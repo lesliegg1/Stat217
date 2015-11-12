@@ -1,0 +1,92 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+\begin{center}
+\large{STAT 217: Two Sample Permutation Tests 10-14} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Suppose $24$ first graders need to be given physical health examinations. Two school nurses conduct the exams. Each first grader is given a ``health score'' from $0$ to $100$. The director of the school is worried that the health scores given by Nurse $1$ are generally greater than the health scores given by Nurse $2$. Each nurse is randomly assigned $12$ first graders. Help them compare the health scores given by Nurse $1$ to the health scores given by Nurse $2$.
+
+<<omnibus, echo=FALSE, size='footnotesize'>>=
+scores <-  c(44,83,94,95,72,73,82, 64,95,54,74,95,85,98,65,76, 74,84,93,54,72,74,85,75)
+nurse <- c(rep(1, 12), rep(2, 12))
+scores <- cbind.data.frame(scores, nurse)
+@
+
+<<diffobs, echo=TRUE, message=FALSE>>=
+require(mosaic)
+diffobs <- diffmean(scores~nurse, data=scores)
+diffobs
+@
+
+<<diffperm, echo=TRUE, message=FALSE, fig.width=16, size='footnotesize'>>=
+require(mosaic)
+B <- 1000
+diffstar <- matrix(NA, nrow=B)
+for(b in 1:B){
+  diffstar[b] <- diffmean(scores~shuffle(nurse), data=scores)
+}
+par(mfrow=c(1,2))
+hist(diffstar)
+abline(v=diffobs, col="red", lwd=3)
+plot(density(diffstar), main="Density curve of diffstar")
+abline(v=diffobs, col="red", lwd=3)
+@
+
+\begin{enumerate}
+\item Explain what \verb+diffobs+ is.
+\vspace{1in}
+
+\item Below the first five rows of the \verb+diffstar+ matrix is shown. Explain how each value in this matrix is generated.
+<<diffstar, echo=FALSE>>=
+head(diffstar)
+@
+\vspace{1.4in}
+
+\item What is the purpose of the \verb+shuffle+ function?
+\vspace{0.9in}
+
+\item What is the purpose of the \verb+for+ loop?
+\vspace{0.8in}
+
+\item What does the ``Histogram of diffstar'' represent?
+\vspace{1in}
+
+\item How will you find the p-value? Explain in detail.
+\vspace{1in}
+
+\item Find another group who is also finished and has a worksheet titled ``One Way Anovas Permutation Test''. Explain the steps of your permutation test to them, and have them explain the steps of their permutation test to you.
+
+\end{enumerate}
+
+
+
+\end{enumerate}
+
+\end{document}

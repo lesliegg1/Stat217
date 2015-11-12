@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Types of Errors} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item How would you describe a type I error in the context of the paper towel experiment (brand vs. drops)?
+\begin{alist}
+\item We find no evidence for at least one difference in the true mean time to failure across number of drops (after controlling for brand), when truly there is no difference.
+\item We find evidence for at least one difference in the true mean time to failure across number of drops (after controlling for brand), when truly there is a difference.
+\item We find no evidence for at least one difference in the true mean time to failure across number of drops (after controlling for brand), when truly there is a difference.
+\item We find evidence for at least one difference in the true mean time to failure across number of drops (after controlling for brand), when truly there is no difference.
+\end{alist}
+
+\item How would you describe a type I error in the context of the Method vs. Ability example you did on Wednesday's worksheet?
+\begin{alist}
+\item We find evidence for a difference between bluebook and computer methods (after controlling for ability), when truly there is no difference.
+\item We find no evidence for a difference between bluebook and computer methods (after controlling for ability), when truly there is no difference.
+\item We find no evidence for a difference between bluebook and computer methods (after controlling for ability), when truly there is a difference.
+\item We find evidence for a difference between bluebook and computer methods (after controlling for ability), when truly there is a difference.
+\end{alist}
+
+\item Also label the answers that describe the type II error.
+
+
+\end{enumerate}
+
+
+
+\end{document}

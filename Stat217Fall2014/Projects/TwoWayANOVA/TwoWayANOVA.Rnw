@@ -1,0 +1,192 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx,xcolor}
+ \pagestyle{myheadings}
+   \markright{\hfill Page }
+\setlength{\topmargin}{-.9in}
+\setlength{\oddsidemargin}{-.15 in}
+\setlength{\textheight}{9.6in}
+\setlength{\textwidth}{7.0in}
+\usepackage{enumerate}
+
+\def\R{{\sf R }}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+
+\begin{document}
+\begin{center}
+\Large{Chapter 3-TWO WAY ANOVA PRACTICE}\\
+Due Wednesday, October 1st\\
+\small Work in groups and turn in one paper for your group!
+\end{center}
+
+\noindent{\bf Gender Differences in Performance on Mathematics Achievement Tests}
+Data set on 861 ACT Assessment Mathematics Usage Test scores from 1987. The test was given to a sample of high school seniors who met one of three profiles of high school mathematics course work: (a) Algebra I only; (b) two Algebra courses and Geometry; and (c) two Algebra courses, Geometry, Trigonometry, Advanced Mathematics and Beginning Calculus.\\
+These data were generated from summary statistics for one particular form of the test as reported by Doolittle (1989).\\
+{\it Source:}Ramsey, F.L. and Schafer, D.W. (2002). {\it The Statistical Sleuth: A Course in Methods of Data Analysis (2nd ed)}, Duxbury.\\
+
+Summary statistics, side-by-side boxplots, and interaction plots are given for these data. 
+{\fs
+<<start, message=FALSE,warning=FALSE>>= 
+options(show.signif.stars = F)
+require(Sleuth2)
+require(mosaic)
+math <- ex1320
+names(math)
+@
+}
+\begin{enumerate}
+\item Is the design balanced? See the output below. 
+<<summaryMath>>=
+favstats(Score~Sex+Background, data = math)
+@
+\vspace{.5in}
+\item What do the side-by-side boxplots tell you about the effects of {\it Sex} and {\it Background}? In other words, describe the relationships you see in the boxplots.
+{\fs
+<<boxplotMath, fig.width = 8, fig.height = 6, out.width= '.5\\linewidth'>>= 
+bwplot(Score~Background|Sex, data = math)
+@
+}
+\item Interpret an interaction in this context.
+\vspace{1in}
+\item Does the plot below suggest that there is an interaction between {\it Sex} and {\it Background}? Explain why or why not.
+{\fs
+<<intplotMath, fig.width = 8, fig.height = 8, out.width= '.5\\linewidth', message=FALSE, warning = FALSE>>= 
+require(HH)
+interaction2wt(Score~Background*Sex, data = math)
+@
+}
+\vspace{1in}
+\item Write out the two-way anova interaction model in terms of $y_{ijk}$'s, $\tau_j$'s, $\gamma_k$'s and $\omega_{jk}$'s. Define all of the parameters and don't forget the errors! 
+\vspace{1.5in}
+
+\item Below is output for the two-way ANOVA model with an interaction.
+{\fs
+<<anovaMath>>=
+fit.Math <- lm(Score~Background*Sex, data = math)
+anova(fit.Math)
+@
+}
+
+\begin{enumerate}
+  \item Write the null and alternative hypothesis for the test you should look at first. 
+  \vspace{.5in}
+  \item What is the distribution of the $F$ statistic under the null hypothesis for this test? 
+  \vspace{.5in}
+  \item What is the value of the $F$ statistic? 
+  \vspace{.5in}
+  \item What is the p-value?
+  \vspace{.5in}
+  \item What would you conclude about the interaction effect?
+  \vspace{1.5in}
+  \item Would you use an additive model or an interaction model for these data?
+  \vspace{.5in}
+\end{enumerate}
+\item Which anova function should you use to fit an additive model? (circle the correct choice) {\tt anova} or {\tt Anova}
+\item The type II sums of squares ANOVA table is given below: 
+{\fs
+<<anovaMath2>>=
+fit.Math.add <- lm(Score~Background + Sex, data = math)
+Anova(fit.Math.add)
+@
+}
+
+For {\it Background:}
+\begin{enumerate}
+ \item Write the null and alternative hypothesis for testing the effect of background.
+ \vspace{1in}
+  \item What is the distribution of the $F$ statistic under the null hypothesis for this test? 
+  \vspace{.5in}
+  \item What is the value of the $F$ statistic? 
+  \vspace{.5in}
+  \item What is the p-value?
+  \vspace{.5in}
+  \item What would you conclude about the effect of {\it Background}?
+  \vspace{1.8in}
+\end{enumerate}
+
+For {\it Sex:}
+\begin{enumerate}
+  \item Write the null and alternative hypothesis for testing the effect of sex.
+  \vspace{1in}
+  \item What is the distribution of the $F$ statistic under the null hypothesis for this test? 
+  \vspace{.5in}
+  \item What is the value of the $F$ statistic? 
+  \vspace{.5in}
+  \item What is the p-value?
+  \vspace{.5in}
+  \item What would you conclude about the effect of {\it Sex}?
+  \vspace{1.5in}
+\end{enumerate}
+
+\item Use the following plots to assess the assumptions and conditions required for the ANOVA.
+{\fs
+<<diagMath, fig.width = 10, fig.height = 3, out.width = '\\linewidth'>>=
+par(mfrow = c(1,4))
+plot(fit.Math.add)
+@
+}
+\vspace{2in}
+
+\item Use the output below to find the fitted values. In other words, I want you to tell me the estimated means for each treatment combination. {\it HINT: There are six, and here is the first one: the estimated mean test score for females with background $a$ is $9.363$.  }
+
+{\fs
+<<outputMath>>=
+summary(fit.Math.add)
+@
+}
+\vspace{2in}
+
+\item Which combination of {\it Background} and {\it Sex} had the highest mean score? 
+\vspace{1in}
+
+\newpage
+{\bf \large Two Questions about Multiple Comparisons}\\
+
+\footnotesize
+
+\item When should you use a multiple comparison procedure? Circle all that apply.
+\begin{enumerate}[A.]
+\item You have multiple groups in the study, and you want to look at all the possible pairwise comparisons. EX: You have three groups, A, B, and C. You want to compare the means of A and B, B and C, and A and B.
+\item You have multiple groups in your study, you see the data, get a little curious, and then you decide you want to compare the means of two of the groups. 
+\item You only have two groups in your study, and you are doing a two-sample t-test to compare the means.
+\item You only have two groups in your study, and you want to make a confidence interval for the true difference in means.
+\item You have multiple groups in your study, and you want to make confidence intervals for all the pairwise differences.
+\end{enumerate}
+
+\item The ``warpbreak'' data(manipulated below) gives the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn. The tension refers to the tension of the loom, set at low, medium, or high.
+
+<<proc, echo=TRUE, message=FALSE>>=
+require(multcomp)
+tension <- factor(warpbreaks$tension, levels=c("H", "M", "L"))
+amod <- aov(warpbreaks$breaks ~ tension)
+ps <- glht(amod, linfct = mcp(tension = "Tukey"))
+confint(ps)
+@
+
+Choose the correct interpretation of the confidence interval(s) above.
+\begin{enumerate}
+\item We are $95\%$ confident that the true difference in mean breaks between those yarns at a low tension and those yarns at a high tension is between $24.282$ and $5.163$ breaks. 
+\item We are $95\%$ confident that the high group has more breaks than the low group.
+\item We are $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\item We are more than $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}

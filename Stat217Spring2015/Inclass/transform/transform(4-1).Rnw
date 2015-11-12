@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Transformations (in class 4/1)} \\
+\end{center}
+
+\begin{enumerate}
+
+\item A high respiratory rate is a potential diagnostic indicator of respiratory infection in children. To judge whether a respiratory rate is truly “high”, a physician must have a clear picture of the distribution of normal respiratory rates. To this end, Italian researchers measured the respiratory rates of 618 children between the ages of 15 days and 3 years.
+
+<<data, echo=F, message=FALSE, size='footnotesize', fig.width=20>>=
+require(Sleuth2)
+kids<-ex0824
+lm.simple <- lm(Rate~Age, data=kids)
+@
+
+
+<<data2, echo=TRUE, size='footnotesize'>>=
+lm.simple <- lm(Rate~Age, data=kids)
+summary(lm.simple)$coef
+@
+
+<<data3, echo=TRUE, size='footnotesize', fig.width=22>>=
+par(mfrow=c(1,4))
+plot(lm.simple)
+@
+
+
+\item The UN data frame contains the infant mortality rate (infant deaths per 1000 live births) and the GDP (US dollars) of $207$ countries around the world. The data are for $1998$.
+
+<<infant, echo=FALSE, message=FALSE, fig.width=15>>=
+require(car)
+data(UN)
+par(mfrow=c(2,2))
+with(UN, plot(gdp, infant.mortality))
+with(UN, plot(log(gdp), infant.mortality, main="log(x)"))
+with(UN, plot(gdp, log(infant.mortality), main="log(y)"))
+with(UN, plot(log(gdp), log(infant.mortality), main="log(x) and log(y)"))
+@
+
+
+<<resp2, echo=TRUE, message=FALSE, size='footnotesize', fig.width=20>>=
+log.rate <- log(kids$Rate)
+lm.kids <- lm(log.rate~Age, data=kids)
+summary(lm.kids)$coef
+confint(lm.kids)
+@
+
+
+<<summary, echo=FALSE, size='footnotesize', fig.width=20>>=
+par(mfrow=c(1,4))
+plot(lm.kids)
+@
+
+\begin{itemize}
+\item What is the estimated simple linear regression model before the transformation? Why is it inappropropriate to use this model for inference?
+\vspace{0.75in}
+\item What is the estimated simple linear regression model after the transformation?
+\vspace{0.75in}
+
+\begin{itemize}
+\item Find the estimated log(rate) for children aged $28$ months.
+\vspace{0.75in}
+\item Find the estimated rate for children aged $28$ months.
+\vspace{0.75in}
+\end{itemize}
+\end{itemize}
+
+
+\end{enumerate}
+
+
+
+
+\end{document}

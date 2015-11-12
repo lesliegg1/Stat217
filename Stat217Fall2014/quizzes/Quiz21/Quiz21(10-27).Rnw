@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize')
+options(replace.assign=TRUE,width=82, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Quiz 21} \\
+\end{center}
+
+<<temptrend, echo=TRUE>>=
+cricket <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz21/slr02.csv" 
+                           ,head=T)
+@
+
+<<lm, echo=TRUE>>=
+lm.chirp <- lm(chirps~temp, data=cricket)
+summary(lm.chirp)
+@
+
+\begin{enumerate}
+
+\item Write the hypotheses being tested in the intercept row.
+\vspace{0.75in}
+
+\item Write the hypotheses being tested in the temp row.
+\vspace{0.75in}
+
+<<int, echo=TRUE>>=
+confint(lm.chirp)
+@
+
+\item Write an ``It is estimated'' statement for the slope coefficient in the table above. Use the $95\%$ confidence interval given.
+\vspace{1in}
+
+<<ciformean, echo=TRUE>>=
+predict(lm.chirp,interval="confidence", level=0.95)
+@
+
+\item Interpret the confidence interval in row $6$ above.
+\vspace{1in}
+
+<<predict, echo=TRUE>>=
+predict(lm.chirp,interval="prediction", level=0.95)
+@
+
+\item Interpret the prediction interval in row $6$ above.
+\vspace{1in}
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

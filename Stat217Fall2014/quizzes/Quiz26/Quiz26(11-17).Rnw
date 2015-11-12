@@ -1,0 +1,82 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Quiz 26} \\
+\end{center}
+
+\begin{enumerate}
+
+\item  To orient themselves with respect to their surroundings, some bats use echolocation. Such a trait has evolved in very few animal species, perhaps because of the high energy costs involved in producing pulses. Zoologists collected data on in-flight energy expenditure (watts) and body mass (g) from $20$ energy studies on three types of flying vertebrates: echolocating bats, non-echolocating bats, and non-echolocating birds. Below is the first five rows of data:
+
+<<readdat,echo=FALSE>>=
+bats <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz26/BatEcholocation.csv",head=T)
+head(bats)
+@
+
+
+<<model,echo=FALSE, eval=FALSE>>=
+lm.bats <- lm(ENERGY~MASS+TYPE+MASS*TYPE,data=bats)
+summary(lm.bats)
+@
+
+\begin{enumerate}
+\item What is the response variable and what are the explanatory variables? Label each as quantitative or categorical.
+\vspace{1in}
+\item Let's first consider the parallel lines model. Write out the TRUE multiple linear regression ADDITIVE model (with $\beta$'s). You will need to use indicator variables. Make sure to define each indicator variable.
+\vspace{1.5in}
+\item Based on the additive model you defined in (b), write out the TRUE simple linear regression model for echolocating bats.
+\vspace{1in}
+\item In terms of betas, what is the slope and y-intercept for the SLR line for echolocating bats?
+\vspace{0.5in}
+\item Based on the additive model you defined in (b), write out the TRUE simple linear regression model for non-echolocating bats.
+\vspace{1in}
+\item In terms of betas, what is the slope and y-intercept for the SLR line for non-echolocating bats?
+\vspace{0.5in}
+\item Based on the additive model you defined in (b), write out the TRUE simple linear regression model for non-echolocating birds.
+\vspace{1in}
+\item In terms of betas, what is the slope and y-intercept for the SLR line for non-echolocating birds?
+\vspace{0.5in}
+\item Sketch a plot like the one I showed in class. For each line, label the slope and the y-intercept. Briefly discuss why the additive model is called a ``parallel lines model''.
+\vspace{3in}
+
+\end{enumerate}
+
+\item Repeat parts (b) through (i) for an interaction or ``separate lines'' model. Please do this on a separate sheet of paper.
+
+
+\end{enumerate}
+
+
+\end{document}

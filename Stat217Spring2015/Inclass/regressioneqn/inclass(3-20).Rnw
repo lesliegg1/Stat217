@@ -1,0 +1,90 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: In Class 3/20} \\
+\end{center}
+
+
+<<scatterCereal, out.width='.7\\linewidth',echo=FALSE, message=FALSE>>= 
+require(mosaic)
+cereal <- read.table("~/Documents/Stat217Fall2014/quizzes/Quiz19/cereals.txt", header = T)
+plot(calories~sugar, ylab = "Calories per Serving (Kcal)", xlab = "Sugar per Serving (gm)", data = cereal, pch = 20)
+#scatterplot(calories~sugar, ylab = "Calories per Serving (Kcal)", xlab = "Sugar per Serving (gm)", data = cereal, smooth = F)
+@
+
+\begin{enumerate}
+
+\item Draw in a best fit line on the scatterplot above.
+
+\item Write out your estimated regression equation. Use descriptive words instead of $x$ and $y$.
+\vspace{1in}
+
+\item Draw a triangle at the estimated number of calories per serving when there are $10$ grams of sugar per serving in the cereal. Write your estimate below.
+
+\item Label on the graph and report the fitted value for calories when sugar=$7$.
+
+\item Label and report $\widehat{cal}$ when there are $3$ grams of sugar per serving.
+
+\item Label the residual for the point $(5,70)$ and the point $(13,160)$. Estimate the value of each.
+\vspace{.25in}
+
+
+
+\newpage
+
+Now let's have R estimate the regression line for us. 
+
+<<line, echo=TRUE, size='footnotesize'>>=
+cereal.fit <- lm(calories~sugar, data = cereal)
+summary(cereal.fit)
+@
+
+\item Write out R's estimated regression equation.
+\vspace{0.5in}
+
+
+\item What is the estimated number of calories per serving when there are $10$ grams of sugar per serving in the cereal, according to R's model?
+\vspace{0.5in}
+
+
+\item What is the fitted value when sugar=$7$ according to R's model?
+\vspace{0.25in}
+
+\item Interpret the slope estimate.
+\vspace{1in}
+
+\item Interpret the y-intercept estimate.
+\vspace{1in}
+
+\end{enumerate}
+
+
+
+
+\end{document}

@@ -1,0 +1,7 @@
+require(heplots)
+data(MockJury)
+mockjury <- subset(MockJury, Attr != "Beautiful")
+mockjury$Attr <- factor(mockjury$Attr, levels=c("Average", "Unattractive"))
+boxplot(Years~Attr, data=mockjury)
+hist(subset(mockjury, Attr=="Average")$Years, main="Average")
+hist(subset(mockjury, Attr=="Unattractive")$Years, main="Unattractive")

@@ -1,0 +1,127 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Worksheet 4 Two-Way Anova Tests 2-20 SOLUTIONS} \\
+\end{center}
+
+
+
+{\footnotesize
+Suppose a statistics teacher gave an essay final to his class. He randomly divides the classes in half such that half the class writes the final with a blue-book and half with notebook computers. In addition the students are partitioned into three groups, no typing ability, some typing ability, and highly skilled at typing. Answers written in blue-books will be transcribed to word processors and scoring will be done blindly. Not with a blindfold, but the instructor will not know the method or skill level of the student when scoring the final. The dependent measure will be the score on the essay part of the final exam.\\
+
+Use the following R output to answer these questions.}
+
+<<an, echo=FALSE, message=FALSE>>=
+ability <- c(rep("none",3), rep("some",3), rep("lots",3), rep("none",3), rep("some",3), rep("lots",3))
+method <- c(rep("bluebook",9),rep("computer",9))
+y <- c(23, 32, 25, 29, 30, 34, 23, 23, 24,32,26,26,34,41,35,23,26,25)
+data <- data.frame(cbind(ability,method,y))
+lm.int <- lm(y~ability*method)
+require(car)
+anova(lm.int)
+@
+
+
+\begin{enumerate}
+\item First, test for an interaction.
+\begin{enumerate}
+\item Write the hypotheses to test for an interaction in this example. \\
+
+$H_0:$ There is no interaction between method and ability \\
+$H_A:$ There is an interaction between method and ability \\
+
+OR \\
+
+$H_0:$ $\omega_{CN}=\omega_{CS}=\omega_{CL}=\omega_{BN}=\omega_{BS}=\omega_{BL}=0$ \\
+$H_A:$ At least one $\omega_{jk} \neq 0$ \\
+
+\item Report the test statistic and the distribution it follows under the null hypothesis. \\
+
+F-stat = $0.97$. The test statistic follows an F-distribution on $2$ and $12$ df.\\
+
+
+\item Report the p-value and your decision (Hint: Decision=reject or fail to reject). \\
+
+p-value=$0.408$ \\
+Decision: Fail to Reject $H_0$ \\
+
+\item What is your conclusion? \\
+
+There is no evidence of an interaction between method and ability (p-value$=0.408$ from F-stat=$0.97$ on $2$ and $12$ df). \\
+
+
+\item Would you choose an additive model or an interaction model for inference? \\
+
+Because there is no evidence of an interaction, I would choose an additive model.
+\end{enumerate}
+
+
+\item Now test for the effect of \verb+method+.
+
+<<Anova, echo=TRUE>>=
+lm.add <- lm(y~ability+method)
+Anova(lm.add)
+@
+
+
+\begin{enumerate}
+\item Write the hypotheses to test for the effect of \verb+method+. \\
+
+$H_0$: There is no difference in the true mean test scores across method after accounting for ability. \\
+$H_A$: There is at least one difference in the true mean test scores across method after accounting for ability. \\
+
+\item Report the test statistic and the distribution it follows under the null hypothesis. \\
+
+F-stat=$3.59$. The test statistic follows an F-distribution on $1$ and $14$ df. \\
+
+
+\item Report the p-value and your decision.\\
+
+p-value=$0.079$
+decision: fail to reject $H_0$ at $\alpha=0.05$
+
+
+\item What is your conclusion?\\
+
+There is moderate evidence of at least one difference in the true mean test scores across method after accounting for ability (p-value=$0.079$ from F-stat=$3.59$ on $1$ and $14$ df).
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+
+\end{document}

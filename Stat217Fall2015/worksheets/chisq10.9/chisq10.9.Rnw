@@ -1,0 +1,118 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+\begin{center}
+\large{STAT 217: Chi-Squared Tests 10-9} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Two random samples of cars were taken (one sample of $30$ Hondas, and one sample of $70$ Toyotas), and then the safety rating of the vehicle was recorded in stars (one star, two star, or three star). The data are shown in the {\bf contingency table} below. 
+
+<<safety, echo=FALSE, message=FALSE>>=
+brand <- c(rep("Honda", 30), rep("Toyota", 70))
+set.seed(3)
+starsH <- ifelse(runif(30)<0.1, "one", ifelse(runif(30)<0.3, "two", "three"))
+starsT <- ifelse(runif(70)<0.4, "one", ifelse(runif(70)<0.7, "two", "three"))
+stars <- c(starsH, starsT)
+brand <- as.factor(brand)
+stars <- as.factor(stars)
+require(mosaic)
+@
+
+<<tally, echo=TRUE, message=FALSE, size='footnotesize'>>=
+safetytable<-tally(~brand+stars,margins=F)
+safetytable
+@
+
+<<plot,echo=FALSE, out.width="0.5\\linewidth">>=
+plot(brand, stars, main="Stacked Bar Chart of Safety Data")
+@
+
+\begin{enumerate}
+\item Based on what you see in the contingency table and stacked bar charts above, do you think the null hypothesis is true? Why or why not?
+\vspace{1in}
+
+<<test, echo=TRUE, size='footnotesize'>>=
+chisq.test(safetytable)
+@
+
+\item Below, draw the chi-square distribution with $2$ df.
+\vspace{1in}
+
+\item Write a conclusion based on the p-value above.
+\vspace{1in}
+
+
+\item Calculate the table of expected counts. 
+\vspace{1in}
+
+\item Find the $\chi^2$ test statistic by hand.
+\vspace{1in}
+
+\end{enumerate}
+
+
+
+
+
+\item A random sample of Brazilians aged $18$ and older was taken, and each subjects Age - (Under 30, 30-49, 50 and over) and Political Ideology-(Liberal, Moderate, Conservative) were noted. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{PolAge} \hlkwb{<-} \hlkwd{as.table}\hlstd{(}\hlkwd{rbind}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{83}\hlstd{,}\hlnum{140}\hlstd{,}\hlnum{73}\hlstd{),} \hlkwd{c}\hlstd{(}\hlnum{119}\hlstd{,}\hlnum{280}\hlstd{,}\hlnum{161}\hlstd{),} \hlkwd{c}\hlstd{(}\hlnum{88}\hlstd{,}\hlnum{284}\hlstd{,}\hlnum{214}\hlstd{)))}
+\hlkwd{dimnames}\hlstd{(PolAge)} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{age}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"underthirty"}\hlstd{,}\hlstr{"thirtytofortynine"}\hlstd{,}\hlstr{"fiftyandOver"}\hlstd{),}
+\hlkwc{party}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"Liberal"}\hlstd{,}\hlstr{"Moderate"}\hlstd{,} \hlstr{"Conservative"}\hlstd{))}
+\hlstd{PolAge}
+\end{alltt}
+\begin{verbatim}
+##                    party
+## age                 Liberal Moderate Conservative
+##   underthirty            83      140           73
+##   thirtytofortynine     119      280          161
+##   fiftyandOver           88      284          214
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\begin{enumerate}
+
+\item Would this be a test of independence or homogeneity?
+\item Write out the hypotheses.
+\item Find the table of expected counts and then calculate the $\chi^2$ test statistic by hand.
+\end{enumerate}
+
+
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

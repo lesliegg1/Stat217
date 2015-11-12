@@ -1,0 +1,81 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 10} \\
+\end{center}
+
+\hspace{4in}Name: \underline{\hspace{2.5in}} \\
+
+\begin{enumerate}
+
+\item When should you use a multiple comparison procedure? Circle all that apply.
+\begin{enumerate}[A]
+\item You have multiple groups in the study, and you want to look at all the possible pairwise comparisons. EX: You have three groups, A, B, and C. You want to compare the means of A and B, B and C, and A and B.
+\item You have multiple groups in your study, you see the data, get a little curious, and then you decide you want to compare the means of two of the groups. 
+\item You only have two groups in your study, and you are doing a two-sample t-test to compare the means.
+\item You only have two groups in your study, and you want to make a confidence interval for the true difference in means.
+\item You have multiple groups in your study, and you want to make a confidence interval for all the pairwise differences.
+\end{enumerate}
+
+\item In class today, we talked about two multiple comparison procedures used to generate family-wise significance levels and family-wise confidence intervals. Circle them (you should circle two answers).
+\begin{enumerate}[A]
+\item Tukey's HSD
+\item Bootstrap intervals
+\item Bonferroni's MCP
+\item Scope of inference
+\end{enumerate}
+
+\vspace{2in}
+
+{\bf \large See Back}
+
+\newpage
+
+The ``warpbreak'' data(manipulated below) gives the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn. The tension refers to the tension of the loom, set at low, medium, or high.
+
+<<proc, echo=TRUE, message=FALSE>>=
+require(multcomp)
+tension <- factor(warpbreaks$tension, levels=c("H", "M", "L"))
+amod <- aov(warpbreaks$breaks ~ tension)
+ps <- glht(amod, linfct = mcp(tension = "Tukey"))
+confint(ps)
+@
+
+\item Choose the correct interpretation of the confidence interval(s) above.
+\begin{enumerate}
+\item We are $95\%$ confident that the true difference in mean breaks between those yarns at a low tension and those yarns at a high tension is between $24.282$ and $5.163$ breaks. 
+\item We are $95\%$ confident that the high group has more breaks than the low group.
+\item We are $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\item We are more than $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\end{enumerate}
+
+
+\vspace{2in}
+
+\end{enumerate}
+\end{document}

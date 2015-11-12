@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: MLR Test for an Interaction (4-24)} \\
+\end{center}
+
+<<avgs, echo=FALSE, message=FALSE, fig.width=12, fig.height=8>>=
+require(ggplot2)
+avg.lengths <- read.csv("~/Documents/WritingProject/report/datafiles/avgs.csv")
+fish.stat <- read.csv("~/Documents/WritingProject/report/datafiles/fishstat.csv")
+
+avg.lengths <- subset(avg.lengths, area!="Aialik")
+
+ggplot(avg.lengths, aes(as.numeric(as.character(year)), mean.in, group=area))+
+  geom_point(aes(shape=area, color=area),size=4)+
+  geom_smooth(aes(color=area),method="lm", se=F)+
+  theme(axis.title.x=element_blank(), axis.text.x=element_text(size=20, 
+                                                               angle=90),
+        axis.text.y=element_text(size=20),
+        axis.title.y=element_text(size=18), 
+        strip.text.x=element_text(size=20))+
+  ylab("Mean Length (inches)")
+@
+
+
+<<ols, echo=FALSE>>=
+lm.int <- lm(mean.in~year*area, data=avg.lengths)
+anova(lm.int) 
+@
+
+
+
+\end{document}

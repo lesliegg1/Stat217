@@ -1,0 +1,75 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+\begin{center}
+\large{STAT 217: Permutation Test for a Slope Coefficient - Cereal Example (in class 10/26)} \\
+\end{center}
+
+
+<<cerealdata, echo=FALSE, message=FALSE>>=
+require(mosaic)
+cereal <- read.table("~/Documents/Stat217Fall2014/quizzes/Quiz19/cereals.txt", header = T)
+@
+
+<<permtest, echo=TRUE, cache=TRUE>>=
+b1obs <- lm(calories~sugar,data=cereal)$coef[2]
+b1obs
+B<- 1000
+b1star<-matrix(NA, nrow=B)
+for (b in (1:B)){
+b1star[b]<-lm(calories~shuffle(sugar), data=cereal)$coef[2]
+}
+@
+
+<<plots, echo=TRUE, fig.width=10>>=
+par(mfrow=c(1,2))
+hist(b1star, xlim=c(-3,3), nclass=25, freq=FALSE)
+abline(v=b1obs,col="red",lwd=3)
+
+plot(density(b1star),main="Density curve of Tstar",xlim=c(-3,3))
+abline(v=b1obs,col="red",lwd=3)
+@
+
+<<overlay, echo=TRUE>>=
+#find p-value from permutation distribution
+pdata(abs(b1obs),abs(b1star),lower.tail=F)
+@
+
+<<sd, echo=TRUE>>=
+#compare sd of permutation dist to standard error
+sd(b1star)
+@
+
+
+
+\end{document}

@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Quiz 24} \\
+\end{center}
+
+\begin{enumerate}
+
+\item  In a study of soil properties, 250 soil samples were taken. We'll work with three variables: response calcium
+  concentration (ppm), and predictors pH (low numbers are acidic, high
+  numbers basic, 7 is neither) and elevation (m). Data for the first six soil samples are shown below.
+
+<<input, echo=F, message=FALSE>>=
+soil <-  read.table("~/Documents/Stat505/Homework/HW6/soils.dat", head = TRUE)
+soil <- soil[,3:5]
+head(soil)
+@
+
+\begin{enumerate} 
+\item Below is a pairs plot. Briefly describe the relationship between calcium and elevation.
+\vspace{0.75in}
+
+\item In the pairs plot below, what is the number $0.79$ on the right side of the plot telling you?
+\vspace{0.75in}
+
+\end{enumerate}
+
+<<pairs, message=FALSE, out.width=".5\\linewidth">>=
+require(mosaic)
+require(psych)
+options(show.signif.stars = F)
+pairs.panels(soil, pch = 20, ellipse = F, main = "Scatterplot matrix of Soil Data")
+@
+
+
+\newpage
+\item Use the table of regression coefficients to answer the following questions.
+
+<<table, size='footnotesize'>>=
+lm.soil <- lm(Ca~elev+pH,data=soil)
+summary(lm.soil)
+@
+
+\begin{enumerate}
+\item For each of the p-values in the table of regression coefficients above, write the null and alternative hypotheses. I did the first one for you to get you started.
+
+\item Suppose you are particularly interested in the relationship between Calcium and pH. Write your conclusion for the coefficient of pH.
+\vspace{1.3in}
+
+\item Explain, in a practical sense, what it means to describe the relationship between Calcium and pH after accounting for elevation.
+\vspace{1.3in}
+\end{enumerate}
+
+
+****Extra Learning**** Only complete if you have time, you will not be deducted points if you do not complete this section.
+
+\item Using the data given on the first page, calculate the residual for the sixth soil sample.
+
+
+\end{enumerate}
+
+
+\end{document}

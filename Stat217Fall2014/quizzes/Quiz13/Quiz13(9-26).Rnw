@@ -1,0 +1,109 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 13} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Fill in the blanks on this incomplete two way ANOVA table.
+
+\begin{verbatim}
+
+Source       Df    Sum Sq    Mean Sq    F-Value   Pr(>F)
+supp         1        205      ___       12.32   0.00089
+dose         __      2224       556     133.42    <2e-16
+supp:dose    __       390      ___        ___     0.02463
+Residuals    __       934      ___   
+------------------------------------------------------------
+Total        19      ____
+
+\end{verbatim}
+
+\item Use the above table to answer the following questions.
+
+\begin{enumerate}
+\item How many levels of the factor 'dose' were there in the study?
+\vspace{.25in}
+\item What was the total sample size?
+\vspace{.25in}
+\end{enumerate}
+
+{\footnotesize
+\item Remember this problem last class: suppose a statistics teacher gave an essay final to his class. He randomly divides the classes in half such that half the class writes the final with a blue-book and half with notebook computers. In addition the students are partitioned into three groups, no typing ability, some typing ability, and highly skilled at typing. Answers written in blue-books will be transcribed to word processors and scoring will be done blindly. Not with a blindfold, but the instructor will not know the method or skill level of the student when scoring the final. The dependent measure will be the score on the essay part of the final exam.
+
+The first factor will be called Method and will have two levels, blue-book and computer. The second factor will be designated as Ability and will have three levels: none, some, and lots. Each subject will be measured a single time.}\\
+
+Use the following R output to answer these questions.
+
+<<an, echo=FALSE, message=FALSE>>=
+ability <- c(rep("none",3), rep("some",3), rep("lots",3), rep("none",3), rep("some",3), rep("lots",3))
+method <- c(rep("bluebook",9),rep("computer",9))
+y <- c(23, 32, 25, 29, 30, 34, 23, 23, 24,32,26,26,34,41,35,23,26,25)
+data <- data.frame(cbind(ability,method,y))
+lm.add <- lm(y~ability+method)
+require(car)
+Anova(lm.add)
+@
+
+\item Interpret the p-value in the ability row in the abova Anova. \\
+A. After controlling for method, there is about a .028\% chance we would observe differences in average scores like we did or more extreme across the three ability levels (None, Some, Lots) if all of the true mean scores were different. \\
+B. After controlling for method, there is about a .028\% chance we would observe differences in average scores like we did or more extreme across the three ability levels (None, Some, Lots) if all of the true mean scores were the same. \\
+C. After controlling for method, there is about a .028\% chance we would observe differences in average scores like we did or more extreme across the three ability levels (None, Some, Lots) if at least one of the true means was different from the rest. \\
+D. After controlling for method, it is the probability of observing differences in average scores level like we did or more extreme across the three ability levels (None, Some, Lots) is 0.00028.
+
+\item In the 'method' row of the above table, what distribution does the test statistic follow under the null hypothesis?
+\vspace{0.5in}
+
+<<sum, echo=TRUE, size='footnotesize'>>=
+summary(lm.add)
+@
+
+\item Use the output above to answer the following questions. 
+\begin{enumerate}
+\item What is the estimated mean score for those people with ``some'' ability in the blue book group?
+\vspace{0.5in}
+\item What is the estimated mean score for people with no ability in the computer group?
+\vspace{0.5in}
+\item What is the estimated difference in mean scores between computer and blue book groups?
+\vspace{0.5in}
+\item What is the estimated difference in mean scores between the ``no ability'' and the ``some ability'' groups?
+\vspace{0.5in}
+\end{enumerate}
+
+
+
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

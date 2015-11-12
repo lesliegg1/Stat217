@@ -1,0 +1,269 @@
+\documentclass[12pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+
+\usepackage{setspace}
+\usepackage{enumerate}
+
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+% an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{amssymb,amsmath}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\newcommand{\R}{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+
+\begin{document}
+
+\begin{center}
+{\Large \bf Quiz $7$}
+\end{center}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72")
+@
+
+
+<<data, echo=TRUE>>=
+age <- c(288,228,240,384,264,247,253,324,240,288,262,257,260,361,252)
+row <- c(rep("1",3), rep("2",3), rep("3",3), rep("4",3), rep("5",3))
+as.factor(row)
+class.data <- rbind(age,row)
+lm.fit <- lm(age~row)
+@
+
+Above is the age row data we collected in class on Wednesday. Answer the following questions.
+
+
+\begin{enumerate}
+
+\item Is this a balanced design?
+
+\item Refer to the plot below. 
+
+\begin{enumerate}
+
+\item What was the average age of students in row 3? List the average age of students for each row.
+\vspace{1in}
+
+\item Which row had the largest spread of ages?
+\vspace{0.25in}
+
+\end{enumerate}
+
+<<plot, message=FALSE, out.width=".5\\linewidth">>=
+require(gplots)
+plotmeans(age~row, mean.labels = T, digits = 2)
+@
+
+\item I fit a linear model and below is a summary of the model.
+
+<<summary>>=
+summary(lm.fit)
+@
+
+\item Refer to 2(a) where you listed the average age of students for each row. Can you find these numbers in the output above? Hint: you may have to do some arithmetic. Show, specifically, how to use the output to get to each of the row averages.
+
+\vspace{1in}
+
+\item State the hypotheses for conducting a one-way ANOVA for these data.
+
+\vspace{1in}
+
+\item The anova is below. What is the F-statistic and the p-value?
+
+\newpage
+
+<<anova>>=
+anova(lm.fit)
+@
+\vspace{-.2in}
+\item What is your decision at a significance level of $0.05$?
+\vspace{0.25in}
+
+\item What is your conclusion?
+\vspace{1in}
+
+\item It turns out that the F-statistic follows an F-distribution with $4$ and $10$ degrees of freedom under the null hypotheses. The F-distribution is similar to the t-distribution in that if I ask:
+
+What is the distribution of the F-statistic under the null hypothesis?
+
+It is not enough to say ``the F-distribution''. You should say ``the F-distribution with $4$ and $10$ degrees of freedom''. This is because the F-distribution changes when the degrees of freedom changes. Note the degrees of freedom are found in the df column in the ANOVA table above.
+
+The plot below shows the F distribution with $4$ and $10$ degrees of freedom. Draw a long vertical line at your F-statistic. Shade the area that is your p-value. Note that F-tests are always upper tailed.
+
+<<fdist, echo=FALSE, out.width=".5\\linewidth">>=
+x <- seq(0,5,by=.01)
+plot(x,df(x,4,14))
+@
+
+\item Does the shaded area appear to be consistent with the p-value given in the ANOVA?
+
+\newpage
+
+\noindent Let's look at a new dataset. Cuckoos are known to lay their eggs in the nests of other (host) birds. The eggs are then adopted and hatched by the host birds. These data were originally collected by O. M. Latter in 1902 to see how the size of a cuckoo egg is related to the species of the host bird.
+
+\item What parameterization of the ANOVA model does the following code create? 
+{\fs
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit.bird} \hlkwb{<-} \hlkwd{lm}\hlstd{(length}\hlopt{~}\hlstd{species,} \hlkwc{data} \hlstd{= cuckoo)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+}
+\begin{enumerate}
+\item Cell Means
+\item Refrence Coded
+\end{enumerate}
+
+\item Use the following output to write the estimated mean egg size for the hedge sparrow and the tree 
+pipet.
+{\fs
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(fit.bird)}
+\end{alltt}
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = length ~ species, data = cuckoo)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.6489 -0.4489 -0.0489  0.5511  2.1511 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(>|t|)
+## (Intercept)          23.1214     0.2430   95.15  < 2e-16
+## speciesmeadow pipet  -0.8225     0.2783   -2.96   0.0038
+## speciespied wagtail  -0.2181     0.3379   -0.65   0.5199
+## speciesrobin         -0.5464     0.3328   -1.64   0.1033
+## speciestree pipet    -0.0314     0.3379   -0.09   0.9261
+## specieswren          -1.9914     0.3379   -5.89  3.9e-08
+## 
+## Residual standard error: 0.909 on 114 degrees of freedom
+## Multiple R-squared:  0.313,  Adjusted R-squared:  0.283 
+## F-statistic: 10.4 on 5 and 114 DF,  p-value: 3.15e-08
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+}
+\begin{itemize}
+\item Hedge Sparrow: 
+\vspace{1in}
+\item Tree Pipet: 
+\vspace{1in}
+\end{itemize}
+
+\item Below are boxplots for the egg size (mm) for all species of host birds, an effects plot and summary statistics for each host species. 
+{\fs
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{names}\hlstd{(cuckoo)}
+\end{alltt}
+\begin{verbatim}
+## [1] "length"  "species"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\hlkwd{boxplot}\hlstd{(length}\hlopt{~}\hlstd{species,} \hlkwc{data} \hlstd{= cuckoo,} \hlkwc{ylab} \hlstd{=} \hlstr{"egg size (mm)"}\hlstd{)}
+\hlkwd{points}\hlstd{(length}\hlopt{~}\hlstd{species,} \hlkwc{data} \hlstd{= cuckoo,} \hlkwc{col} \hlstd{=} \hlkwd{as.numeric}\hlstd{(species),} \hlkwc{pch} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlcom{#install.packages("gplots") }
+\hlkwd{require}\hlstd{(gplots)}
+\hlkwd{plotmeans}\hlstd{(length} \hlopt{~}\hlstd{species,} \hlkwc{data} \hlstd{= cuckoo,} \hlkwc{mean.labels} \hlstd{= T,} \hlkwc{digits} \hlstd{=} \hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=.7\linewidth]{figure/boxplotCuckoo} 
+\begin{kframe}\begin{alltt}
+\hlkwd{favstats}\hlstd{(length}\hlopt{~}\hlstd{species,} \hlkwc{data} \hlstd{= cuckoo)}
+\end{alltt}
+\begin{verbatim}
+##          .group   min    Q1 median    Q3   max  mean     sd  n missing
+## 1 hedge sparrow 20.85 22.90  23.05 23.85 25.05 23.12 1.0687 14       0
+## 2  meadow pipet 19.65 22.05  22.25 22.85 24.45 22.30 0.9206 45       0
+## 3  pied wagtail 21.05 21.95  23.05 23.75 24.85 22.90 1.0676 15       0
+## 4         robin 21.05 22.05  22.55 23.05 23.85 22.57 0.6846 16       0
+## 5    tree pipet 21.05 22.55  23.25 23.75 24.05 23.09 0.9014 15       0
+## 6          wren 19.85 20.85  21.05 21.75 22.25 21.13 0.7437 15       0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+}
+\item TRUE or FALSE: This a balanced design (circle one).
+
+\newpage
+
+\item State the hypotheses for conducting a one-way ANOVA for these data\\\\
+$H_0: $\\\\
+$H_a:$\\\\
+\item The ANOVA is below.
+
+<<anova2, echo=FALSE, message=FALSE>>=
+require(fastR)
+fit.bird <- lm(length~species, data=cuckoo)
+anova(fit.bird)
+@
+
+
+
+\item What is the distribution of the F statistic under $H_0$? 
+\vspace{.4in}
+
+\item What is the F statistic and corresponding p-value? 
+\vspace{.4in}
+
+\item Which of the following is true about the F-statistic?
+
+\begin{enumerate}[A.]
+\item The F-statistic is small because the variation in average egg size across bird type is large compared to the variation in the egg sizes within a bird type.
+\item The F-statistic is large because the variation in average egg size across bird types is large compared to the variation in the egg sizes within a bird type.
+\item The F-statistic is large because the variation in average egg size across bird types is small compared to the variation in the egg sizes within a bird type.
+
+\end{enumerate}
+
+\item What is your conclusion? 
+
+\end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: Worksheet 3\\
+\end{flushleft}
+
+Write a Scope of Inference for each of the following scenarios. Be sure to write {\bf in context}. You may only write two sentences for each scenario. Write one sentence for random sample and one sentence for random assignment.
+
+\begin{enumerate}
+
+\item In the 1980s, biologists Peter and Rosemary Grant caught and measured all the birds from more than 20 generations of finches on the Galapagos island of Daphne Major. In one of those years, 1977, a severe drought caused vegetation to wither, and the only remaining food source was a large, tough seed, which the finches ordinarily ignored. Were the birds with larger and stronger beaks for opening these tough seeds more likely to survive that year, and did they tend to pass this characteristic to their offspring? The data are beak depths (height of the beak at its base) of 89 finches caught the year before the drought (1976) and 89 finches captured the year after the drought (1978).
+
+\vspace{2in}
+
+
+\item Susan Sound predicts that students will learn most effectively with a constant background sound, as opposed to an unpredictable sound or no sound at all. She randomly divides twenty-four students into three groups of eight. All students study a passage of text for 30 minutes. Those in group 1 study with background sound at a constant volume in the background. Those in group 2 study with noise that changes volume periodically. Those in group 3 study with no sound at all. After studying, all students take a 10 point multiple choice test over the material.
+
+\vspace{2in}
+
+\item In an industrial laboratory, under uniform conditions, $28$ randomly selected batches of electrical insulating fluid were subjected to constant voltages until the insulating property of the fluids broke down. Seven different voltage levels were randomly assigned to each of the batches and the measured reponses were the times until breakdown.
+
+
+
+
+
+\end{enumerate}
+\end{document}

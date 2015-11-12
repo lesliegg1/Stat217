@@ -1,0 +1,107 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: Chapter 1, Testing Mockjury Data}
+\end{center}
+
+The courts are suspicious that unattractive females being sentenced for crimes tend to receive longer sentence lengths than defendants with average appearances. The MockJury dataset gives the sentence lengths for $75$ female defendants, some of which are unattractive, and some of which are average.
+
+\begin{enumerate}
+\item What are our parameters of interest? Write them down in words and notation.
+\vspace{0.75in}
+
+\item What are our null and alternative hypotheses? Write them down in notation. 
+\vspace{0.5in}
+
+\item What are the two methods you learned to test this hypothesis?
+\vspace{0.75in}
+
+\item In 216 we used computer applets to make null distributions when we wanted to test our null hypothesis using randomization methods. In this class we’re going to use R. But the idea is the same. Describe how the null distribution (aka the permutation distribution) is constructed. 
+\vspace{1.5in}
+
+<<datasetup, echo=FALSE, message=FALSE>>=
+require(heplots) ## telling R to load the package I need
+data(MockJury) ## telling R to go grab the MockJury data set
+MockJury <- subset(MockJury, select = c(Attr, Crime, Years, Serious, independent,
+sincere)) ## selecting only the columns I'm interested in
+MockJury2 <- subset(MockJury, Attr != "Beautiful")
+## getting rid of observations from the Beautiul group
+MockJury2$Attr <- factor(MockJury2$Attr, levels = c("Average", "Unattractive"))
+## telling R to only keep those 2 levels of the Attr variable
+rownames(MockJury2) <- 1:nrow(MockJury2) ## telling R to number the rows starting at 1
+@
+
+
+\item To build the permutation distribution in R, we are going to use a {\bf for loop}. Why is the {\bf for loop} needed?
+
+\vspace{0.5in}
+
+<<permdist, echo=TRUE, message=FALSE>>=
+require(mosaic)
+Tobs <- diffmean(Years ~ Attr, data = MockJury2) ## this is the observed diff in means
+B <- 1000 ## this is how many permutations you want
+Tstar <- matrix(NA, nrow = B) ## setting up empty slots to put our permutation statistics in
+for (b in 1:B) {
+Tstar[b] <- diffmean(Years ~ shuffle(Attr), data = MockJury2) ## the bth permutation stat
+## the text uses compareMean, but that is an outdated function
+}
+par(mfrow = c(1, 2)) ## telling R to put the two plots side by side
+hist(Tstar)
+abline(v = Tobs, lwd = 2) ## adding a line for the observed statistic
+abline(v = -Tobs, lwd = 2)
+plot(density(Tstar), main = "Density Plot of Tstar", xlab = "")
+abline(v = Tobs, lwd = 2)
+abline(v = -Tobs, lwd = 2)
+@
+
+\item What can you see from the above output? Do you think there is statistical evidence that unattractive women tend to receive longer sentences?
+\vspace{0.75in}
+
+\item The last piece of information we need for our hypothesis test is a p-value. We can get this from R using the following code. State your conclusion in the context of the problem.
+
+<<pval, echo=TRUE>>=
+pdata(abs(Tobs), abs(Tstar), lower.tail = F)
+@
+
+
+\vspace{1in}
+
+\item Interpret the p-value in the context of the problem.
+\vspace{1in}
+
+\end{enumerate}
+
+\end{document}

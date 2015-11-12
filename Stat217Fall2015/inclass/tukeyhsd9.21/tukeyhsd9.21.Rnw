@@ -1,0 +1,265 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{setspace}
+\usepackage{multicol}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.7in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-2.0cm}
+
+%% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+
+\begin{document}
+
+\begin{center}
+{\Large \bf In Class $9/21$}
+\end{center}
+\vspace{0.25in}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  # this is equivalent to \SweaveOpts{...}
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72", show.signif.stars=FALSE)
+@
+
+<<plot, echo=FALSE, message=FALSE, out.width="0.5\\linewidth">>=
+require(Sleuth3)
+handicap.data <- case0601
+par(mai=c(1,1,1,1))
+#with(handicap.data, plot(Handicap, Score))
+@
+
+<<anova, echo=TRUE>>=
+lm.hand <- lm(Score~Handicap, data=handicap.data)
+anova(lm.hand)
+@
+
+
+
+<<cis, echo=TRUE, fig.width=12, message=FALSE>>=
+require(multcomp)
+cis <- glht(lm.hand, linfct=mcp(Handicap = "Tukey"))
+confint(cis)
+@
+
+<<ciplot, echo=FALSE, fig.width=8>>=
+old.par <- par(mai=c(1.5,3,1,1))
+plot(cis)
+@
+
+<<letters, echo=FALSE, message=FALSE, out.width="0.7\\linewidth">>=
+require(beanplot)
+beanplot(Score~Handicap, data=handicap.data , col="white")
+text(c(5), "ab", col="blue", cex=2)
+text(c(2),6.5, "a", col="blue", cex=2)
+text(c(3),c(4), "b", col="blue", cex=2)
+text(4,5.5, "ab", col="blue", cex=2)
+text(5,6, "ab", col="blue", cex=2)
+@
+
+\newpage
+{\bf \large What happens if we do not use a multiple comparison procedure? The true mean for each group is 10. Check to make sure all intervals contain 10.}
+
+<<sim, echo=FALSE, eval=FALSE>>=
+set.seed(501)
+for(i in 1:100){
+data.sim <- c(rnorm(180,10,2))
+groups <- rep(c("1","2","3","4","5","6"),30)
+groups <- as.factor(groups)
+lm.study <- lm(data.sim~groups-1, data=sample)
+#individualwise
+print("INDIVIDUAL-WISE INTERVAL")
+
+print(confint(lm.study))
+#familywise
+print("FAMILYWISE INTERVAL")
+
+print(confint(lm.study,level=0.995))
+}
+@
+
+\begin{multicols}{2}
+
+{\footnotesize
+\begin{verbatim}
+[1] "INDIVIDUAL-WISE INTERVAL"
+            2.5 %   97.5 %
+groups1  9.851036 11.23042
+groups2 10.451670 11.83106
+groups3  9.696693 11.07608
+groups4  9.273430 10.65282
+groups5  9.307122 10.68651
+groups6  9.958090 11.33748
+[1] "FAMILYWISE INTERVAL"
+           0.25 %  99.75 %
+groups1  9.547166 11.53429
+groups2 10.147800 12.13493
+groups3  9.392823 11.37995
+groups4  8.969559 10.95669
+groups5  9.003252 10.99038
+groups6  9.654220 11.64135
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %   97.5 %
+groups1 8.669845 10.07130
+groups2 9.436318 10.83777
+groups3 9.387577 10.78903
+groups4 9.778291 11.17974
+groups5 8.923070 10.32452
+groups6 9.518390 10.91984
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 8.361115 10.38003
+groups2 9.127588 11.14650
+groups3 9.078847 11.09776
+groups4 9.469561 11.48847
+groups5 8.614340 10.63325
+groups6 9.209660 11.22857
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %   97.5 %
+groups1 9.568830 11.20051
+groups2 8.767659 10.39934
+groups3 8.846529 10.47821
+groups4 9.374585 11.00626
+groups5 8.433931 10.06561
+groups6 9.079746 10.71142
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 9.209383 11.55995
+groups2 8.408212 10.75878
+groups3 8.487081 10.83765
+groups4 9.015138 11.36571
+groups5 8.074484 10.42505
+groups6 8.720298 11.07087
+
+
+
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %    97.5 %
+groups1 8.489713  9.849643
+groups2 9.313334 10.673263
+groups3 9.241750 10.601680
+groups4 9.530464 10.890394
+groups5 9.630912 10.990842
+groups6 9.325270 10.685200
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 8.190129 10.14923
+groups2 9.013750 10.97285
+groups3 8.942167 10.90126
+groups4 9.230881 11.18998
+groups5 9.331329 11.29043
+groups6 9.025687 10.98478
+
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %    97.5 %
+groups1 9.107038 10.469915
+groups2 8.529224  9.892102
+groups3 8.944100 10.306978
+groups4 9.274045 10.636923
+groups5 9.384647 10.747525
+groups6 8.740045 10.102923
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 8.806805 10.77015
+groups2 8.228991 10.19233
+groups3 8.643867 10.60721
+groups4 8.973813 10.93716
+groups5 9.084414 11.04776
+groups6 8.439812 10.40316
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %   97.5 %
+groups1 9.096457 10.45892
+groups2 9.680775 11.04323
+groups3 9.280952 10.64341
+groups4 9.679842 11.04230
+groups5 9.698998 11.06146
+groups6 9.134102 10.49656
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 8.796316 10.75906
+groups2 9.380634 11.34337
+groups3 8.980811 10.94355
+groups4 9.379701 11.34244
+groups5 9.398858 11.36160
+groups6 8.833961 10.79670
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %   97.5 %
+groups1 9.397737 10.74781
+groups2 9.589944 10.94001
+groups3 9.042246 10.39231
+groups4 9.685154 11.03522
+groups5 9.689151 11.03922
+groups6 9.111298 10.46137
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 9.100326 11.04522
+groups2 9.292533 11.23742
+groups3 8.744835 10.68972
+groups4 9.387743 11.33263
+groups5 9.391740 11.33663
+groups6 8.813887 10.75878
+[1] "INDIVIDUAL-WISE INTERVAL"
+            2.5 %   97.5 %
+groups1  9.498772 10.86402
+groups2  9.839157 11.20440
+groups3 10.036568 11.40181
+groups4  9.598272 10.96352
+groups5  9.101405 10.46665
+groups6  9.239984 10.60523
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 9.198018 11.16477
+groups2 9.538403 11.50516
+groups3 9.735813 11.70257
+groups4 9.297517 11.26427
+groups5 8.800650 10.76741
+groups6 8.939230 10.90598
+[1] "INDIVIDUAL-WISE INTERVAL"
+           2.5 %   97.5 %
+groups1 9.755545 11.13594
+groups2 9.129836 10.51024
+groups3 9.792264 11.17266
+groups4 9.093313 10.47371
+groups5 9.363684 10.74408
+groups6 9.715636 11.09604
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 9.451452 11.44004
+groups2 8.825743 10.81433
+groups3 9.488171 11.47676
+groups4 8.789220 10.77781
+groups5 9.059591 11.04818
+groups6 9.411543 11.40013
+[1] "INDIVIDUAL-WISE INTERVAL"
+            2.5 %   97.5 %
+groups1  9.907651 11.37240
+groups2  9.086596 10.55135
+groups3  9.551744 11.01650
+groups4 10.184976 11.64973
+groups5  9.296932 10.76168
+groups6  9.051486 10.51624
+[1] "FAMILYWISE INTERVAL"
+          0.25 %  99.75 %
+groups1 9.584976 11.69508
+groups2 8.763921 10.87402
+groups3 9.229069 11.33917
+groups4 9.862301 11.97240
+groups5 8.974257 11.08436
+groups6 8.728811 10.83891
+
+\end{verbatim}}
+
+\end{multicols}
+
+\end{document}
+
+
+

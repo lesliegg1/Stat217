@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+\begin{center}
+\large{STAT 217: One Way Anova Permutation Tests 10-14} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Suppose $27$ exams need to be graded. As the job is too much work for one grader, suppose 3 graders are used. The scholarship committee would like to ensure that each grader is using the same grading scale, as otherwise the students aren't being treated equally. One approach to checking if the graders are using the same scale is to randomly assign each grader 9 exams to grade. Then compare the grades for the 3 graders knowing that the differences should be due to chance errors if the graders all grade equally.
+
+<<omnibus, echo=FALSE>>=
+scores <-  c(44,83,94,95,72,73,82, 64,95,54,74,95,85,98,65,76, 74,84,93,54,72,74,85,75,94,84, 95)
+grader <- c(rep(1, 9), rep(2, 9), rep(3, 9))
+scores <- cbind.data.frame(scores, grader)
+@
+
+<<Fobs, echo=TRUE>>=
+Fobs <- anova(lm(scores~grader, data=scores))[1,4]
+Fobs
+@
+
+<<Fperm, echo=TRUE, message=FALSE, fig.width=16>>=
+require(mosaic)
+B <- 1000
+Fstar <- matrix(NA, nrow=B)
+for(b in 1:B){
+  Fstar[b] <- anova(lm(scores~shuffle(grader), data=scores))[1,4]
+}
+par(mfrow=c(1,2))
+hist(Fstar)
+abline(v=Fobs, col="red", lwd=3)
+plot(density(Fstar), main="Density curve of Fstar")
+abline(v=Fobs, col="red", lwd=3)
+@
+
+\begin{enumerate}
+\item Explain what \verb+Fobs+ is.
+\vspace{1in}
+
+\item Below the first five rows of the \verb+Fstar+ matrix is shown. Explain how each value in this matrix is generated.
+<<Fstar, echo=FALSE>>=
+head(Fstar)
+@
+\vspace{1.4in}
+
+\item What is the purpose of the \verb+shuffle+ function?
+\vspace{0.9in}
+
+\item What is the purpose of the \verb+for+ loop?
+\vspace{0.8in}
+
+\item What does the ``Histogram of Fstar'' represent?
+\vspace{1in}
+
+\item How will you find the p-value? Explain in detail.
+\vspace{1in}
+
+\item Find another group who is also finished and has a worksheet titled ``Two Sample Permutation Test''. Explain the steps of your permutation test to them, and have them explain the steps of their permutation test to you.
+
+\end{enumerate}
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

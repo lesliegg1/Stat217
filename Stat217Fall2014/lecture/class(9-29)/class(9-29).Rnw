@@ -1,0 +1,64 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+<<data, echo=FALSE, message=FALSE>>=
+spock <- read.csv("~/Documents/Stat217Fall2014/Projects/Project1/spock.tex")
+spock$judge <- as.factor(spock$judge)
+require(mosaic)
+#favstats(percent~judge, data = spock)
+@
+
+<<boxplot, echo=FALSE>>=
+boxplot(percent~judge, data = spock, ylab = "% Women in Venire")
+points(percent~judge, data = spock, col = as.numeric(judge), pch = 20)
+@
+
+<<pairs, echo=FALSE, message=FALSE>>=
+fit.spock<-lm(percent~judge, data = spock)
+#anova(fit.spock)
+par(mfrow = c(2,2))
+plot(fit.spock)
+require(multcomp)
+pairs <- glht(fit.spock, linfct=mcp(judge = "Tukey"))
+confint(pairs)
+@
+
+<<lkdf, echo=FALSE, message=FALSE>>=
+plot(pairs)
+require(gplots)
+plotmeans(percent~judge, data=spock, mean.labels=F)
+text(c(1:7),c(10,37,37,32,30,30,30),c("a", "b", "b","b", "ab", "b", "b")
+     ,col=c("blue",rep("green", 3), "red", "green","green"),cex=2)
+@
+
+
+
+
+
+
+
+\end{document}

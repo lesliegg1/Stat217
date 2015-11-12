@@ -1,0 +1,154 @@
+\documentclass[12pt]{article}
+
+  %% LaTeX margin settings:
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage[margin=.5in]{geometry}
+\setlength\parindent{0pt}
+
+\begin{document}
+\large
+\begin{center}
+{\Large \bf  One-Way ANOVA Activity}\\
+{{Stat 217} \vspace{.2in}}
+\end{center}
+\small
+<<setup, include=FALSE, cache=FALSE, echo=FALSE, results='hide'>>=
+set.seed = 1230
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize', tidy.opts=list(width.cutoff=70), tidy=TRUE)
+options(replace.assign=TRUE,width=80, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+@
+
+In this activity we will look at two data sets: one on insecticides and the other about ACT scores. \\
+
+{\bf Insects:} In an agricultural experiment, 72 plots of land were randomly assigned to be treated with one of six different insecticides.The next day, the number of insects in each plot were counted.  We will test to see if there is a difference in the number of insects for at least one of the sprays. Since there is a quantitative response variable and a single categorical explanatory variable, a One-Way ANOVA is an appropriate procedure for these data.\\
+
+
+<<insectdata, warning=FALSE, message=FALSE, out.width='\\linewidth', fig.align='center', echo=FALSE, fig.width=10>>=
+require(datasets)
+require(ggplot2)
+require(mosaic)
+data(InsectSprays)
+require(beanplot)
+act <- read.csv("~/Documents/Stat217Fall2015/inclass/ClaireANOVAactivity/act.csv", header = T)
+par(mfrow=c(1,2))
+beanplot(count ~ spray, data = InsectSprays, main="Insects")
+beanplot(ACT ~ Sport, data = act, main="ACT")
+@
+
+{\bf ACT Scores:} A school is interested in comparing ACT scores for students with baseball scholarships, football scholarships, and non-athletes. Let Group 1 be the Baseball athletes, Group 2 be the non-athletes, and Group 3 be the Football athletes.They want to know if one of the groups has a different mean ACT score than the others.  \\
+
+<<actdata, out.width='.5\\linewidth', fig.align='center', echo=FALSE>>=
+favstats(ACT~Sport, data=act)
+@
+\newpage
+
+\begin{enumerate}
+
+\item Below is the insect Sprays ANOVA Table. Let's think about where each piece comes from.
+
+<<insanova, echo=TRUE, comment="">>=
+lm.insect <- lm(count~spray, data=InsectSprays)
+anova(lm.insect)
+@
+
+Here is your key:
+\begin{itemize}
+\item J = number of groups
+\item N = total sample size
+\item Spray degrees of freedom (df) = J-1
+\item Residual degrees of freedom (df) = N-J
+\item $MS_A = SS_A / $ spray df
+\item $MS_E = SS_E / $ Residual df
+\item F-statistic $= MS_A / MS_E$  
+\item The F-statistic follows an F distribution with spray df numerator and residual df denominator: $\sim F(spraydf, residualdf)$
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+  \begin{tabular}{rrrrrr}
+  \hline
+    id      \vline  & Df \vline & Sum Sq \vline & Mean Sq \vline & F value \vline & Pr($>$F) \\
+    \hline
+    spray    \vline & ~ \vline & ~  \vline & ~     \vline  & ~     \vline  & ~      \\
+    \hline
+    Residuals \vline & ~ \vline & ~  \vline & ~     \vline  & ~    \vline   & ~      \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\item Fill in the sparse ACT ANOVA Table .
+
+\begin{table}[h!]
+\centering
+  \begin{tabular}{rrrrrr}
+  \hline
+    id      \vline  & Df \vline & Sum Sq \vline & Mean Sq \vline & F value \vline & Pr($>$F) \\
+    \hline
+    Group    \vline & ~ \vline & 71.0   \vline & ~      \vline  & ~     \vline  & ~      \\
+    \hline
+    Residuals \vline & ~ \vline & ~   \vline & 7.78      \vline & ~      \vline & ~      \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\item ACT Test Statistic Distribution
+
+What is the test statistic?  What distribution does it follow? 
+\vspace{.5in}
+\item P-value for Insect Sprays\\
+
+Recall, that we always use the right tail to find a p-value. An F(5, 66) distribution is plotted below. The test statistic is labelled with the vertical line.  
+
+<<insectnulldist, echo=FALSE, out.width='.4\\linewidth', fig.align='center'>>=
+ggplot() + 
+  geom_density(aes(rf(1000, 5, 66)), binwidth = .5, colour = "darkgreen", fill = "grey") + 
+  geom_vline(aes(xintercept = 34.7), size = I(1.6), colour = "red") + 
+  theme_bw() + 
+  labs(x = "F", title = "F(5,66)")
+@
+
+Clearly, the test statistic is more extreme than anything we would expect to observe under the null.  We can use the {\tt pf} command to compare our test statistic to the F-distribution.  In R, {\tt 3.19e-17} means $3.19 * 10^{-17}$ so we get an incredibly tiny p-value for these data.
+
+<<insectpval>>=
+pf(34.7, 5, 66, lower.tail = F)
+@
+
+
+\item  An $F(2,20)$ is plotted below. Draw a line for the test statistic for the ACT data. Shade the part of the distribution you will use to find the p-value.
+
+<<actnulldistn2, echo=FALSE, out.width='.4\\linewidth', fig.align='center'>>=
+dat0 <- dplyr::data_frame(f = seq(0.05, 6, by = .05), 
+                          density = df(f, 2, 20))
+ggplot(dat0, aes(x = f, ymax = density, ymin = 0)) + 
+  geom_ribbon(colour = "darkgreen", fill = "lightgrey", size = I(1.03)) +
+  theme_bw() + 
+  labs(x = "F", y = "density", title = "F(2,20)")
+@
+
+\item Write the code you would use to find the p-value.
+\vspace{0.5in}
+
+
+\item What is your decision for the ACT data? Recall that the significance level was 0.05 and that a decision is either {\it Reject} or {\it Fail to Reject}.
+\vspace{.5in}
+\item What is your conclusion for the ACT data?
+
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+

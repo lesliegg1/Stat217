@@ -1,0 +1,123 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Interaction vs Additive Models Worksheet 9/28} \\
+\end{center}
+
+
+
+{\footnotesize
+Suppose a statistics teacher gave an essay final to his class. He randomly divides the classes in half such that half the class writes the final with a blue-book and half with notebook computers. In addition the students are partitioned into three equal size groups, no typing ability, some typing ability, and highly skilled at typing. Answers written in blue-books will be transcribed to word processors and scoring will be done blindly. Not with a blindfold, but the instructor will not know the method or skill level of the student when scoring the final. The dependent measure will be the score on the essay part of the final exam. Use the following R output to answer the questions.}
+
+<<an, echo=FALSE, message=FALSE>>=
+ability <- c(rep("none",3), rep("some",3), rep("lots",3), rep("none",3), rep("some",3), rep("lots",3))
+method <- c(rep("bluebook",9),rep("computer",9))
+y <- c(23, 32, 25, 29, 30, 34, 23, 23, 24,32,26,26,34,41,35,23,26,25)
+data <- data.frame(cbind(ability, method, y))
+data$ability <- factor(data$ability)
+data$method <- factor(data$method)
+data$y <- as.numeric(data$y)
+lm.int <- lm(y~ability*method, data=data)
+require(car)
+@
+
+<<anovaint, echo=TRUE, comment="">>=
+anova(lm.int)
+@
+
+
+\begin{enumerate}
+\item First, test for an interaction.
+\begin{enumerate}
+\item Write the hypotheses to test for an interaction in this example.
+\vspace{0.75in}
+\item Report the test statistic and the distribution it follows under the null hypothesis.
+\vspace{0.25in}
+\item Report the p-value and your decision (Hint: Decision=reject or fail to reject).
+\vspace{0.25in}
+\item What is your conclusion?
+\vspace{0.75in}
+\item Would you choose an additive model or an interaction model for inference? Why?
+\vspace{0.5in}
+\item What is the total sample size? Show how you figured it out.
+\vspace{0.5in}
+\item How many students are in each treatment group? Is the design balanced?
+\vspace{0.5in}
+\end{enumerate}
+
+\newpage
+
+\item Now test for the effect of \verb+method+.
+
+<<Anova, echo=TRUE>>=
+lm.add <- lm(y~ability+method, data=data)
+Anova(lm.add)
+@
+
+
+\begin{enumerate}
+\item Write the hypotheses to test for the effect of \verb+method+.
+\vspace{,75in}
+\item Report the test statistic and the distribution it follows under the null hypothesis.
+\vspace{0.25in}
+\item Report the p-value and your decision.
+\vspace{0.25in}
+\item What is your conclusion?
+\vspace{0.75in}
+\end{enumerate}
+
+<<summary, echo=TRUE, eval=FALSE>>=
+summary(lm.add, show.signif.stars=FALSE)
+@
+\begin{verbatim}
+               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      1.1111     0.7812   1.422   0.1768    
+abilitynone      2.3333     0.9567   2.439   0.0287  
+abilitysome      5.6667     0.9567   5.923 3.72e-05 
+methodcomputer   1.7778     0.7812   2.276   0.0391  
+\end{verbatim}
+
+\item Use the output above to estimate the mean test score for every treatment group.
+\vspace{0.75in}
+
+\item Interpret the estimate in the \verb+methodcomputer+ row of the output above.
+
+
+\end{enumerate}
+
+
+
+\end{document}

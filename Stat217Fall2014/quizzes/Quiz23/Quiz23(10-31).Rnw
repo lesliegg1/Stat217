@@ -1,0 +1,108 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 23} \\
+\end{center}
+
+\begin{enumerate}
+
+\item A high respiratory rate is a potential diagnostic indicator of respiratory infection in children. To judge whether a respiratory rate is truly “high”, a physician must have a clear picture of the distribution of normal respiratory rates. To this end, Italian researchers measured the respiratory rates of 618 children between the ages of 15 days and 3 years.
+
+<<data, echo=F, message=FALSE, size='footnotesize'>>=
+require(Sleuth2)
+kids<-ex0824
+log.rate <- log(kids$Rate)
+lm.kids <- lm(log.rate~Age, data=kids)
+summary(lm.kids)
+confint(lm.kids)
+@
+
+\begin{enumerate}
+
+\item Conduct a hypothesis test for the slope coefficient and write your conclusion in the context of the problem. Only write your evidence sentence here.
+\vspace{1.5in}
+
+\item Provide an interpretation of $b_1$ on the original scale.
+
+\vspace{1.5in}
+
+\end{enumerate}
+
+\newpage
+
+\item Biological Pest Control. In a study of the effectiveness of biological control of the exotic weed tansy ragwort, researches manipulated the exposure to the ragwort flea beetle on 15 plots that had been planted with high density of ragwort. Harvesting the plots the next season, they measured the average dry mass of ragwort remaining (grams/plant) and the flea beetle load (beetles/gram of ragwort dry mass) to see if the ragwort plants in plots with high flea beetle loads were smaller as a result of herbivory by the beetles.
+
+<<ragwort, echo=F, size='footnotesize'>>=
+require(Sleuth2)
+pest <- ex0817
+log.mass <- log(pest$Mass)
+log.load <- log(pest$Load)
+lm.log <- lm(log.mass~log.load)
+summary(lm.log)
+confint(lm.log)
+@
+
+\begin{enumerate}
+
+\item Conduct a hypothesis test for the slope coefficient and write your conclusion in the context of the problem. Only write your evidence sentence here.
+\vspace{1.2in}
+
+\item Provide an interpretation of $b_1$ on the original scale.
+
+\vspace{1.5in}
+
+\end{enumerate}
+
+\newpage
+
+\item The data come from the United Nations’ website showing CO2 consumption per capita (in metric tons) between the years of $1990$ to $2010$. We will examine this relationship.
+
+<<co2, echo=F>>=
+c02 <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz23/co2.csv", head=T)
+log.year <- log(c02$Year)
+lm.co2 <- lm(Value~log.year, data=c02)
+summary(lm.co2)
+confint(lm.co2)
+@
+
+\begin{enumerate}
+
+\item Conduct a hypothesis test for the slope coefficient and write your conclusion in the context of the problem. Only write your evidence sentence here.
+\vspace{1.5in}
+
+\item Provide an interpretation of $b_1$ on the original scale.
+
+\vspace{1.5in}
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{document}

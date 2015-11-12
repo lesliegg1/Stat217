@@ -1,0 +1,90 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 20} \\
+\end{center}
+
+A high respiratory rate is a potential diagnostic indicator of respiratory infection in children. To judge whether a respiratory rate is truly “high”, a physician must have a clear picture of the distribution of normal respiratory rates. To this end, Italian researchers measured the respiratory rates of 618 children between the ages of 15 days and 3 years.
+
+<<data, echo=TRUE, message=FALSE, size='footnotesize'>>=
+require(Sleuth2)
+kids<-ex0824
+lm.kids <- lm(Rate~Age, data=kids)
+summary(lm.kids)
+@
+
+\begin{enumerate}
+
+\item Circle the coefficient of determination in the above output.
+
+\item Choose the correct interpretation of $R^2$ in this context.
+\begin{enumerate}[A.]
+\item 47.66\% of the variation in children's ages is explained by the linear model with respiratory rates as a predictor.
+\item 47.66\% of the variation in children's respiratory rates is explained by the linear model with age as a predictor. 
+\item There is a moderate relationship between age and respiratory rate.
+\item The coefficient of determination is a measure of the strength and direction of a linear relationship.
+\end{enumerate}
+
+\newpage
+
+\item For each of the following assumptions and conditions for a simple linear regression model, say whether it is met or not. Explain how you know. Use the plots below.
+
+<<plot1, echo=TRUE, out.width=".4\\linewidth", size='footnotesize'>>=
+plot(kids, main="Plot of All the Data")
+@
+
+
+<<plot, echo=TRUE, fig.width=12, fig.height=4, size='footnotesize'>>=
+par(mfrow=c(1,4))
+plot(lm.kids)
+@
+
+{\bf Quantitative variables condition:}
+\vspace{.5in}
+
+{\bf Independence Assumption:} {\it For this one, just speculate on one possible violation.}
+\vspace{1.5in}
+
+{\bf Linearity:}
+\vspace{1in}
+
+{\bf Constant Variance Assumption:}
+\vspace{1in}
+
+{\bf Normality:}
+\vspace{1in}
+
+{\bf No influential points:}
+\vspace{1in}
+
+\end{enumerate}
+
+
+
+\end{document}

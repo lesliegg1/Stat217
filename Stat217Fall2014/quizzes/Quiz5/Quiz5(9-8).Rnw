@@ -1,0 +1,81 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{setspace}
+
+ %% LaTeX margin settings:
+\setlength{\textwidth}{7.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.7in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-2.0cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+
+\begin{document}
+
+\begin{center}
+{\Large \bf Quiz $5$}
+\end{center}
+\vspace{0.25in}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72")
+@
+
+
+Study explores how physical handicaps affect people’s perception of employment qualifications. Researchers prepared 5 videotaped job interviews using actors with a script designed to reflect an interview with an applicant of average qualifications. The 5 tapes differed only in that the applicant appeared with a different handicap in each one. Seventy undergraduate students were randomly assigned to view the tapes and rate the qualification of the applicant on a 0-10 point scale. See the plot below. "Score" is the score each student gave to the applicant. "Handicap"is a factor variable with 5 levels.
+
+
+<<plot, echo=FALSE, message=FALSE>>=
+require(Sleuth3)
+handicap.data <- case0601
+require(lattice)
+xyplot(Score~Handicap, data=handicap.data)
+@
+
+
+\begin{enumerate}
+
+\item What is the response variable and what is the explanatory variable? Identify each as categorical or quantitative.
+\vspace{1in}
+
+\item Suppose you want to know whether score depends on the type of handicap. Set up hypotheses to answer this question.
+\vspace{1in}
+
+\item Write out the null model. What do we call this model?
+\vspace{1in}
+
+\item Draw a long horizontal line at the grand mean, $\bar{\bar{y}}$ above.
+\vspace{1in}
+
+\item Label the $y_{24}$ response on the plot above. Assume the numbering starts at the bottom and goes up.
+
+\item Now label the residual, $\epsilon_{24}$, on the plot above (for the null model).
+
+\item We learned about three models in class today, the single mean model, the cell means model, and the reference coded model. I fit each of these three models in the code below. Label them.
+
+<<model>>=
+lm.hand1 <- lm(Score~Handicap-1, data=handicap.data)
+
+lm.hand2 <- lm(Score~Handicap, data=handicap.data)
+
+lm.hand3 <- lm(Score~1, data=handicap.data)
+@
+
+\item Now let's consider the alternative, separate means model. Draw short horizontal lines on the plot above at the averages for each group.
+
+\item We haven't yet learned how to formally test the hypotheses in (b). Just by looking at the plot, do you think score depends on handicap? Explain why. Be sure to discuss the variation within each group in your response.
+
+
+
+\end{enumerate}
+
+
+\end{document}

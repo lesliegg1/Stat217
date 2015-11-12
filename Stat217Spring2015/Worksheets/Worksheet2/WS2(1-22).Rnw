@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: Permutation Test Activity - A non-parametric approach} 
+\end{center}
+
+Lab tests with animals have shown that exposure to tobacco smoke is harmful in many ways.
+To make connections to humans has been more of a challenge. One dataset which might help
+us connect tobacco use of pregnant women to birth weights of their babies comes from a large set of data on births in North Carolina. We will examine a random sample of size $200$ from the much larger dataset. The two variables provided are habit (either smoker or nonsmoker) and weight (baby’s weight at birth measured in pounds).
+
+\begin{enumerate}
+\item Could there be some physiological reason why birthweights for the children of the 28 smokers might be lower than the birth weights of the babies born to nonsmokers? Write down what you and your group know about smoke and nicotine to hypothesize a connection to
+birthweight.
+\vspace{0.75in}
+\item What is the response variable in this study? Is it quantitative or categorical?
+\vspace{0.25in}
+\item Is there an explanatory variable in this study? If so, name it and tell which type of variable it is.
+\vspace{0.25in}
+\item Go to http://lock5stat.com/statkey/ and click on \verb+Test For Difference in Means+. Press the \verb+Edit Data+ button. This is where you will paste the birth weight data. The data is on D2L. Open it in a text editor and copy and paste it in.
+
+\item What is the average birth weight for smokers? Non-smokers?
+\vspace{0.2in}
+\item What is the difference in average birth weights between non-smokers and smokers?
+\vspace{0.25in}
+
+You will conduct a permutation test to find out how likely it would be to see this large
+a difference in sample means if the two populations really have the same overall mean birth weight. By doing the reassignment many times, we can see what results are expected
+when the populations really have the same distribution of responses.
+
+\item Write the null and alternative hypotheses for your permutation test.
+\vspace{0.5in}
+
+\item Now generate 1 reshuffled sample by clicking \verb+Generate 1 Sample+. What is the mean birth weight to smokers from this simulated trial? Answers will vary. What is the mean birth weight to nonsmokers for this single simulated trial? What is the difference in means between these two groups?
+\vspace{0.5in}
+
+\item Now click \verb+Generate 1000+ samples. In the $1001$ reshuffled samples, what was the smallest difference in means? What was the largest?
+\vspace{0.35in}
+
+\item How were each of these samples created?
+\vspace{1in}
+
+\item Where is the histogram centered and why?
+\vspace{1in}
+
+\item Go back and consider the difference of means you observed in the original sample. Based on the null distribution you just simulated, is it {\bf possible} that the null hypothesis is true?
+\vspace{1in}
+
+\item Is it {\bf likely} that the null hypothesis is true?
+\vspace{0.75in}
+
+\item Now let's find the approximate p-value. Check the box for either right-tail or left-tail depending on your alternative hypothesis. After doing so, a box with a number in it will pop up on your x-axis. Click on this box and enter the observed difference in means from the original sample. The p-value is then displayed. What is your p-value? Answers may vary.
+\vspace{0.2in}
+
+\item Write a conclusion in context of the problem.
+\vspace{1in}
+
+\end{enumerate}
+
+
+\end{document}

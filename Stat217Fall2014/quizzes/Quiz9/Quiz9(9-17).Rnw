@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 9} \\
+\end{center}
+
+\hspace{4in}Name: \underline{\hspace{2.5in}} \\
+
+
+\noindent Cuckoos are known to lay their eggs in the nests of other (host) birds. The eggs are then adopted and hatched by the host birds. These data were originally collected by O. M. Latter in 1902 to see how the size of a cuckoo egg is related to the species of the host bird.
+
+
+
+<<cuckoo1,echo=FALSE,message=FALSE,warning=FALSE, eval = FALSE>>=
+install.packages("fastR")
+require(fastR)
+options(show.signif.stars = F)
+data(cuckoo)
+names(cuckoo)
+@
+
+<<cuckoo2,echo=FALSE,message=FALSE,warning=FALSE,eval = TRUE, results = 'hide'>>=
+require(fastR)
+options(show.signif.stars = F)
+data(cuckoo)
+names(cuckoo)
+@
+
+<<SummaryCuckoo, eval = TRUE, echo = TRUE>>= 
+fit.bird <- lm(cuckoo$length ~ cuckoo$species)
+@
+
+%<<boxplotCuckoo, echo = TRUE, fig.width = 8, fig.height = 6, out.width = '.9\\linewidth'>>= 
+%names(cuckoo)
+%par(mfrow = c(1,2))
+%boxplot(length~species, data = cuckoo, ylab = "egg size (mm)")
+%points(length~species, data = cuckoo, col = as.numeric(species), pch = 20)
+%#install.packages("gplots") 
+%require(gplots)
+%plotmeans(length ~species, data = cuckoo, mean.labels = T, digits = 2)
+%favstats(length~species, data = cuckoo)
+%@
+
+
+<<ANOVAcuckoo, eval = TRUE, echo = TRUE, results = 'hide'>>=
+anova(fit.bird)
+@
+
+
+To investigate the assumptions, we need to look at the diagnostic plots for the ANOVA. 
+
+<<DiagCuckoo, fig.width = 8, fig.height = 8, out.width = '.8\\linewidth'>>= 
+par(mfrow = c(2,2))
+plot(fit.bird)
+eij <- residuals(fit.bird)
+@
+
+%<<DiagCuckoo2, fig.width = 8, fig.height = 8, out.width = '.5\\linewidth'>>= 
+%par(mfrow = c(1,1))
+%plot(density(eij), main = "Density plot of Residuals")
+%@
+
+%The top two plots and the density plot of the residuals are what we are most interested in. Does it look like the variance is equal across host species? Do the errors look like they are distributed normally? Does {\sf R} warn you that the assumptions to run an ANOVA may not be met? 
+
+\begin{enumerate}
+
+\item Were the assumptions and conditions to run a parametric ANOVA met? \\
+\begin{itemize}
+\item Independence: \vspace{.3in}
+\item Equal Var: \vspace{.4in}
+\item Normal Residuals: \vspace{.4in}
+\item Randomization and Representative: 
+\end{itemize}
+
+\vspace{2in}
+
+\end{enumerate}
+\end{document}

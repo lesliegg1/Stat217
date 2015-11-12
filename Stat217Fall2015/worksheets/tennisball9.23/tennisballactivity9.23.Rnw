@@ -1,0 +1,88 @@
+
+
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: Tennis Ball Activity 9/23\\
+\end{flushleft}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(out.width='.8\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+In this activity, you will measure the diameter of tennis balls in centimeters using three methods:
+\begin{itemize}
+\item string
+\item flashlight
+\item rolling
+\end{itemize}
+Work through the following questions. {\bf Turn in one sheet for your group before you leave class today.}
+
+\begin{enumerate}
+\item What is the response variable? Is it categorical or quantitative?
+\vspace{0.25in}
+
+\item What are the two explanatory variables? Identify each as categorical or quantitative. (Hint: the second explanatory is group. There are 8 groups in the class today.)
+\vspace{0.5in}
+
+\item Use the rulers and materials provided, have each person in your group measure the diameter of the tennis balls with all three methods. Record each person's measurements here.
+\vspace{2in}
+
+\item Find the average diameter length for each method.
+\vspace{0.5in}
+
+\item Provide two reasons why people in your group may have gotten different measurements even though they used the same methods (string, flashlight, and rolling).
+\vspace{0.75in}
+
+\item Find another group and write down that groups' data below. Include the names of the people in the group you get the data from.
+\vspace{2in}
+
+\item Find the average diameter length for each method for the other group's data.
+\vspace{0.5in}
+
+\item Draw an interaction plot with your data and the other group's data. Include the means and all the data points on the plot.
+\vspace{2in}
+
+\item Does there appear to be an interaction between measuring method and group? Explain how you know.
+\vspace{0.25in}
+
+\item Describe what it means to have an interaction between measuring method and group in this context. Think hard about this one, and explain it thoroughly. I encourage you to use pictures in your explanation.
+\vspace{2in}
+
+\item Write out the two way ANOVA interaction model for this example. What does each parameter represent? What are the possible values for $i$, $j$, and $k$?
+\vspace{2in}
+
+\end{enumerate}
+
+
+
+
+\end{document}

@@ -1,0 +1,229 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx,xcolor}
+ \pagestyle{myheadings}
+   \markright{\hfill Page }
+\setlength{\topmargin}{-.9in}
+\setlength{\oddsidemargin}{-.15 in}
+\setlength{\textheight}{9.6in}
+\setlength{\textwidth}{7.0in}
+\usepackage{enumerate}
+
+\def\R{{\sf R }}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+\begin{center}
+\Large{TWO-WAY Anova Homework}\\
+Due Friday, February 20th\\
+\small You may work in groups or individually
+\end{center}
+
+\noindent{\bf Gender Differences in Performance on Mathematics Achievement Tests}
+Data set on 861 ACT Assessment Mathematics Usage Test scores from 1987. The test was given to a sample of high school seniors who met one of three profiles of high school mathematics course work: (a) Algebra I only; (b) two Algebra courses and Geometry; and (c) two Algebra courses, Geometry, Trigonometry, Advanced Mathematics and Beginning Calculus.\\
+These data were generated from summary statistics for one particular form of the test as reported by Doolittle (1989). {\it Source:}Ramsey, F.L. and Schafer, D.W. (2002). {\it The Statistical Sleuth: A Course in Methods of Data Analysis (2nd ed)}, Duxbury.\\
+
+Summary statistics, side-by-side boxplots, and interaction plots are given for these data. 
+{\fs
+<<start, message=FALSE,warning=FALSE>>= 
+options(show.signif.stars = F)
+require(Sleuth2)
+require(mosaic)
+math <- ex1320
+names(math)
+@
+}
+\begin{enumerate}
+\item Is the design balanced? See the output below. 
+<<summaryMath>>=
+favstats(Score~Sex+Background, data = math)
+@
+
+\item What do the side-by-side boxplots tell you about the effects of {\it Sex} and {\it Background}? In other words, describe the relationships you see in the boxplots.
+\begin{enumerate}
+\item For both males and females, the average score is highest for background a, and males have higher average scores than females for backgrounds a and b. The average scores for males and females with background c are about the same.
+\item For both males and females, the average score is highest for background c, and females have higher average scores than males for backgrounds a and b. The average scores for males and females with background c are about the same.
+\item  For both males and females, the average score is highest for background c, and males have higher average scores than females across all backgrounds.
+\item For both males and females, the average score is highest for background c, and males have higher average scores than females for backgrounds a and b. The average scores for males and females with background c are about the same.
+\end{enumerate}
+{\fs
+<<boxplotMath, fig.width = 8, fig.height = 6, out.width= '.5\\linewidth'>>= 
+bwplot(Score~Background|Sex, data = math)
+@
+}
+\item Interpret an interaction in this context.
+\begin{enumerate}
+\item There is an interaction if the difference in mean scores between males and females changes across backgrounds.
+\item There is an interaction if males have higher scores than females on average.
+\item There is an interaction if the true mean score for background c is higher than the true mean scores for backgrounds a and b.
+\item There is an interaction if the interaction plot shows parallel lines.
+
+\end{enumerate}
+\item Does the plot below suggest that there is an interaction between {\it Sex} and {\it Background}? 
+\begin{enumerate}
+\item Yes because males appear to be higher than females
+\item Yes because background c appears to be higher than backgrounds a or b.
+\item No because the lines are parallel. The difference in average scores between males and females does not change much across levels of background.
+\item No because it would not make sense to have an interaction in this context.
+\end{enumerate}
+{\fs
+<<intplotMath, fig.width = 12, fig.height = 8, out.width= '.5\\linewidth', message=FALSE, warning = FALSE>>= 
+require(HH)
+interaction2wt(Score~Background*Sex, data = math)
+@
+}
+\vspace{1in}
+\item Write out the two-way anova interaction model for this scenario in terms of $y_{ijk}$'s, $\tau_j$'s, $\gamma_k$'s and $\omega_{jk}$'s. Define all of the parameters and don't forget the errors! 
+\vspace{1.5in}
+
+\item Below is output for the two-way ANOVA model with an interaction.
+{\fs
+<<anovaMath>>=
+fit.Math <- lm(Score~Background*Sex, data = math)
+anova(fit.Math)
+@
+}
+
+\begin{enumerate}
+  \item Write the null and alternative hypothesis for the test you should look at first. 
+  \begin{enumerate}
+  \item $H_0: \tau_1=\tau_2=0$ vs. at least one $\tau_i \neq 0$
+  \item $H_0: \omega_{11}=\omega_{12}=\omega_{13}=\omega_{21}=\omega_{22}=\omega_{23}$ vs. $H_{A}:$ at least one $\omega_{ij} \neq 0$
+  \item $H_0: \gamma_{1}=\gamma_{2}=\gamma_{3}=0$ vs. $H_A:$ at least one $\gamma_j \neq 0$
+  \item $H_0:$ there is no gender effect vs. $H_A:$ there is a gender effect
+  \end{enumerate}
+  \item What is the distribution of the $F$ statistic under the null hypothesis for this test? 
+  \vspace{.5in}
+  \item What is the value of the F-statistic? What is the p-value? 
+  \vspace{.25in}
+  \item What would you conclude about the interaction effect?
+  \begin{enumerate}
+  \item There is strong evidence of an interaction effect (p-value=$0.46$ from F-stat=$0.77$ on $2$ and $855$ df).
+  \item There is no evidence that the difference in true mean scores between males and females depends on the level of background (p-value=$0.46$ from F-stat=$0.77$ on $2$ and $855$ df).
+  \item There is strong evidence that the difference in true mean scores between males and females depends on the level of background (p-value=$0.46$ from F-stat=$0.77$ on $2$ and $855$ df).
+  \item There is no evidence that the difference in the average scores in our sample between males and females depends on the level of background (p-value=$0.46$ from F-stat=$0.77$ on $2$ and $855$ df).
+  \end{enumerate}
+  \item Would you use an additive model or an interaction model for these data?
+  \vspace{.5in}
+\end{enumerate}
+\item Which anova function should you use to fit an additive model? (circle the correct choice) {\tt anova} or {\tt Anova}
+\item The type II sums of squares ANOVA table is given below: 
+{\fs
+<<anovaMath2>>=
+fit.Math.add <- lm(Score~Background + Sex, data = math)
+Anova(fit.Math.add)
+@
+}
+
+For {\it Background:}
+\begin{enumerate}
+ \item Write the null and alternative hypothesis for testing the effect of background.
+  \begin{enumerate}
+  \item $H_0: \tau_1=\tau_2=0$ vs. at least one $\tau_i \neq 0$
+  \item $H_0: \omega_{11}=\omega_{12}=\omega_{13}=\omega_{21}=\omega_{22}=\omega_{23}$ vs. $H_{A}:$ at least one $\omega_{ij} \neq 0$
+  \item $H_0: \gamma_{1}=\gamma_{2}=\gamma_{3}=0$ vs. $H_A:$ at least one $\gamma_j \neq 0$
+  \item $H_0:$ there is no gender effect vs. $H_A:$ there is a gender effect
+  \end{enumerate}
+  \item What is the distribution of the $F$ statistic under the null hypothesis for this test? 
+  \vspace{.5in}
+  \item What would you conclude about the effect of {\it Background}?
+  \begin{enumerate}
+  \item There is strong evidence of an interaction effect (p-value=$0.46$ from F-stat=$0.77$ on $2$ and $855$ df).
+  \item There is no evidence of a difference in the true mean scores across levels of background, after accounting for sex (p-value$<0.0001$ from F-stat=$301.3$ on $2$ and $857$ df).
+  \item There is no evidence of a difference in the true mean scores across levels of background, after accounting for sex (p-value$<0.0001$ from F-stat=$21.2$ on $1$ and $857$ df).
+  \item There is no evidence of a difference in the true mean scores across levels of background (p-value$<0.0001$ from F-stat=$301.3$ on $2$ and $857$ df).
+\end{enumerate}
+
+\newpage
+
+\item Use the following plots to assess the assumptions and conditions required for the ANOVA.
+{\fs
+<<diagMath, fig.width = 10, fig.height = 3, out.width = '\\linewidth'>>=
+par(mfrow = c(1,4))
+plot(fit.Math.add)
+@
+}
+\begin{multicols}
+The normality assumption...
+\begin{enumerate}
+\item Is not met because the horizontal line in the Scale-Location plot is not perfectly flat.
+\item Is not met because there are several points in the Residuals vs. Leverage plot that have a large Cook's Distance.
+\item Is met because the points in the Residuals vs. Fitted Values plot show approximately equal spread across all groups.
+\item Is met because the points in the normal Q-Q plot lie on the diagonal line.
+\end{enumerate}
+
+The equal variance assumption...
+\begin{enumerate}
+\item Is not met because the horizontal line in the Scale-Location plot is not perfectly flat.
+\item Is not met because there are several points in the Residuals vs. Leverage plot that have a large Cook's Distance.
+\item Is met because the points in the Residuals vs. Fitted Values plot show approximately equal spread across all groups.
+\item Is met because the points in the normal Q-Q plot lie on the diagonal line.
+\end{enumerate}
+
+\end{multicols}
+
+\newpage
+
+\item Use the output below to find the estimated means for each combination of background and gender. 
+
+{\fs
+<<outputMath>>=
+summary(fit.Math.add)
+@
+}
+\vspace{1.6in}
+
+\item Which combination of {\it Background} and {\it Sex} had the highest mean score? 
+\vspace{1in}
+
+
+\newpage
+
+\footnotesize
+
+
+\item The ``warpbreak'' data(manipulated below) gives the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn. The tension refers to the tension of the loom, set at low, medium, or high.
+
+<<proc, echo=TRUE, message=FALSE, out.width="0.5\\linewidth">>=
+require(multcomp)
+tension <- factor(warpbreaks$tension, levels=c("H", "M", "L"))
+amod <- aov(warpbreaks$breaks ~ tension)
+ps <- glht(amod, linfct = mcp(tension = "Tukey"))
+confint(ps)
+plot(confint(ps))
+@
+
+Choose the correct interpretation of the confidence interval(s) above.
+\begin{enumerate}
+\item We are $95\%$ confident that the true difference in mean breaks between those yarns at a low tension and those yarns at a high tension is between $24.282$ and $5.163$ breaks. 
+\item We are $95\%$ confident that the high group has more breaks than the low group.
+\item We are $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\item We are more than $95\%$ confident that all of the intervals above contain their respective true differences in mean breaks.
+\end{enumerate}
+
+\item Based on the output and plot above, which groups (if any) are found to be significantly different?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,115 @@
+---
+title: "Testing Mock Jury"
+output: pdf_document
+date: "Wednesday, January 14, 2015"
+---
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE, 
+               message = FALSE, 
+               warning = FALSE, 
+               tidy = FALSE, 
+               fig.align = "center", 
+               fig.width = 5, 
+               fig.height = 4, 
+               fig.pos = "H", 
+               cache = F)
+set.seed(19)
+```
+
+## Comparing the Observed Mock Jury Data
+
+```{r data}
+library(heplots)
+library(dplyr)
+library(mosaic)
+data(MockJury)
+m1 <- MockJury %>% 
+  select(Attr, Years) %>% 
+  filter(Attr != "Beautiful") %>% 
+  droplevels()
+```
+
+```{r beanplot}
+library(beanplot)
+par(mfrow = c(1,1))
+beanplot(Years ~ Attr, data = m1, log = "", col = "bisque", method = "jitter", ylab = "Years")
+```
+
+## Looking at the Data
+
+```{r print-data}
+# knitr::kable(rbind(head(m1), tail(m1)), format = "markdown")
+```
+|   |Attr         |Years |
+|:--|:------------|:-----|
+|1  |Unattractive |1  |
+|2  |Unattractive |4  |
+|3  |Unattractive |3  |
+|4  |Unattractive |2  |
+|5  |Unattractive |8  |
+|6  |Unattractive |8  |
+|...|...          |...|
+|70 |Average      |3  |
+|71 |Average      |2  |
+|72 |Average      |7  |
+|73 |Average      |6  |
+|74 |Average      |12 |
+|75 |Average      |8  |
+
+## Permuting the Data
+
+```{r permute-data}
+m1$perm_Attr <- shuffle(m1$Attr)
+# knitr::kable(rbind(head(m1), tail(m1)), format = "markdown")
+```
+
+|   |Attr         | Years|perm_Attr    |
+|:--|:------------|:-----|:------------|
+|1  |Unattractive |     1|Average      |
+|2  |Unattractive |     4|Unattractive |
+|3  |Unattractive |     3|Unattractive |
+|4  |Unattractive |     2|Average      |
+|5  |Unattractive |     8|Unattractive |
+|6  |Unattractive |     8|Average      |
+|...|...          |...   | ...         |
+|70 |Average      |     3|Unattractive |
+|71 |Average      |     2|Average      |
+|72 |Average      |     7|Average      |
+|73 |Average      |     6|Average      |
+|74 |Average      |    12|Unattractive |
+|75 |Average      |     8|Unattractive |
+
+## Comparing Averages
+
+In the observed data, the unattractive women are given sentences that are `r round(diffmean(Years ~ Attr, data = m1), 2)` years longer than the unattractive women.
+
+In the permuted data, the difference is only `r round(diffmean(Years ~ perm_Attr, data = m1), 2)` years.
+
+## Null Distribution of Sentence Lengths
+
+```{r null-distn, fig.width=5.5}
+B <- 500
+null <- rep(NA, B)
+for(i in 1:B) {
+  null[i] <- diffmean(Years ~ shuffle(Attr), data = m1)
+}
+hist(null, xlab = "Difference in Sentence Lengths", main = "Null Distribution of Sentence Lengths")
+```
+
+```{r p-value, fig.width=5.5}
+hist(null, xlab = "Difference in Sentence Lengths", main = "Comparing Observed Difference to Null Distribution")
+abline(v = 1.84, col = "red", lwd = 3)
+```
+
+
+
+
+
+
+
+
+
+
+

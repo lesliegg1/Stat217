@@ -1,0 +1,83 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 16} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item In a study of the television viewing habits of children, a developmental psychologist selects a random sample of 100 first grade boys and 200 first grade girls. Each child is asked which of the following TV programs they like best: The Lone Ranger, Sesame Street, or The Simpsons. Results are shown in the contingency table below.
+
+\begin{table} [H]
+\begin{tabular}{rrrrr}
+& Lone Ranger & Sesame Street & The Simpsons & Total \\
+Boys & 50 & 30 & 20 & 100 \\
+Girls & 50 & 80 & 70 & 200 \\
+Total & 100 & 110 & 90 & 300 
+
+\end{tabular}
+\end{table}
+
+\item Will you use a chi-squared test of homogeneity or independence?
+\vspace{0.25in}
+
+\item State the hypotheses to be tested.
+\vspace{1in}
+
+\item Make a table of expected counts.
+\vspace{1.8in}
+
+\item Compare the table of expected counts to the table of observed counts. Do you think you will find evidence in favor of the alternative hypothesis? Briefly explain.
+\vspace{1in}
+
+\item Calculate the chi squared test statistic.
+\vspace{1in}
+
+\item What distribution does the test statistic follow under the null hypothesis?
+\vspace{0.25in}
+
+\item Below is a picture of the distribution you named above. Draw a vertical line at the test statistic.
+
+<<chi, echo=TRUE, out.width="0.5\\linewidth">>=
+curve(dchisq(x,2),xlim=c(0,25))
+@
+
+
+\item Based on the picture above, estimate the p-value.
+\vspace{0.25in}
+
+\item Write a conclusion in the context of the problem.
+
+
+\end{enumerate}
+
+
+
+\end{document}

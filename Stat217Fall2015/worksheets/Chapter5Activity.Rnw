@@ -1,0 +1,199 @@
+\documentclass[12pt]{article}
+
+  %% LaTeX margin settings:
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage[margin=.5in]{geometry}
+\usepackage{longtable}
+\usepackage{graphicx, multicol}
+\setlength\parindent{0pt}
+
+\begin{document}
+\large
+\begin{center}
+{\Large \bf  Chapter 5 Activity}\\
+217
+\end{center}
+
+\small
+<<setup, include=FALSE, cache=FALSE, echo=FALSE, results='hide'>>=
+set.seed = 1230
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize', tidy.opts=list(width.cutoff=70), tidy=TRUE)
+options(replace.assign=TRUE,width=80, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+@
+\noindent In this activity, we will be looking at two different datasets. The first is from a study at Upper Flat Creek study area in the University of Idaho Experimental Forest. A random sample of 336 trees were selected from the forest, with measurements recorded on Douglas Fir, Grand Fir, Western Red Cedar, and Western Larch trees. We will explore the relationship between tree height and tree diameter.\\
+
+The second is from mark/recapture data on the Kootenai river in Northwestern Montana. Each year scientists use mark/recapture methods to track the population of various trout species downstream of Libby Dam. We will explore the relationship between annual outflow from the dam (measured in hundreds of thousands of cubic feet) and rainbow trout population.\\
+
+{\bf The Tree Data}
+
+<<1, message=FALSE, warning=FALSE>>=
+require(spuRs)
+data(ufc)
+@
+
+
+<<2, message=FALSE, warning=FALSE, echo=FALSE>>=
+require(gdata)
+require(dplyr)
+require(reshape2)
+require(ggplot2)
+require(xtable)
+recruitAbundLength.fwp <- read.xls("/Users/Claire/Desktop/Writing Project/Data Sets/KootenaiRiverRecruitmentAbundanceAndLengthAnalysis.xls", sheet = 5, head = T)
+colnames(recruitAbundLength.fwp) <- c("section", "year", "date", "sec.length", "pop.tot", "popL250", 
+                                      "popL150", "popG250", "popG325", "p1.catch", "p1.catchL150", 
+                                      "p1.catchL250", "p1.catchG250", "p1.catchG350", "catch.tot1000",
+                                      "catchL150.1000", "catchL250.1000", "catchG250.1000", "catchG325.1000",
+                                      "mean.lenG250", "mean.lenG325", "cond.num", "condL150", "condL250",
+                                      "condG250", "condG325", "bio.tot", "bioL150", "bioL250", "bioG250",
+                                      "bioG325", "Qchange.hour", "Qchange.hourFall", "Qchange.hourSpr",
+                                      "Qchange.hourSumr", "Qchange.hourWinter", "annualQ.out", "fallQ.out",
+                                      "sprQ.out", "sumQ.out", "winterQ.out", "elev.min", "elev.avg",
+                                      "elev.max", "elevFall.avg", "elevSpr.avg", "elevSum.avg", "elevWinter.avg",
+                                      "flow.in", "spill", "hydro.depart", "absHydro.depart", "ssHydro.depart",
+                                      "absSSHydro.depart", "inflow.dd", "fallInflow.dd", "sprInflow.dd",
+                                      "sumInflow.dd", "winterInflow.dd", "TU", "fallTU", "springTU",
+                                      "summerTU", "winterTU", "res.time", "res.timeFall", "res.timeSpr",
+                                      "res.timeSum", "res.timeWinter", "hourQchange", "fall.hourQchange",
+                                      "spr.hourQchange", "sum.hourQchange", "winter.hourQchange", "an.hourQout",
+                                      "fall.Qout", "spr.Qout", "sum.Qout", "winter.Qout", "elev.min", "elev.avg",
+                                      "elev.max", "fall.elevAvg", "spr.elevAvg", "sum.elevAvg", "winter.elevAve", 
+                                      "lagQin", "lag.spill", "lag.hydroDep", "lag.absHydroDep", "lag.sprSumHydroDep",
+                                      "lag.absSprSumHydroDep", "lagIn.dd", "lagFallIn.dd", "lagSprIn.dd", 
+                                      "lagSumIn.dd", "lagWinterIn.dd", "lag.tu", "lagFall.tu", "lagSpr.tu", "lagSum.tu", 
+                                      "lagWinter.tu")
+@
+
+<<15, out.width = '.5\\linewidth'>>=
+plot(height.m ~ dbh.cm, data = ufc)
+@
+\begin{enumerate}
+\item 
+The relationship in the plot above is positive, moderately strong with some curvature, and increasing variability as the diameter increases. There do not appear to be groups in the data set, but since this contains four different types of trees, we would want to look at a scatterplot split by group. Of particular interest is the observation with a diameter around 58 cm and a eight of less than 5 m. This tree may be an outlier. We can look at the correlation with and without it.\\
+
+<<3>>=
+cor(ufc$dbh.cm, ufc$height.m)
+cor(ufc$dbh.cm[-168], ufc$height.m[-168])
+@
+
+The correlation increases slightly when we exclude this outlier, but the change is relatively minor.\\
+
+{\bf The Trout Data}
+<<4, out.width = '.5\\linewidth'>>=
+fish<- subset(recruitAbundLength.fwp, section == "FP") 
+fish2 <- fish[, c(6, 37)]
+fish2$annualQ.out <- fish2$annualQ.out/100
+cor(fish2)
+plot(popL250 ~ annualQ.out, data = fish2)
+@
+
+Describe the relationship you seen the scatterplot of the fish data above.
+\vspace{1.5in}
+
+\item {\bf Describing the Relationship with a Regression Model:}\\
+
+{\bf The Tree Model}\\
+
+<<5>>=
+tree.lm <- lm(height.m ~ dbh.cm, data = ufc)
+summary(tree.lm)
+@
+
+Our model estimates that a one centimeter increase in tree diameter is associated with {\bf an average increase} of 0.324 meters. Our model also estimates that a tree with diameter equal to zero has {\bf an average} height of 12 meters. However, the interpretation of the y-intercept is somewhat nonsensical, as there are no trees with diameter equal to zero.\\
+
+{\bf The Trout Model}\\
+
+<<6>>=
+fish.lm <- lm(popL250 ~ annualQ.out, data = fish2)
+summary(fish.lm)
+@
+
+Give an interpretation of the coefficients in the trout model.\\
+\vspace{2in}
+
+\item {\bf Prediction:}\\
+{\bf The Tree Model:} It is predicted that {\bf on average} a tree with a diameter of 24 cm has height of 23.8 m. \\
+
+{\bf The Trout Model:} Give the predicted rainbow trout population for a year in which 3,000,000 cubic feet of water were release from the dam (remember how the outflow is measured in the data). \\
+\vspace{1in}
+
+
+<<7, results='hide', echo=FALSE>>=
+cor(ufc$dbh.cm, ufc$height.m)
+cor(ufc$dbh.cm[-168], ufc$height.m[-168])
+@
+
+<<8, out.width = '.5\\linewidth', echo=FALSE, results='hide', fig.show='hide'>>=
+fish<- subset(recruitAbundLength.fwp, section == "FP") 
+fish2 <- fish[, c(6, 37)]
+fish2$annualQ.out <- fish2$annualQ.out/100
+cor(fish2)
+plot(popL250 ~ annualQ.out, data = fish2)
+@
+
+\item {\bf Finding and Interpreting $R^2$:}\\
+{\bf Tree Model}\\
+In the R output below, we can see that the $R^2$ for our tree model is .5928. That means that 59.28$\%$ of the variability in tree heights is explained by tree diameters in this population of Idaho State University experimental forest trees.\\
+<<9>>=
+tree.lm <- lm(height.m ~ dbh.cm, data = ufc)
+summary(tree.lm)
+@
+
+{\bf Trout Model}\\
+Give the $R^2$ for the trout model and interpret it in the context of the problem.\\
+\vspace{1in}
+<<10>>=
+fish.lm <- lm(popL250 ~ annualQ.out, data = fish2)
+summary(fish.lm)
+@
+
+\item {\bf Assessing Assumptions:}\\
+
+{\bf Tree Model}\\
+\begin{enumerate}
+\item Quantitative variables: Both tree height and tree diameter are quantitative.
+\item Independence: The documentation of these data state that the sample was random. Therefore, our observations must be independent.
+\item Linearity of relationship: 
+\begin{multicols}{2}
+<<11, out.width = '\\linewidth', echo=FALSE>>=
+plot(height.m ~ dbh.cm, data = ufc)
+plot(tree.lm, which = 1)
+@
+\end{multicols}
+We can see from the scatterplot that the relationship between tree height and tree diameter appears reasonably linear. From the Residuals vs. Fitted plot we observe a slight curvature. If we were looking adding terms to our model to account for curvature, I would want to explore this. But right now you should just make note of it and move on.
+\item Constant variance: We can see from the Residuals vs. Fitted plot (above) that the spread is fairly constant the range of fitted values. It may appear as thought larger fitted values have somewhat less spread, but I think this is more due to there being fewer observations in that range.
+\item Normality of residuals: The Normal Q-Q plot looks just fine. I see nothing to be concerned about.
+<<12, echo=F, out.width='.4\\linewidth'>>=
+plot(tree.lm, which = 2)
+@
+\item No influential points: We can see from the Scale-Location plot that these data contain no influential points. \\
+<<13, echo=F, out.width='.4\\linewidth'>>=
+plot(tree.lm, which = 5)
+@
+\end{enumerate}
+
+{\bf Trout Model}\\
+<<14, fig.width=10, fig.height=3>>=
+par(mfrow = c(1,4))
+plot(fish.lm)
+@
+
+\begin{enumerate}
+\item Quantitative variables condition:\\
+\vspace{1.5in}
+\item Independence of observations:\\
+\vspace{1.5in}
+\item Linearity of relationship:\\
+\vspace{1.5in}
+\item Equal (constant) variance:\\
+\vspace{1.5in}
+\item Normality of residuals:\\
+\vspace{1.5in}
+\item No influential points:\\
+\vspace{1in}
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

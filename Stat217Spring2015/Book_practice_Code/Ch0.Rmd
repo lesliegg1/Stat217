@@ -1,0 +1,47 @@
+---
+title: "IntroR"
+output: word_document
+---
+
+Type 3+4
+```{r}
+3+4
+(-3+5+7+8)/4
+c(-3,5,7,8)
+variable1 <- c(-3,5,7,8)
+mean(variable1)
+sd(variable1)
+treadmill<-read.csv("http://dl.dropboxusercontent.com/u/77307195/treadmill.csv",header=T)
+head(treadmill)
+tail(treadmill)
+require(mosaic)
+treadmill$RunTime
+mean(treadmill$RunTime)
+sd(treadmill$RunTime)
+favstats(treadmill$RunTime)
+hist(treadmill$RunTime)
+hist(treadmill$RunTime,labels=T)
+boxplot(treadmill$RunTime)
+IQR<-11.27-9.78
+IQR
+11.27+1.5*IQR
+
+boxplot(treadmill$RunTime,ylab="1.5 Mile Run Time (minutes)",main="Boxplot of the Run Times of n=31 participants")
+
+
+```
+Chapter 0 Practice Problems
+```{r}
+treadmill<-read.csv("http://dl.dropboxusercontent.com/u/77307195/treadmill.csv",header=T)
+favstats(treadmill$Age)
+favstats(treadmill$BodyWeight)
+hist(treadmill$Age)
+boxplot(treadmill$Age)
+treadmill$BWlb<-2.205*treadmill$BodyWeight
+par(mfrow=c(2,2)) #Code to allow multiple graphs to be placed on a single graph in different panels 
+hist(treadmill$BodyWeight,main="Body Weight Histogram (kgs)")
+hist(treadmill$BWlb,,main="Body Weight Histogram (lbs)")
+boxplot(treadmill$BodyWeight,main="Body Weight Boxplot (kgs)")
+boxplot(treadmill$BWlb,main="Body Weight Boxplot (kgs)")
+
+```

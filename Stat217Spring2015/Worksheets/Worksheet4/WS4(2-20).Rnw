@@ -1,0 +1,97 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Worksheet 4 Two-Way Anova Tests 2-20} \\
+\end{center}
+
+
+
+{\footnotesize
+Suppose a statistics teacher gave an essay final to his class. He randomly divides the classes in half such that half the class writes the final with a blue-book and half with notebook computers. In addition the students are partitioned into three groups, no typing ability, some typing ability, and highly skilled at typing. Answers written in blue-books will be transcribed to word processors and scoring will be done blindly. Not with a blindfold, but the instructor will not know the method or skill level of the student when scoring the final. The dependent measure will be the score on the essay part of the final exam.\\
+
+Use the following R output to answer these questions.}
+
+<<an, echo=FALSE, message=FALSE>>=
+ability <- c(rep("none",3), rep("some",3), rep("lots",3), rep("none",3), rep("some",3), rep("lots",3))
+method <- c(rep("bluebook",9),rep("computer",9))
+y <- c(23, 32, 25, 29, 30, 34, 23, 23, 24,32,26,26,34,41,35,23,26,25)
+data <- data.frame(cbind(ability,method,y))
+lm.int <- lm(y~ability*method)
+require(car)
+anova(lm.int)
+@
+
+
+\begin{enumerate}
+\item First, test for an interaction.
+\begin{enumerate}
+\item Write the hypotheses to test for an interaction in this example.
+\vspace{1in}
+\item Report the test statistic and the distribution it follows under the null hypothesis.
+\vspace{0.75in}
+\item Report the p-value and your decision (Hint: Decision=reject or fail to reject).
+\vspace{0.5in}
+\item What is your conclusion?
+\vspace{1in}
+\item Would you choose an additive model or an interaction model for inference?
+\vspace{0.5in}
+\end{enumerate}
+
+\newpage
+
+\item Now test for the effect of \verb+method+.
+
+<<Anova, echo=TRUE>>=
+lm.add <- lm(y~ability+method)
+Anova(lm.add)
+@
+
+
+\begin{enumerate}
+\item Write the hypotheses to test for the effect of \verb+method+.
+\vspace{1in}
+\item Report the test statistic and the distribution it follows under the null hypothesis.
+\vspace{0.75in}
+\item Report the p-value and your decision.
+\vspace{0.5in}
+\item What is your conclusion?
+\end{enumerate}
+
+\end{enumerate}
+
+
+
+\end{document}

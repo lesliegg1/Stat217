@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: MLR Model and Assumptions (in class 11/9 and 11/13)} \\
+\end{center}
+
+
+
+<<mlr, echo=FALSE>>=
+setwd("~/0_webdev/leslie/Stat217/mlrintro11.9")
+snow <- read.csv("snotel_s.csv", head=T)
+@
+
+<<modelfit, echo=FALSE, size='footnotesize'>>=
+lm.snow <- lm(Snow.Depth~Max.Temp+Min.Temp+Elevation, data=snow)
+#summary(lm.snow)
+@
+
+<<effect, echo=FALSE, out.width="\\linewidth", fig.width=12>>=
+#pairs plot
+plot(snow[,3:6])
+@
+
+<<res, echo=FALSE, fig.width=20>>=
+par(mfrow=c(1,4))
+plot(lm.snow)
+@
+
+\newpage
+
+<<snowmodels, echo=TRUE, size='footnotesize'>>=
+lm.snow <- lm(Snow.Depth~Max.Temp+Min.Temp+Elevation, data=snow)
+summary(lm.snow)
+lm.snow2 <- lm(Snow.Depth~Elevation, data=snow)
+summary(lm.snow2)
+@
+
+
+
+%\begin{enumerate}
+
+%\newpage
+
+%\item The following dataset contains the SAT verbal and SAT math scores of $1000$ college graduates, as well as there college GPA. 
+
+<<sat, echo=FALSE, message=FALSE, fig.width=14, include=FALSE, eval=FALSE>>=
+require(openintro)
+data(satGPA)
+plot(satGPA[,c(2,3,6)])
+@
+
+<<satfit, echo=FALSE, size='footnotesize', fig.width=20,include=FALSE, eval=FALSE>>=
+lm.sat <- lm(FYGPA~SATV+SATM, data=satGPA)
+par(mfrow=c(1,4))
+plot(lm.sat)
+#summary(lm.sat)
+@
+
+
+
+
+%\end{enumerate}
+
+
+
+
+
+\end{document}

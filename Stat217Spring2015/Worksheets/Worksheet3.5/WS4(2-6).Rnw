@@ -1,0 +1,92 @@
+
+
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: Worksheet 4\\
+\end{flushleft}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(out.width='.8\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+Wal-mart executives want to conduct a study to see if the stress levels of their employees vary by age. The employees were classified into age groups (less than $40$, $40$ to $55$, and above $55$) and were then asked a series of questions to evaluate their stress level on a daily basis. The response was a 'stress score'. This was a nationwide survey conducted across all Wal-Marts in the United States. The employees in the study were randomly selected. Identify at least three possible violations of the independence assumption.
+\vspace{-0.4in}
+\begin{enumerate}
+\item 
+\vspace{.5in}
+\item
+\vspace{0.5in}
+\item 
+\vspace{0.6in}
+
+\end{enumerate}
+
+<<slkdf, echo=FALSE, fig.width=14, out.width="0.6\\linewidth", message=FALSE>>=
+par(mfrow=c(1,2))
+sim.heavy <- rt(1000,5)
+qqnorm(sim.heavy, main="Heavy Tails")
+qqline(sim.heavy)
+sim <- rnorm(1000,0,1)
+sim.light <- subset(sim, sim < 1.8 & sim>-1.8)
+qqnorm(sim.light, main="Short Tails")
+qqline(sim.light)
+@
+
+<<var, echo=FALSE, fig.width=10, out.width="0.7\\linewidth", message=FALSE>>=
+set.seed(103)
+data <- rnorm(100, 0, c(5, 20, 85, 100))
+groups <- rep(c("group1", "group2", "group3", "group4"), 25)
+lm.fit <- lm(data~groups)
+par(mfrow=c(2,2))
+plot(lm.fit, main="An Example of Unequal Variance")
+@
+
+<<handi, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE>>=
+require(Sleuth3)
+handicap.data <- case0601
+lm.hand <- lm(Score~Handicap, data=handicap.data)
+par(mfrow=c(2,2))
+plot(lm.hand)
+anova(lm.hand)
+@
+
+\begin{enumerate}
+\item The above residual plots are from the handicap data. Assess the assumptions for a one-way ANOVA test.
+\vspace{3in}
+
+\item Given the ANOVA table, write a conclusion.
+\end{enumerate}
+
+
+
+
+\end{document}

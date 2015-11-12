@@ -1,0 +1,76 @@
+
+
+\documentclass{article}
+%% LaTeX margin settings:
+  \setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+{\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='large')
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72")
+@
+
+\begin{flushleft} 
+STAT 217: Warpbreaks In-Class 2-4\\
+\end{flushleft}
+
+This data set gives the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn. The loom is set at a tension of low, medium or high. $54$ measurements are taken. The researcher wants to know if the machine tension is related to the number of warp breaks.
+
+<<oe, echo=FALSE, message=FALSE>>=
+  require(multcomp)
+tension <- factor(warpbreaks$tension, levels=c("H", "M", "L"))
+breaks <- warpbreaks$breaks
+lm.model <- lm(breaks~tension)
+@
+
+<<anova, echo=TRUE>>=
+anova(lm.model)
+@
+
+<<cellmeans, echo=TRUE>>=
+lm.cellmeans <- lm(breaks~tension-1)
+summary(lm.cellmeans)
+@
+
+\newpage
+
+<<refcoded, echo=TRUE>>=
+lm.refcoded <- lm(breaks~tension)
+summary(lm.refcoded)
+@
+
+<<model, echo=FALSE, message=FALSE>>=
+require(Sleuth3)
+handicap.data <- case0601
+lm.handicap <- lm(Score~Handicap, data=handicap.data)
+summary(lm.handicap)
+@
+
+
+
+  
+\end{document}

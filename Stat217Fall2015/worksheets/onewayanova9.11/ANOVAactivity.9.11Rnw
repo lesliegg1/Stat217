@@ -1,0 +1,125 @@
+\documentclass[12pt]{article}
+
+  %% LaTeX margin settings:
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage[margin=.5in]{geometry}
+\setlength\parindent{0pt}
+
+\begin{document}
+\large
+\begin{center}
+{\Large \bf  One-Way ANOVA Activity}\\
+{{Stat 217} \vspace{.2in}}
+\end{center}
+\small
+<<setup, include=FALSE, cache=FALSE, echo=FALSE, results='hide'>>=
+set.seed = 1230
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize', tidy.opts=list(width.cutoff=70), tidy=TRUE)
+options(replace.assign=TRUE,width=80, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+@
+
+
+In an agricultural experiment, 72 plots of land were randomly assigned to be treated with one of six different insecticides.The next day, the number of insects in each plot were counted.  We will test to see if there is a difference in the number of insects for at least one of the sprays. Since there is a quantitative response variable and a single categorical explanatory variable, a One-Way ANOVA is an appropriate procedure for these data.\\
+
+
+<<insectdata, warning=FALSE, message=FALSE, out.width='.5\\linewidth', fig.align='center'>>=
+require(datasets)
+require(ggplot2)
+data(InsectSprays)
+require(beanplot)
+beanplot(count ~ spray, data = InsectSprays, method="jitter",log="",col=7)
+require(mosaic)
+summary(InsectSprays)
+@
+
+
+\begin{enumerate}
+\item Describe what you see in the beanplot \\
+\vspace{0.75in}
+
+\item What is $n_1$? $n_5$? $n_3$?\\
+\vspace{0.2in}
+
+\item What is $y_{2,1}$ approximately?\\
+
+
+\item The Insect Sprays Hypotheses:\\
+
+Using cell means coding, what are the hypotheses?
+\vspace{0.75in}
+
+Using reference coding, what are the hypotheses?:
+\vspace{0.75in}
+
+
+\item Is the model fit below a reference coded model or a cell means model?
+\vspace{0.2in}
+
+Write out the reference coded model. Use correct notation. \\ 
+\vspace{1in}
+
+<<insectmodel>>=
+lm1 <- lm(count ~ spray, data = InsectSprays)
+anova(lm1)
+@
+
+\item Using the ANOVA table above, report the test statistic and the p-value.
+\vspace{0.5in}
+
+\item Below is a picture of an F distribution with $5$ and $66$ degrees of freedom. Draw a vertical line at the test statistic on the plot below and shade in the area that is the p-value.
+
+<<df, echo=FALSE, fig.width=10, out.width="0.5\\linewidth">>=
+x<-seq(1,40,by=0.01)
+plot(x,df(x, 5,66))
+@
+
+\item What distribution does the test statistic follow under the null hypothesis?
+\vspace{0.5in}
+
+
+\item What is your decision (reject or fail to reject)?
+\vspace{0.5in}
+
+\item Using the ANOVA table provided above, write a conclusion to your hypotheses(evidence sentence only).
+\vspace{1in}
+
+\item Would you choose a single mean model or a separate means model? Why?
+\vspace{0.75in}
+
+
+\item The model summary output is shown below.
+
+<<r actmodel>>=
+summary(lm1)
+@
+\begin{enumerate}
+\item What is the reference group?  \\
+
+\item What Greek letter does the sprayC row estimate?  \\
+
+\item What is the average number of insects in the sprayF group?\\
+
+\item What is the average number of insects in the sprayA group? The sprayE group?
+\end{enumerate}
+
+
+\item For this example, did we conduct a parametric test or a non-parametric test?
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+

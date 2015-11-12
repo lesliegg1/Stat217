@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Handout 11-19} \\
+\end{center}
+
+To orient themselves with respect to their surroundings, some bats use echolocation. Such a trait has evolved in very few animal species, perhaps because of the high energy costs involved in producing pulses. Zoologists collected data on in-flight energy expenditure (watts) and body mass (g) from $20$ energy studies on three types of flying vertebrates: echolocating bats, non-echolocating bats, and non-echolocating birds.
+
+<<readdat,echo=FALSE>>=
+bats <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz26/BatEcholocation.csv",head=T)
+@
+
+<<addmodel, echo=TRUE>>=
+lm.bats.1 <- lm(ENERGY~TYPE+MASS,data=bats)
+summary(lm.bats.1)
+@
+
+\newpage
+
+<<intmodel,echo=TRUE>>=
+lm.bats.2 <- lm(ENERGY~TYPE+MASS+MASS*TYPE,data=bats)
+summary(lm.bats.2)
+@
+
+\vspace{3in}
+
+
+<<anova, echo=TRUE>>=
+anova(lm.bats.2)
+@
+
+
+
+\end{document}

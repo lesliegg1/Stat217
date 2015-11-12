@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+
+  %% LaTeX margin settings:
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{graphicx, multicol}
+\usepackage[margin=.5in]{geometry}
+\usepackage{longtable}
+\setlength{\parindent}{0pt}
+\usepackage{titlesec}
+
+\begin{document}
+\large
+\begin{center}
+{\Large \bf Stat 217 Project 2}\\
+Due Wednesday September 23rd In Class
+\end{center}
+\small
+{\bf You must work in groups of 3 to 4. There will be a point deduction if you do not work in a group.}\\
+
+<<setup, include=FALSE, cache=FALSE, echo=FALSE, results='hide'>>=
+set.seed = 1230
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize', tidy.opts=list(width.cutoff=70), tidy=TRUE)
+options(replace.assign=TRUE,width=80, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+muffleError <- function(x,options) {}
+knit_hooks$set(error=muffleError)
+@
+
+<<data, echo=FALSE, eval=FALSE>>=
+mice <- read.csv("/Users/Claire/Desktop/Teaching/217/Project 2/mice.csv")
+@
+
+For this project we will look at data from a study in which researchers fed mice different doses of red dye number 40 and recorded the time until death in weeks (reference: Journal Natl. Cancer Inst., Vol. 66, p 197-212). The dose variable has four levels: control, low, medium, and high. We are interested in whether there is a difference among the groups in the average number of weeks until death and, if so, which groups differ from one another. For this project, we will use a significance level of 0.05. Note that the researchers randomized the mice into treatment groups and that lab mice are bred to be as nearly genetically identical as possible. \\
+
+Summarize your results in a written report following the {\bf Project Writing Guidelines} posted on D2L. The {\bf Summary of Statistical Findings} section of your report should include the following:
+\begin{itemize}
+\item A decision sentence stating whether you would reject or fail to reject the null at a significance level of $0.05$.
+\item {\bf One} evidence sentence reporting the results of the One Way Analysis of Variance.
+\item {\bf Four} estimate sentences - one sentence interpreting each of the coefficient estimates you get from R.
+\item A confidence interval and associated interpretation for any pairwise differences your Tukey's HSD analysis detects as being different from 0 (one sentence for each difference that is significant).
+\end{itemize}
+
+Begin by downloading the data file from D2L and saving it on your computer. Then read it in to R. The following code should get you started:
+
+<<code, eval=FALSE>>=
+require(mosaic)
+require(beanplot)
+require(multcomp)
+
+mice <- read.csv("...") ## insert the path for your saved mice.csv file
+head(mice) ## shows you the first 6 lines of your mice data, so you can see how it is organized
+
+favstats(weeks ~ dose, data = mice)
+beanplot(weeks ~ dose, data = mice, method = "jitter", log ="", col = 7)
+
+mice.lm <- lm(weeks ~ dose, data = mice)
+summary(mice.lm)
+anova(mice.lm)
+par(mfrow = c(2,2)) ## arranges the diagnostic plots in a 2x2 grid
+plot(mice.lm)
+
+mice.lm2 <- glht(mice.lm, linfct = mcp(dose = "Tukey"))
+confint(mice.lm2, level = 0.95)
+par(mfrow = c(1,1)) ## makes only one plot appear at a time
+old.par <- par(mai = c(1.5, 2.5, 1, 1)) ## makes room on the plot for the group names
+plot(mice.lm2)
+cld(mice.lm2)
+@
+\end{document}

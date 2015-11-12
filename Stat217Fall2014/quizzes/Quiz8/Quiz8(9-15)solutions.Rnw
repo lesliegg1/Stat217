@@ -1,0 +1,113 @@
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: QUIZ 8\\
+\end{flushleft}
+
+For each of the following, clearly write:
+
+\begin{itemize}
+\item Question of interest
+\item Summary of statistical findings (based on output given)
+\item Scope of inference (never assume you have a R.S. or R.A. unless it is specifically stated)
+\end{itemize}
+
+\begin{enumerate}
+
+\item In the 1980s, biologists Peter and Rosemary Grant caught and measured all the birds from more than 20 generations of finches on the Galapagos island of Daphne Major. In one of those years, 1977, a severe drought caused vegetation to wither, and the only remaining food source was a large, tough seed, which the finches ordinarily ignored. Were the birds with larger and stronger beaks for opening these tough seeds more likely to survive that year, and did they tend to pass this characteristic to their offspring? The data are beak depths (height of the beak at its base) of 89 finches caught the year before the drought (1976) and 89 finches captured the year after the drought (1978).
+
+<<finches, echo=FALSE, message=FALSE>>=
+require(Sleuth3)
+attach(case0201)
+yearFactor <- factor(Year) # Convert the numerical variable Year into a factor
+# with 2 levels. 1976 is "group 1" (it comes first alphanumerically)
+t.test(Depth ~ yearFactor, var.equal=TRUE) # 2-sample t-test; 2-sided by default
+@
+
+{\bf Question} {\it Does the evidence suggest that the true mean beak depth in 1978 is longer than the true mean beak depth in 1976?}
+
+{\bf Summary} {\it At a significance level of $0.05$, we reject the null hypothesis. There is strong evidence that the true mean beak depth in 1978 is longer than the true mean beak depth in 1976 (p-value$<0.0001$ from two-sample t-stat=$-4.583$ on $176$ df). }
+
+{\bf Scope of Inference} {\it Since birds were not randomly selected from a larger populatioin of birds on the island, inference does not extend beyond the $178$ birds studied. 
+
+Since birds were not randomly assigned beak depths, we cannot say that a longer beak caused them to survive the drought.}
+
+\item Susan Sound predicts that students will learn most effectively with a constant background sound, as opposed to an unpredictable sound or no sound at all. She randomly divides twenty-four students into three groups of eight. All students study a passage of text for 30 minutes. Those in group 1 study with background sound at a constant volume in the background. Those in group 2 study with noise that changes volume periodically. Those in group 3 study with no sound at all. After studying, all students take a 10 point multiple choice test over the material.
+
+<<susan, echo=FALSE>>=
+scores <- c(7,4,6,8,6,6,2,9,5,5,3,4,4,7,2,2,2,4,7,1,2,1,5,5)
+sound <- c(rep("constant",8), rep("random",8), rep("nosound",8))
+lm.fit <- lm(scores~sound)
+anova(lm.fit)
+@
+
+{\bf Question} {\it Does the evidence suggest there is at least one difference among the true mean test scores across types of background sound?}
+
+{\bf Summary} {\it At a significance level of $0.05$, we reject the null hypothesis. There is moderate evidence of at least one different among the true mean test scores across types of background sound (p-value$=0.045$ from F-stat=$3.59$ on $2$ and $21$ df). }
+
+{\bf Scope of Inference} {\it Since students were not randomly selected from all students, inference does not extend beyond the $24$ students in the study. 
+
+Since students were randomly assigned to a type of background noise, we can say that the type of background noise causes the students to score better or worse on the test.}
+
+\item In an industrial laboratory, under uniform conditions, $28$ randomly selected batches of electrical insulating fluid were subjected to constant voltages until the insulating property of the fluids broke down. Seven different voltage levels were randomly assigned to each of the batches and the measured reponses were the times until breakdown.
+
+<<voltages, echo=FALSE, message=FALSE>>=
+attach(case0802)
+logTime <- log(Time)
+myOneWay <- lm(logTime ~ factor(Voltage))
+anova(myOneWay) 
+@
+
+{\bf Question} {\it Does that evidence suggest that there is at least one difference among the true mean breakdown times of fluids across voltage levels? }
+
+{\bf Summary} {At a significance level of $0.05$, we reject the null hypothesis. There is strong evidence of at least one difference among the true mean breakdown times of fluids across voltage levels (p-value$<0.0001$ from F-stat=$13$ on $6$ and $69$ df).}
+
+{\bf Scope of Inference} {\it Since batches were randomly selected, inference extends to all batches of electrical insulating fluid in this industrial lab.
+
+Since batches were randomly assigned to voltage levels, we can inference that a change in voltage level causes a change in breakdown time of the fluids.}
+
+\item Educational researchers randomly assigned 28 ninth-year students in Australia to receive coordinate geometry training in one of two ways: a conventional way and a modified way. After the training, the students were asked to solve a coordinate geometry problem. The time to complete the problem was recorded, but five students in the “conventional” group did not complete the solution in the five minute alloted time.
+
+<<tests, echo=FALSE, message=FALSE>>=
+attach(case0402)
+#boxplot(Time ~ Treatment)
+median(Time[Treatment=="Conventional"])-median(Time[Treatment=="Modified"])
+t.test(Time ~ Treatment, var.equal=TRUE,
+            alternative="two.sided", conf.int=TRUE)
+@
+
+{\bf Question} {\it Does the evidence suggest that the true mean time to complete the problem when students receive the conventional training differs from the true mean time to complete the problem when students receive the modified training?}
+
+{\bf Summary} {\it There is strong evidence of a difference between the true mean time to complete the problem when students receive conventional training and the true mean time to complete the problem when students receive modified training (p-value$=0.0003699$ from two-sample t-stat=$4.09$ on $26$ df).}
+
+{\bf Scope of Inference}{\it Since students were not randomly selected, inference does not extend beyond the $28$ students in the study. Since students were randomly assigned to the type of training, we can infer that the type of training causes them to complete the problem faster or slower.}
+
+
+\end{enumerate}
+\end{document}

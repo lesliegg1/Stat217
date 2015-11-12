@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: MLR models and AIC (4-24)} \\
+\end{center}
+
+<<fev, echo=FALSE, message=FALSE, out.width="\\linewidth", fig.width=10>>=
+require(coneproj)
+data(FEV)
+FEV$sex<-factor(FEV$sex)
+levels(FEV$sex)<-c("Female","Male")
+FEV$smoke<-factor(FEV$smoke)
+levels(FEV$smoke)<-c("Nonsmoker","Smoker")
+require(car)
+scatterplot(log(FEV)~age|smoke,data=FEV,smooth=F,main="Plot of log(FEV) vs Age of children by smoking status")
+fm1<-lm(log(FEV)~height+age*smoke+sex,data=FEV)
+
+par(mfrow=c(1,4),oma=c(0,0,2,0))
+
+fm<-lm(FEV~height+age*smoke+sex,data=FEV)
+plot(fm,sub.caption="Diagnostics for FEV model (no log)")
+plot(fm1,sub.caption="Diagnostics for full FEV model")
+
+@
+
+<<anova, echo=FALSE>>=
+summary(fm1)
+anova(fm1)
+fm1R<-lm(log(FEV)~height+age+smoke+sex,data=FEV)
+summary(fm1R)
+
+AIC(fm1, fm1R)
+@
+
+
+
+\end{document}

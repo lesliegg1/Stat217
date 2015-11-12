@@ -1,0 +1,226 @@
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{flushleft} 
+STAT 217: Homework 1\\
+You may work in groups or on your own for this homework - your choice. If you work in a group, turn in one for your group.
+\end{flushleft}
+\begin{enumerate}
+\item {\it Data were collected to investigate differences in salaries between men and women university professors in America (Reference: Academe, Bulletin of the American Association of University Professors, year unknown). Men and women university professors from all over the country were randomly selected for the study. Specifically, they were interested in if men's salaries were higher than women's salaries. The units are thousands of dollars (\$1K) The questions on this quiz are based on these data. The observed difference in means was $\yb_{M} - \yb_{F} = 0.23182$ thousands of dollars (\$231.8).} 
+\begin{enumerate}
+\item Below are summary statistics and histograms for the two groups. Are the equal variance and distributional assumptions met to run a parametric test? 
+<<SalariesHist, echo = FALSE, message = FALSE, fig.height = 4, fig.width = 6, out.width = '.6\\linewidth'>>= 
+require(mosaic)
+salaries <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz4/salaries", header = T)
+favstats(Salary~Gender, data = salaries)
+histogram(~Salary|Gender, data = salaries, width = 2, col = "gray")
+@
+\begin{enumerate}
+  \item Yes, the histograms are similar in shape. 
+  \item No, the histograms are not similar in shape. 
+  \item Yes, the histograms are approximately unimodal and symmetric and have approximately equal spread. 
+  \item No, the histograms do not meet the nearly normal condition. 
+\end{enumerate}
+
+
+\item A test was run and the output is below. 
+<<TtestSalary, echo = FALSE, message = FALSE>>= 
+t.test(Salary~Gender, data = salaries, var.equal = T, alternative = "less")
+@
+Was the test parametric or non-parametric? Circle one.
+\vspace{0.1in}
+
+  \item What is the distribution of the test statistic under the null hypothesis: $\mu_F - \mu_M = 0$? 
+  \vspace{0.2in}
+  \item Sketch this distribution. Draw a vertical line at the test statistic and shade in the area that is your p-value. Write your p-value next to the picture.
+  \newpage
+  \item How would you answer the research question? 
+  \begin{enumerate}
+  \item There is strong evidence against the null hypothesis that there is no difference in the mean salaries paid to male and female professors at American Universities. Therefore, we conclude that based on these data male professors at these universities in America have higher average salaries as their female co-workers. 
+  \item We conclude that based on these data, male professors at these universities in America receive on average the same salaries than their female co-workers. 
+  \item There is no evidence of a difference in the mean salaries paid to male and female professors at American Universities. 
+    \item There is strong evidence against the null hypothesis that there is no difference in the mean salaries paid to male and female professors at American Universities (included in this study). Therefore, we conclude that based on these data, male professors at these universities in America receive on average the same salaries than their female co-workers.
+\end{enumerate}
+
+\item What is the scope of inference for this study?
+\begin{enumerate}
+\item Non-causal to the sample
+\item Since professors were randomly selected, inference extends to all professors worldwide. Since subjects were not randomly assigned to gender, we cannot infer a causal relationship between gender and salary.
+\item Professors were randomly selected from American universities, so inference extends all American university professors. Subjects were not randomly assigned to gender, so we cannot infer a causal relationship between gender and salary.
+\item Causal to the population
+\end{enumerate}
+
+\end{enumerate}
+
+\item In 2004, a random sample of 30 25-year-old permanent Bozeman residents was obtained. Each subject was asked to rate their political tendency on a scale of 1-10 (1 being very liberal and 10 being very conservative). Evey five years, they were asked again to re-rate their political tendency on the same scale. That is, ratings of political tendancy for each subject were recorded at three time points (25
+yrs, 30 yrs, and 35 yrs). Researchers are now interested in if the average political tendancy score is the same across the three age groups. Assess the independence assumption for this problem.
+\begin{enumerate}
+\item The independence assumption is met because the subjects were selected randomly.
+\item The independence assumption is met because it is a sample of Bozeman residents.
+\item The independence assumption is not met because the three responses given by one individual are likely to be more similar to each other than to responses given by other people in the sample.
+\item The independence assumption is not met because Bozeman is a college town.
+\end{enumerate}
+
+\item Forty subjects were recruited to participate in a clinical trial to assess the effectiveness of a new type of eye drop to alleviate dryness. The participants were randomly divided into four groups, and each of the groups were assigned to receive $1$, $2$, $3$, or $4$ eyedrops at regularly scheduled time intervals.  After two weeks participants were given questionnaire to assess dryness.  Reported in the table below are the standardized scores where higher scores indicate greater problems with dryness.
+
+
+<<eye, echo=FALSE>>=
+set.seed(100)
+drops <- read.csv("~/Documents/Stat217Spring2015/Homeworks/HW1/eyedrop.csv", head=F)
+drops$group <- c(rep("one",10), rep("two",10))
+names(drops) <- c("dryness","no","group")
+drops$no <- NULL
+dry.sim.3 <- round(rnorm(10, 5,2), digits=2)
+dry.sim.4 <- round(rnorm(10, 8, 3), digits=2)
+total <- matrix(c(c(dry.sim.3, dry.sim.4), c(rep("three",10),rep("four",10))), nrow=20, ncol=2, byrow=F)
+total <- as.data.frame(total)
+names(total) <- c("dryness", "group")
+drops <- rbind(drops,total)
+drops$group <- factor(drops$group, levels=c("one", "two", "three", "four"))
+drops$dryness <- as.numeric(drops$dryness)
+drops[15,1] <- 15.2
+test <- lm(dryness~group, data=drops)
+test2 <- lm(dryness~group-1,data=drops)
+@
+
+\begin{enumerate}
+\item Write the hypotheses to test whether reported eye dryness depends on the number of drops.
+\begin{enumerate}
+\item $H_0: \bar{x}_{one}=\bar{x}_{two}=\bar{x}_{three}=\bar{x}_{four}$ vs $H_A$: At least one difference in the true mean reported dryness scores among the four groups
+\item $H_0: \mu_{one}=\mu_{two}=\mu_{three}=\mu_{four}$ vs $H_A$: At least one difference in the true mean reported dryness scores among the four groups
+\item $H_0:\mu_{one}=\mu_{two}=\mu_{three}=\mu_{four}$ vs $H_A$: At least one difference in the average reported dryness scores among the four groups in our sample
+\item $H_0: \mu_{one}=\mu_{two}=\mu_{three}=\mu_{four}$ vs $H_A$: $\mu_{one} \neq \mu_{two} \neq \mu_{three} \neq \mu_{four}$
+\end{enumerate}
+
+\item The following output shows a plot of the data and some summary statistics. Draw short horizontal lines at the group averages on the plot. What is the average dryness for each of the groups?
+
+<<plot, echo=FALSE, out.width="0.5\\linewidth">>=
+require(lattice)
+xyplot(dryness~group, data=drops)
+require(mosaic)
+favstats(dryness~group, data=drops)
+@
+
+\item One person who received two eyedrops reported an eye dryness of $15.20$. What is the residual error for this observation? Be sure to show your calculations. Also label $e_{2,10}$ on the plot above.
+\vspace{1.3in}
+
+\item Draw a long horizontal line at the grand mean, $\bar{\bar{y}}$ on the plot above.
+\vspace{.1in}
+
+\item Identify the single mean model with correct notation.
+\begin{enumerate}
+\item $y_{ij}=\mu+\epsilon_{ij}$, $i={1,2,3,4,5}$ $j={1,2,3,4,5}$
+\item $y_{ij}=\mu_{j}+\epsilon_{ij}$, $i={1,2,3,4,5}$ $j={1,2,3,4,5}$
+\item $y_{ij}=\mu+\epsilon_{ij}$, $i={1,2,...,10}$ $j={1,2,3,4}$
+\item $y_{ij}=\mu_{j}+\epsilon_{ij}$, $i={1,2,...,10}$ $j={1,2,3,4}$
+\end{enumerate}
+
+\item Idenfity the separate means model with correct notation. 
+\begin{enumerate}
+\item $y_{ij}=\mu+\epsilon_{ij}$, $i={1,2,3,4,5}$ $j={1,2,3,4,5}$
+\item $y_{ij}=\mu_{j}+\epsilon_{ij}$, $i={1,2,3,4,5}$ $j={1,2,3,4,5}$
+\item $y_{ij}=\mu+\epsilon_{ij}$, $i={1,2,...,10}$ $j={1,2,3,4}$
+\item $y_{ij}=\mu_{j}+\epsilon_{ij}$, $i={1,2,...,10}$ $j={1,2,3,4}$
+\end{enumerate}
+
+\newpage
+
+\item I fit a linear model below. Label each as the cell means model or the reference coded. Briefly justify why you know.
+
+{\bf Model 1:}
+\begin{verbatim}
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   1.5800     0.9894   1.597   0.1190    
+grouptwo      3.5120     1.3992   2.510   0.0167 
+groupthree    3.3840     1.3992   2.419   0.0208
+groupfour     7.1210     1.3992   5.089 1.14e-05 
+\end{verbatim}
+
+{\bf Model 2:}
+\begin{verbatim}
+Coefficients:
+           Estimate Std. Error t value Pr(>|t|)    
+groupone     1.5800     0.9894   1.597    0.119    
+grouptwo     5.0920     0.9894   5.147 9.59e-06 
+groupthree   4.9640     0.9894   5.017 1.42e-05 
+groupfour    8.7010     0.9894   8.795 1.71e-10
+\end{verbatim}
+
+<<models, echo=FALSE, eval=FALSE>>=
+summary(test)
+summary(test2)
+@
+
+
+
+\item A ONE-WAY ANOVA model was fit and the ANOVA table is below. Fill in the blanks.
+
+\begin{verbatim}
+Analysis of Variance Table
+
+Response: dryness
+          Df  Sum Sq   Mean Sq  F value    Pr(>F)    
+group     ___ 253.75    _____    8.6412    0.0001884 
+Residuals ___ ______    9.788                      
+\end{verbatim}
+
+\item Would you choose the single mean model or the separate means model and why? Use the above ANOVA table to answer the question.
+
+\begin{enumerate}
+\item The separate means model because the group mean square is large relative to the residual mean square error.
+\item The separate means model because the group mean square is small relative to the residual mean square error. 
+\item The single mean model because the group mean square is large relative to the residual mean square error.
+\item The single mean model because the group mean square is small relative to the residual mean square error.
+\end{enumerate}
+
+\item Based on the results of the statistical test, what is your conclusion?
+\begin{enumerate}
+\item Dryness score does not appear to differ across the number of drops.
+\item The true mean dryness scores for three and four groups are higher, but the true mean dryness scores for groups one and two are the same.
+\item There is no evidence of at least one difference among the true mean dryness scores across the number of drops (p-value=$0.0001884$ from F-stat$=8.6412$ on \verb+___+ and \verb+__+ df).
+\item There is strong evidence of at least one difference among the true mean dryness scores across the number of drops (p-value=$0.0001884$ from F-stat$=8.6412$ on \verb+__+ and \verb+__+ df).
+
+\end{enumerate}
+
+\end{enumerate}
+
+\item {\bf Extra Credit}: Draw a picture of a scenario where a single mean model would be appropriate.
+
+
+
+
+
+
+
+
+
+
+
+
+\end{enumerate}
+\end{document}

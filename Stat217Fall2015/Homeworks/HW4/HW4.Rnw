@@ -1,0 +1,219 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, multicol} \usepackage{hyperref}
+\usepackage{fancybox} \usepackage[centertags]{amsmath} \usepackage{amssymb} \usepackage{amsthm}
+\usepackage{epsfig} \usepackage{newlfont}
+
+\setlength{\textwidth}{6.5in} 
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in} 
+\setlength{\topmargin}{-2cm} 
+\newcommand{\sptwo}{\def\baselinestretch{2.0} \large\normalsize} 
+\newcommand{\spone}{\def\baselinestretch{1} \large\normalsize}
+
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+
+
+
+\begin{document}
+\begin{center}
+\Large{Stat 217 Homework 4} \\
+Due: Friday, October 24th, beginning of class\\
+\end{center}
+
+<<setup, echo = FALSE, results = 'hide', message=FALSE, warning=FALSE, error=FALSE>>= 
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize', comment="")
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+\begin{enumerate}
+
+\item Write the letter of the scatterplot that corresponds to each correlation coefficient below. \\ \\
+r = 0.85            \hfill         \underline{\hspace{2in}}  \\
+r=-0.85      \hfill         \underline{\hspace{2in}}  \\
+r=0    \hfill         \underline{\hspace{2in}}  \\
+r=-0.2  \hfill         \underline{\hspace{2in}}  
+
+
+<<match, echo=FALSE, fig.width=14>>=
+par(mfrow=c(1,4))
+curve.fun <- function(x){
+  x^2
+}
+x <- seq(-5, 5, by=0.1)
+y <- curve.fun(x)+runif(length(x), 0, 5)
+plot(x, y, main="Plot A")
+
+neg.fun <- function(x){
+  -x
+}
+y.neg <- neg.fun(x)+runif(length(x), 0, 20)
+plot(x, y.neg, main="Plot B")
+
+strong.neg <- neg.fun(x)+runif(length(x), 0, 3)
+plot(x, strong.neg, main="Plot C")
+
+strong.pos <- neg.fun(-x)+runif(length(x), 0, 3)
+plot(x, strong.pos, main="Plot D")
+@
+
+\item Page $167$ of the textbook provides a list of some general things to look for in scatterplots. What items from the list do you see in the following scatterplot?
+
+<<fungroups, echo=FALSE, out.width="0.5\\linewidth", fig.align='left'>>=
+fun.male <- function(x){
+  4*x
+}
+
+fun.female <- function(x){
+  1/2*x
+}
+
+x <- seq(0, 500, by=5)
+plot(x, fun.male(x)+runif(length(x), 0, 5*x), ylab="y")
+points(x, fun.female(x)+runif(length(x), 0, 300))
+@
+
+
+\item Suppose you toss a ball in the air, and you make a plot showing the height of the ball from time $t=0$ to the time when the ball hits the ground.  What is wrong with the following statement: ``There is a strong correlation between time and height of the ball''.
+\begin{alist}
+\item Correlation does not imply causation
+\item We generally use the word correlation to describe a linear relationship between two variables, and the relationship between time and height is curved
+\item You should not use correlation to describe a relationship between two quantitative variables
+\item There is nothing wrong with this statement
+\end{alist}
+
+\item Which of the following statements about correlation are true? \\ \\
+I   Correlation is a value between 0 and 1. \\
+II  Correlation measures the strength and direction of a linear relationship. \\
+III Correlation is not resistant to outliers. 
+\begin{alist}
+\item I only
+\item II only
+\item III only
+\item I and III only
+\item I and II only
+\item II and III only
+\item All of the above are true
+\end{alist}
+
+\item Which of the following pairs of variables would you expect to have a correlation near 1?
+\begin{alist}
+\item Size of car engine (liters) and top speed of a car.
+\item Age of adult women and likelihood of getting pregnant
+\item Type of pet and size of yard
+\item Ounces of water drank in a day and score on a statistics exam that evening
+\end{alist}
+
+\item (Old Faithful): Old Faithful Geyser in Yellowstone National Park derives its names and fame from the regularity (and beauty) of its eruptions. Rangers usually post the predicted times of eruptions for visitors. R. A. Hutchinson, a park geologist, collected measurements of the eruption durations (in minutes) and the subsequent time intervals before the next eruption (in minutes) over an 8-day period. Help rangers use the data to explain the relationship between duration and subsequent time to the next eruption.
+
+<<data, echo=FALSE>>=
+faith.data <- read.csv("~/Documents/Stat217Fall2014/Projects/Project3/faith.data.csv")
+@
+
+\begin{multicols}{2}
+<<lm, echo=FALSE, comment="", size='footnotesize', out.width="0.5\\linewidth">>=
+lm.out <- lm(INTERVAL~DURATION, data=faith.data)
+summary(lm.out)
+@
+\begin{center}
+<<plot, echo=FALSE>>=
+with(faith.data, plot(DURATION,INTERVAL,type="n", xlim=c(1,6),
+                      main="Waiting time vs. Duration"))
+with(faith.data, points(DURATION,INTERVAL, pch=16))
+abline(lm.out)
+abline(h=seq(40,90,by=10), lty=2)
+@
+\end{center}
+\end{multicols}
+
+\newpage
+
+\begin{enumerate}
+
+\item A simple linear regression model was fit, and the ouput is shown above. What is the estimated regression equation?
+\begin{alist}
+\item $\widehat{duration} = 10.74 + 33.83interval_i$
+\item $\widehat{duration} = 33.83 + 10.74interval_i$
+\item $\widehat{interval} = 33.83 + 10.74duration_i$
+\item $\widehat{interval} = 10.74 + 33.83duration_i$
+\item $\widehat{duration} = \beta_0 + \beta_1 interval_i$
+\item $\widehat{interval} = \beta_0 + \beta_1 duration_i$
+\end{alist}
+
+\item Interpret the estimate of the y-intercept.
+\begin{alist}
+\item After an eruption that lasts $0$ minutes, the true mean waiting time to the next eruption is estimated to be $33.83$ minutes. 
+\item The estimated change in the interval for a one minute increase in duration.
+\item After an eruption that lasts $1$ minute, the true mean waiting time to the next eruption is estimated to be $45$ minutes.
+\item For a duration of $0$, the interval is estimated to be $2.26$ minutes.
+\end{alist}
+
+\item Interpret the estimate of the slope.
+\begin{alist}
+\item The estimated interval at a duration of $0$.
+\item For a one second increase in eruption duration, the true mean waiting time to the next eruption is estimated to increase by $10.74$ seconds.
+\item For a one minute increase in eruption duration, the true mean waiting time to the next eruption is estimated to increase by $10.74$ minutes.
+\item For a one minute increase in duration, the change in the interval is estimated to be $0.626$ minutes.
+\end{alist}
+
+\item What symbol do we use to describe the slope in the population? What symbol do we use to describe the y-intercept in the population?
+\begin{alist}
+\item slope=$\beta_0$; y-intercept = $\beta_1$
+\item slope=$\beta_1$; y-intercept = $\beta_0$
+\item slope=$b_0$; y-intercept = $b_1$
+\item slope=$b_1$; y-intercept = $b_0$
+\item slope=$\mu_1$; y-intercept = $\mu_2$
+\item slope=$\rho$; y-intercept = $r$
+\end{alist}
+
+\item Why are $b_0$ and $b_1$ called {\it least squares estimates}?
+\begin{alist}
+\item $b_0$ and $b_1$ are found by minimizing the sum of the squared residuals.
+\item $b_0$ and $b_1$ are found by minimizing the type I error rates of the t-tests in the coefficient table.
+\item $b_0$ and $b_1$ are the estimates for the slope and y-intercept, and they are square numbers.
+\item King Charles II made up this name.
+\end{alist}
+
+\end{enumerate}
+
+\newpage
+
+\item Below, the Beers vs. BAC data are shown. The scatterplot and the output of the regression model are also shown. Find the sum of the squared residuals for this example. Recall: each residual can be found with the equation $e_i = y_i - \hat{y}$, and $\hat{y}$ can be found from the estimated regression equation. The sum of the squared residuals is then $\sum_{i=1}^{16} e_i^2$.
+
+\begin{multicols}{2}
+<<simple, echo=FALSE>>=
+BB<- read.csv("~/Documents/Stat217Fall2015/Homeworks/HW4/beersbac.csv")
+BB
+@
+
+<<plotbeer>>=
+with(BB, plot(Beers, BAC))
+@
+\end{multicols}
+
+<<model, echo=TRUE>>=
+lm.beer <- lm(BAC~Beers, data=BB)
+summary(lm.beer)
+@
+
+
+
+
+
+<<other, include=FALSE>>=
+par(mfrow=c(2,2))
+plot(lm.out)
+
+confint(lm.out)
+dur.2 <- with(faith.data, data.frame(DURATION=2))
+fit.2 <- predict(lm.out, newdata=dur.2, se.fit=TRUE, interval="confidence",level=0.95)
+@
+
+\end{enumerate}
+
+
+
+\end{document}

@@ -1,0 +1,134 @@
+\documentclass[10pt]{article}
+
+\usepackage{verbatim}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+
+\title{Analyzing the Mock Jury Data}
+\author{Stat 217: Worksheet 1}
+
+\begin{document}
+
+\maketitle
+
+<<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+opts_chunk$set(echo = FALSE, 
+               message = FALSE, 
+               warning = FALSE, 
+               tidy = FALSE, 
+               fig.align = "center", 
+               fig.width = 5, 
+               fig.height = 4, 
+               out.width = ".8\\linewidth", 
+               fig.pos = "H")
+@
+
+Let's look at the data collected from a study in 1989 that investigated whether there was a relationship between perceived physical attractiveness and the sentence length that male jurors gave to female defendants.  
+
+<<data, results="asis">>=
+library(heplots)
+library(dplyr)
+library(mosaic)
+data(MockJury)
+m1 <- MockJury %>% 
+  select(Attr, Crime, Years, Serious, independent, sincere) %>% 
+  filter(Attr != "Beautiful") %>% 
+  droplevels()
+#knitr::kable(rbind(head(m1), tail(m1)), format = "latex")
+@
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|l|l|r|r|r|r}
+\hline
+  & Attr & Crime & Years & Serious & independent & sincere\\
+\hline
+1 & Unattractive & Burglary & 1 & 3 & 6 & 5\\
+\hline
+2 & Unattractive & Burglary & 4 & 8 & 2 & 9\\
+\hline
+3 & Unattractive & Burglary & 3 & 5 & 9 & 7\\
+\hline
+4 & Unattractive & Burglary & 2 & 2 & 7 & 1\\
+\hline
+5 & Unattractive & Burglary & 8 & 5 & 5 & 1\\
+\hline
+6 & Unattractive & Burglary & 8 & 9 & 2 & 8\\
+\hline
+... & ... & ... & ... & ... & ... & ...\\
+\hline
+70 & Average & Swindle & 3 & 2 & 9 & 9\\
+\hline
+71 & Average & Swindle & 2 & 1 & 8 & 8\\
+\hline
+72 & Average & Swindle & 7 & 4 & 9 & 1\\
+\hline
+73 & Average & Swindle & 6 & 3 & 5 & 2\\
+\hline
+74 & Average & Swindle & 12 & 9 & 9 & 1\\
+\hline
+75 & Average & Swindle & 8 & 8 & 1 & 5\\
+\hline
+\end{tabular}
+\end{table}
+
+To begin, let's look at the distribution of sentence lengths.  On the left is a histogram where taller bars indicate higher frequencies of sentence lengths and on the right is a boxplot.
+
+<<sentence-dist, fig.width=12, fig.height=6, out.width="\\linewidth">>=
+par(mfrow = c(1,2))
+hist(m1$Years, xlab = "Years", main = "Histogram of Sentence Lengths")
+boxplot(m1$Years, ylab = "Years", main = "Boxplot of Sentence Lengths")
+@
+
+\begin{enumerate}
+
+\item Recall the five number summary from Stat 216.  Label on the boxplot where each summary measure is located.
+
+\vspace{.4in}
+
+\item According to the histogram, what are the most common sentence lengths?
+\begin{enumerate}
+\item $>15$ years
+\item 5 years
+\item 0-2 years
+\item 10-15 years
+\end{enumerate}
+
+\vspace{.1in}
+
+Originally, we wanted to know if there was a difference in sentence length between Average looking and Unattractive people.  We can make a beanplot to compare the two groups.
+
+<<beanplot, fig.height=3.5>>=
+library(beanplot)
+par(mfrow = c(1,1))
+beanplot(Years ~ Attr, data = m1, log = "", col = "bisque", method = "jitter", ylab = "Years")
+@
+
+\item In a beanplot, the width describes frequency of observations.  So, in the average group, are there more sentences of 2 years in length or 10 years?  Why?
+
+\vspace{.5in}
+
+\item The short black bars in each group denote sentence length assigned to individual defendants.  In which group is there a greater range in the data?
+
+\vspace{.3in}
+
+\item The long, black bars in each group denote the average sentence length of the defendants that group.  So which group gets longer sentences on average?
+
+\vspace{.3in}
+
+\item Based on this information, do you think that the true mean sentence length for  unattractive women is longer than the true mean sentence length for average women? Why or why not?
+
+\vspace{.8in}
+
+On Friday, we will use a test to quantify how much evidence there is to conclude that the true mean sentence lengths between unattractive and average women are different.
+
+\end{enumerate}
+
+
+\end{document}

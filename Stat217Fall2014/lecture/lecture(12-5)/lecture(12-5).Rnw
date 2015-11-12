@@ -1,0 +1,121 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+<<readdat, echo=FALSE>>=
+cig.dat <- read.table("~/Documents/Stat217Fall2014/lecture/lecture(12-5)/cig.txt", head=F)
+type <- c(rep("menthol",5),rep("regular",5),rep("clove",5), rep("cherry",5), rep("chocolate",5))
+cig.dat <- cbind(cig.dat,type)
+names(cig.dat)<-c("brand", "tar", "nicotine", "weight", "COcontent", "Flavor")
+@
+
+\noindent The dataset presented here contains measurements of weight (g), tar(mg),
+nicotine content (mg), carbon monoxide content (mg), brand, and flavor for 25
+cigarettes. \\
+
+\noindent Write out the true model and the estimated model for each of the following. \\
+
+{\bf Model 1}
+<<mlradd, echo=FALSE>>=
+lm.one <- lm(weight~tar+nicotine+COcontent,data=cig.dat)
+summary(lm.one)
+@
+
+TRUE model:
+\vspace{1in}
+
+Estimated model:
+\vspace{1in}
+
+What hypotheses are being tested in the NICOTINE line of the R output above?
+\vspace{1in}
+
+Provide the conclusion, in context, of the test of the hypotheses in the previous question.
+\vspace{1.5in}
+
+\newpage
+
+
+
+{\bf Model 3}
+<<mlrint, echo=FALSE>>=
+lm.four <- lm(weight~nicotine*Flavor,data=cig.dat)
+summary(lm.four)
+
+anova(lm.four)
+@
+
+TRUE model:
+\vspace{1.5in}
+
+ESTIMATED model:
+
+\vspace{1.5in}
+
+What is the estimated regression line for menthol flavored cigarettes?
+
+\vspace{1in}
+
+What hypotheses are being tested in the nicotine:Flavor row above?
+
+\vspace{1in}
+
+Write a conclusion for these hypotheses.
+
+\vspace{1in}
+
+The response is the length of odontoblasts (teeth) in each of $10$ guinea pigs at each of three dose levels of Vitamin C ($0.5$, $1$, $2$, or $2.5$ mg) with each of two delivery methods (orange juice or pill). A total of $60$ guinea pigs were studied.
+
+
+Here is a partial ANOVA table for this example. Fill in the blanks.
+
+\begin{verbatim}
+Analysis of Variance Table
+
+Response: len
+          Df  Sum Sq Mean Sq F value    Pr(>F)    
+supp      __  205.35  205.35  15.572 0.0002312 ***
+dose      __ 2426.43  ______    ____ < 2.2e-16 ***
+supp:dose __  108.32   ____    _____ 0.0218603 *  
+Residuals __  712.11   13.19                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{verbatim}
+
+Write out the hypotheses being tested in the \verb+supp:dose+ row above.
+
+\vspace{1in}
+
+Write out a conclusion for these hypotheses.
+
+
+\end{document}

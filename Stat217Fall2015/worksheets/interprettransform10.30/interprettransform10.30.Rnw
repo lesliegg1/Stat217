@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Interpretation After Transformations 10/30} \\
+\end{center}
+
+<<data, echo=FALSE, message=FALSE>>=
+c02 <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz23/co2.csv", head=T)
+names(c02)[3] <- "c02"
+require(Sleuth2)
+pest <- ex0817
+@
+
+
+\begin{enumerate}
+
+\item The data come from the United Nations’ website showing CO2 consumption per capita (in metric tons) between the years of $1990$ to $2010$. We will examine this relationship.
+
+<<co2, echo=TRUE, warning=FALSE, size='footnotesize'>>=
+lm.co2 <- lm(log(c02)~Year, data=c02)
+summary(lm.co2)
+@
+
+\begin{enumerate}
+
+\item Provide two interpretations of $b_1$ on the original scale. Your first interpretation should use the multiplicative factor wording. Your second interpretation should use the percent increase/decrease wording.
+
+\vspace{2in}
+
+\item Provide a $95\%$ confidence interval for $\beta_1$ on the original scale. Show your work.
+\vspace{1.5in}
+
+\end{enumerate}
+
+\newpage
+
+\item Biological Pest Control. In a study of the effectiveness of biological control of the exotic weed tansy ragwort, researches manipulated the exposure to the ragwort flea beetle on 15 plots that had been planted with high density of ragwort. Harvesting the plots the next season, they measured the average dry mass of ragwort remaining (grams/plant) and the flea beetle load (beetles/gram of ragwort dry mass) to see if the ragwort plants in plots with high flea beetle loads were smaller as a result of herbivory by the beetles.
+
+<<ragwort, echo=TRUE, size='footnotesize', message=FALSE>>=
+lm.log <- lm(log(Mass)~I(log(Load)), data=pest)
+summary(lm.log)
+@
+
+\begin{enumerate}
+
+
+\item Provide two interpretations of $b_1$ on the original scale. Your first interpretation should use the multiplicative factor wording. Your second interpretation should use the percent increase/decrease wording.
+
+\vspace{1.6in}
+
+\item What is the predicted mass of a plant with a load of $20$ beetles per gram?
+\vspace{.75in}
+
+\item Provide a $95\%$ confidence interval for $\beta_1$ on the original scale. Show your work.
+
+\end{enumerate}
+
+\newpage
+
+
+
+
+
+\end{enumerate}
+
+
+\end{document}

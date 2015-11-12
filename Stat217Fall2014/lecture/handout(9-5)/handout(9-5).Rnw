@@ -1,0 +1,103 @@
+\documentclass{article}
+%% LaTeX margin settings:
+  \setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+{\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+
+\begin{center} \large{HANDOUT IN CLASS 9-5} \end{center}
+Researchers are interested if there is different sugar content in children's cereals than in adult cereals. They randomly collected the sugar content (percentage of weight) on 19 children's cereals and 26 adult cereals from a population of 600 children's cereals and 600 adult cereals in order to answer the question of interest. \\ \\
+
+1. Set up hypotheses to answer the question of interest.
+
+\vspace{0.75in}
+
+2. What are the two types of tests you have learned so far to test these hypotheses?
+
+\vspace{0.75in}
+
+Let's examine some plots to decide which type of test to use.
+
+<<mosaic, echo=FALSE, message=FALSE>>=
+require(mosaic)
+@
+
+
+<<sugar,echo=FALSE,out.width='.6\\linewidth'>>=
+  children=c(40.3,55,15.7,55,50.3,45.9,53.5,43,44.2,44,47.4,53,33.6,27.9,48.8,50.4,50.8,56.1,46.6)
+adult=c(20,30.2,2.2,7.5,4.4,22.2,16.6,14.5,21.4,3.3,6.6,7.8,10.6,16.2,14.5,4.1,15.8,3.5,8.5,10,4.4,1.3,8.1,4.7,18.4)
+p<-c(rep(0,25),rep(1,19))
+type<-ifelse(p==0,"adult","children")
+sugar<-c(20,30.2,2.2,7.5,4.4,22.2,16.6,14.5,21.4,3.3,6.6,7.8,10.6,16.2,14.5,4.1,15.8,3.5,8.5,10,4.4,1.3,8.1,4.7,18.4,40.3,55,15.7,55,50.3,45.9,53.5,43,44.2,44,47.4,53,33.6,27.9,48.8,50.4,50.8,56.1,46.6)
+cereal<-data.frame(sugar,type)
+@
+  
+  <<plottter,echo=TRUE,out.width='.6\\linewidth', fig.height = 4, fig.width = 6>>=
+children;
+summary(children)
+adult;
+summary(adult);
+observed2<-compareMean(sugar~type,data=cereal, digits=1)
+observed2
+bwplot(sugar~type,data=cereal)
+histogram(~sugar|type,data=cereal, col = "lightgray")
+@
+  
+  So it appears that the children cereals may be more left-skewed than we would expect from a normal distribution. Which type of test should we use?
+  \vspace{0.5in}
+
+Now... think back to Stat $216$. Suppose we wanted to answer the question of interest, but we did not want to do a hypothesis test. What is another way to answer the question of interest?
+
+\vspace{0.75in}
+
+Bootstrapping
+
+<<herwego,echo=TRUE,cache=TRUE,out.width='.5\\linewidth', fig.height = 5, fig.width = 5, message=FALSE>>=
+require(mosaic)
+require(heplots)
+  set.seed(824862)
+bootdist2<-do(1000)*compareMean(sugar~type,data=resample(cereal))
+hist(bootdist2$result,col="gray",main="Histogram of bootstrapped Difference in Means", nclass = 50, freq = F, xlab = "bootstrapped differences in means (children - adult)")
+abline(v=qdata(c(.025,0.975),bootdist2$result)$quantile,col="blue",lwd=3)
+#pull off endpoints of the interval for 95\% CI
+qdata(c(.025,0.975),bootdist2$result)
+#99%CI
+qdata(c(.005,0.995),bootdist2$result)
+
+## RECALL THE PERMUTATION DISTRIBUTION
+
+nulldist2<-do(5000)*compareMean(sugar~shuffle(type),data=cereal)
+hist(nulldist2$result,col="lightgray",main="Histogram of Null Distribution",xlim = c(-38,38), nclass = 50, probability = F, labels = T)
+abline(v=observed2,lwd=3)
+abline(v=-observed2,lwd=3)
+pdata(abs(observed2),abs(nulldist2$result),lower.tail=F)
+@
+  
+
+
+
+
+
+\end{document}

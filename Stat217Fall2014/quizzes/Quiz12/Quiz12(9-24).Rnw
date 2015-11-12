@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 12} \\
+\end{center}
+
+
+\begin{enumerate}
+
+{\footnotesize
+\item Suppose a statistics teacher gave an essay final to his class. He randomly divides the classes in half such that half the class writes the final with a blue-book and half with notebook computers. In addition the students are partitioned into three groups, no typing ability, some typing ability, and highly skilled at typing. Answers written in blue-books will be transcribed to word processors and scoring will be done blindly. Not with a blindfold, but the instructor will not know the method or skill level of the student when scoring the final. The dependent measure will be the score on the essay part of the final exam.
+
+The first factor will be called Method and will have two levels, blue-book and computer. The second factor will be designated as Ability and will have three levels: none, some, and lots. Each subject will be measured a single time.}\\
+
+Use the following R output to answer these questions.
+
+<<data, echo=FALSE>>=
+ability <- c(rep("none",3), rep("some",3), rep("lots",3), rep("none",3), rep("some",3), rep("lots",3))
+method <- c(rep("bluebook",9),rep("computer",9))
+y <- c(23, 32, 25, 29, 30, 34, 23, 23, 24,32,26,26,34,41,35,23,26,25)
+data <- data.frame(cbind(ability,method,y))
+@
+
+\begin{enumerate}
+
+\item Based on the plot below, do you think you will find evidence for an interaction between method and ability? Briefly explain.
+\vspace{1in}
+
+<<plots, echo=TRUE, out.width="0.4\\linewidth", size='footnotesize'>>=
+interaction.plot(ability, method,y)
+@
+
+\item With the output on the next page, test for an interaction effect. Write your conclusion below.
+\vspace{2in}
+
+<<anova, echo=TRUE, size="footnotesize">>=
+lm.int <- lm(y~ability+method+ability*method)
+anova(lm.int)
+@
+
+\item If you found evidence of an interaction, stop here. If you did not find evidence for an interaction, test for main effects using the Anova below.
+
+\begin{enumerate}
+\item Write your conclusion for the ``ability'' factor below.
+\vspace{1.5in}
+
+\end{enumerate}
+
+<<add, echo=TRUE, message=FALSE, size='footnotesize'>>=
+lm.add <- lm(y~ability+method)
+require(car)
+Anova(lm.add)
+@
+
+
+
+
+
+\end{enumerate}
+
+
+
+
+
+\vspace{2in}
+
+\end{enumerate}
+\end{document}

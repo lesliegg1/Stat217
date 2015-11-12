@@ -1,0 +1,99 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{setspace}
+
+ %% LaTeX margin settings:
+\setlength{\textwidth}{7.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.7in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-2.0cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+
+\begin{document}
+
+\begin{center}
+{\Large \bf Quiz $6$}
+\end{center}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72")
+@
+
+
+{\footnotesize Study explores how physical handicaps affect people’s perception of employment qualifications. Researchers prepared 5 videotaped job interviews using actors with a script designed to reflect an interview with an applicant of average qualifications. The 5 tapes differed only in that the applicant appeared with a different handicap in each one. Seventy undergraduate students were randomly assigned to view the tapes and rate the qualification of the applicant on a 0-10 point scale. See the plot below. "Score" is the score each student gave to the applicant. "Handicap"is a factor variable with 5 levels.}
+
+
+<<plot, echo=FALSE, message=FALSE, out.width=".5\\linewidth">>=
+require(Sleuth3)
+handicap.data <- case0601
+require(lattice)
+xyplot(Score~Handicap, data=handicap.data)
+@
+
+
+\begin{enumerate}
+
+\item Recall the handicap data from last class. I fit a linear model and the ANOVA is below. What type of model did I fit?
+\begin{enumerate}[A]
+\item Cell means model
+\item Single mean model
+\item Means only model
+\item Reference coded model
+\end{enumerate}
+
+<<model1, echo=TRUE>>=
+lm.1 <- lm(Score~Handicap, data=handicap.data)
+anova(lm.1)
+@
+
+
+\item What are $N$ and $J$ in this example?
+\vspace{.75in}
+
+\item Look at the Mean Sq column in the ANOVA table above. Show how they calculated these numbers.
+\vspace{.75in}
+
+\item Now show how they calculated the F-statistic.
+\vspace{.75in}
+
+\item Think about what pieces go into the F-statistic. If the F-statistic is small, what does that suggest?
+\begin{enumerate}
+\item If the F-statistic is small, the deviation in the group averages around the grand mean is small compared to the variation in the responses around the group averages.
+\item If the F-statistic is small, the separate means model is better. 
+\item If the F-statistic is small, the deviation in the group averages around the grand mean is large compared to the variation in the responses around the group averages.
+\item If the F-statistic is small, the variation in the responses around the group averages is small.
+\end{enumerate}
+
+\item At the $0.05$ significance level, what is your decision?
+\vspace{0.5in}
+
+\item Write your conclusion in the context of the problem.
+
+\vspace{1in}
+
+\item Based on your conclusion above, would you use a single mean model or a separate means model for these data?
+\vspace{.25in}
+
+\item Label the following formulas as SSE, SSA, or SST for the separate means model. \\ \\
+$\sum_{j=1}^J\sum_{i=1}^{n_j} (y_{ij}-\bar{\bar{y}})^2$ \hfill
+$\sum_{j=1}^J\sum_{i=1}^{n_j} (y_{ij}-\bar{y_j})^2$ \hfill
+$\sum_{j=1}^J\sum_{i=1}^{n_j} (\bar{y_{j}}-\bar{\bar{y}})^2$ \\
+\vspace{.25in}
+
+\item EXTRA CREDIT (up to 10pts) Due Monday, September 15th. Think back to the formula you used to calculate variance ($\sigma^2$) in Stat $216$. Calculate $\sigma^2$ for the age-row data we collected in class today (I will post data to D2L). Find this quantity on the ANOVA table. What does $\sigma^2$ measure? Why do we see this quantity in the ANOVA table?
+
+
+
+\end{enumerate}
+
+
+\end{document}

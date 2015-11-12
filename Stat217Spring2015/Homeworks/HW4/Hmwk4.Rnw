@@ -1,0 +1,182 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx, multicol}
+\usepackage{amsmath}
+ \pagestyle{myheadings}
+   \markright{\hfill  Page   }
+\setlength{\topmargin}{-.9in}
+\setlength{\oddsidemargin}{-.15 in}
+\setlength{\textheight}{9.6in}
+\setlength{\textwidth}{7.0in}
+
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+
+
+\begin{document}
+
+\begin{center}
+\large{STAT 217: Homework 4} \\
+{\bf Due Wednesday, April 29th at the beginning of class}
+\end{center}
+
+\hfill Name: \underline{\hspace{2.5in}}\\
+
+\begin{enumerate}
+
+\item This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.. Below is the output from the model with an interaction term along with a plot:
+{\fs \center
+<<interact1, out.width = '.5\\linewidth', message =FALSE, echo = FALSE>>= 
+require(mosaic)
+options(show.signif.stars = F)
+data(iris)
+scatterplot(Petal.Length~Petal.Width|Species, data = iris,smooth = F, boxplot = F,  lwd = 2)
+@
+
+<<interactSumm, echo=FALSE>>= 
+fit.int2 <- lm(Petal.Length~Petal.Width*Species, data = iris)
+summary(fit.int2)
+@
+}
+
+\newpage
+
+\begin{enumerate} 
+\item Based on the plot, does there appear to be an interaction in these data?
+\begin{alist}
+\item No, because the lines for each species are mostly parallel
+\item Yes, because the lines for each species are mostly parallel
+\item No, because the lines for each species are not parallel
+\item Yes, because the lines for each species are not parallel
+\end{alist}
+
+
+\item {\it The $R^2_{adj}$ for the additive model was 0.9542.} What happened to the adjusted $R^2$ when we went from the additive (parallel lines) model to the interaction (non-parallel lines) model and what does this tell us about the importance of allowing varying slopes? 
+\begin{alist}
+\item The $R^2_{adj}$ increased, suggesting that the parallel lines model, with same slopes, is adequate
+\item The $R^2_{adj}$ increased, suggesting that varying slopes are not needed
+\item The $R^2_{adj}$ increased, suggesting that the interaction model, with varying slopes, is preferred over the parallel lines model
+\item The $R^2_{adj}$ increased, suggesting that the parallel lines model, with varying slopes, is preferred over the interaction model
+\end{alist}
+
+\item What are the explanatory and response variables in this model? 
+\begin{alist}
+\item Response: Petal Length; Explanatory: Petal Width and Species
+\item Response: Petal Length; Explanatory: Petal Width and setosa, versicolor, and virginica 
+\item Response: Petal Width; Explanatory: Petal Length and setosa, versicolor, and virginica 
+\item Response: Petal Width; Explanatory: Petal Length and Species
+\end{alist}
+
+
+\item Below is the anova table for the interaction model.
+
+
+{\fs 
+<<anova, echo=FALSE>>= 
+anova(fit.int2)
+@
+}
+
+\begin{enumerate}
+\item What are the null and alternative hypotheses for testing whether or not the slope adjustments are necessary?
+\vspace{0.75in}
+\item What is the value of the test statistic and what distribution does it follow under the null hypothesis?
+\vspace{0.5in}
+\item What is the p-value and your decision?
+\vspace{0.5in}
+\item Write your conclusion in the context of the problem.
+\begin{alist}
+\item There is strong evidence that the slope for petal width is the same across species in the population (p-value$=0.00065$ from F-stat$=7.72$ on $2$ and $144$ df).
+\item There is strong evidence that the slope for petal width in at least one species differs the others in the population (p-value$=0.00065$ from F-stat$=7.72$ on $2$ and $144$ df).
+\item There is strong evidence that the slope for petal width is the same across species in the population (p-value$<0.0001$ from F-stat$=49.79$ on $2$ and $144$ df).
+\item There is strong evidence that the slope for petal width in at least one species differs the others in the population (p-value$<0.0001$ from F-stat$=49.79$ on $2$ and $144$ df). 
+\end{alist}
+\end{enumerate}
+
+
+
+\item Write out the estimated regression equation.
+\vspace{0.75in}
+\begin{enumerate}
+\item Write out the estimated regression line for species {\it versicolor}.
+\vspace{0.75in}
+\item Write out the estimated regression line for species {\it setosa}.
+\vspace{0.75in}
+\item Write out the estimated regression line for species {\it virginica}.
+\vspace{0.75in}
+\end{enumerate}
+
+ \item Below are the AIC values for the three models fit: SLR(\texttt{fit.SLR2}), Additive model (\texttt{fit.add2}), interaction model (\texttt{fit.int2}). Which one would you prefer based on AIC?\\
+
+{\fs
+<<COMPARE, echo=FALSE>>=
+fit.SLR2 <- lm(Petal.Length~Petal.Width, data = iris)
+fit.add2 <- lm(Petal.Length~Petal.Width + Species, data = iris)
+AIC(fit.SLR2,fit.add2, fit.int2)
+@
+}
+
+%A table of $R^2_{adj}$ values for each fit is are also given below, Which do you prefer based on $R^2$? 
+
+\end{enumerate}
+
+<<r2table, echo = FALSE, results ='asis', message=FALSE, include=FALSE>>= 
+require(xtable)
+r2 <-c( 0.9271, 0.9551, 0.9595) 
+models <- c("fit.SLR", "fit.add1", "fit.int2")
+xtable(cbind(models, r2))
+@
+
+\newpage
+\item The folowing dataset shows the nonverbal standardized IQ's of dyslexic and non-dyslexic children. The childrens' scores on a reading accuracy test are also recorded.
+
+<<dys, echo=FALSE, message=FALSE, out.width="0.5\\linewidth", size='footnotesize'>>=
+require(smdata)
+data("dyslexic3")
+scatterplot(score~ziq|dys,xlab="Standardized nonverbal IQ scores",ylab="Reading score",data=dyslexic3,smooth=F,main="Plot of IQ vs Reading by dyslexia status")
+dyslexic3$dys<-factor(dyslexic3$dys) #Because dys was just numerically coded - makes it a factor
+dys_model<-lm(score~ziq+dys,data=dyslexic3)
+summary(dys_model)
+@
+
+\begin{enumerate}
+
+\item How many levels does the `dyslexia' variable have?
+\vspace{0.25in}
+
+\item Calculate a $95\%$ confidence interval for the slope coefficient on \verb+ziq+. Use $t^*=-2.02$.
+\vspace{0.75in}
+
+\item Interpret your interval in the context of the problem.
+\vspace{1in}
+
+\end{enumerate}
+
+\newpage
+
+\item Information was recorded about the number of steps taken and the amount of calories consumed per day in a random sample of $100$ Montanans. Assumptions for the simple linear regression model were not met, so Calories Consumed was log transformed. The estimated regression equation, after the log transformation, is $ln(Cal)_i=2000+0.042*Steps_i$.
+
+\begin{enumerate}
+\item Predict the number of calories consumed for someone who takes $10000$ steps in a day.
+\vspace{1in}
+
+\item Interpret the coefficient on Steps on the original scale.
+\begin{alist}
+\item For each additional step, the true median number of calories consumed is estimated to increase by $4\%$.
+\item For each additional step, the true mean number of calories consumed is estimated to increase by $0.042$. 
+\item For each additional step, the true median number of calories consumed is estimated to change by a multiplicative factor of $2.92$. 
+\item For each additional step, the true mean number of calories consumed is estimated to increase by $2000$.
+\end{alist}
+
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{document}

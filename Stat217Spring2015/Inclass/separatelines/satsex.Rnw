@@ -1,0 +1,21 @@
+\documentclass{article}
+
+\begin{document}
+
+<<gpa, echo=FALSE, message=FALSE>>=
+require(openintro)
+data(satGPA)
+satGPA$SEX<-factor(satGPA$sex)
+levels(satGPA$SEX)<-c("MALE","FEMALE")
+satGPA$SEXINDICATOR<-as.numeric(satGPA$SEX=="FEMALE")
+@
+
+<<sex, echo=TRUE>>=
+SATSex2<-lm(FYGPA~SATM*SEX,data=satGPA)
+summary(SATSex2)
+@
+
+
+
+
+\end{document}

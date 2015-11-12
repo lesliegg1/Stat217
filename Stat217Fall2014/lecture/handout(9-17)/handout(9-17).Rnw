@@ -1,0 +1,50 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+{\Large Handout 9-17}
+
+\vspace{0.5in}
+
+The residual plots below look good. I don't see any severe violations of assumptions.
+
+<<tooth, echo=FALSE, fig.width=10, fig.height=4, out.width="\\linewidth">>=
+dose1 <- as.factor(ToothGrowth$dose)
+lm.2 <- lm(len~dose1, data=ToothGrowth)
+par(mfrow=c(1,4))
+plot(lm.2)
+@
+
+The diagnostic plots below look bad. Why?
+
+<<case, echo=FALSE, fig.width=10, fig.height=4, out.width="\\linewidth", message=FALSE>>=
+require(Sleuth3)
+lm.1 <- lm(case0802$Voltage~case0802$Group)
+par(mfrow=c(1,4))
+plot(lm.1)
+@
+
+
+
+\end{document}

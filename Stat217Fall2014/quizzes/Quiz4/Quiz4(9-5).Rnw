@@ -1,0 +1,96 @@
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{flushleft} 
+STAT 217: QUIZ 4\\
+\underline{\hspace{2in}}
+\end{flushleft}
+{\it Data were collected to investigate differences in salaries between men and women university professors in America (Reference: Academe, Bulletin of the American Association of University Professors, year unknown). Specifically, they were interested in if men's salaries were higher than women's salaries. The units are thousands of dollars (\$1K) The questions on this quiz are based on these data. The observed difference in means was $\yb_{M} - \yb_{F} = 0.23182$ thousands of dollars (\$231.8).} 
+\begin{enumerate}
+\item Below are summary statistics and histograms for the two groups. Are the equal variance and distributional assumptions met to run a parametric test? 
+<<SalariesHist, echo = FALSE, message = FALSE, fig.height = 4, fig.width = 6, out.width = '.6\\linewidth'>>= 
+require(mosaic)
+salaries <- read.csv("salaries", header = T)
+favstats(Salary~Gender, data = salaries)
+histogram(~Salary|Gender, data = salaries, width = 2, col = "gray")
+@
+\begin{enumerate}
+  \item Yes, the histograms are similar in shape. 
+  \item No, the histograms are not similar in shape. 
+  \item Yes, the histograms are approximately unimodal and symmetric and have approximately equal spread. 
+  \item No, the histograms do not meet the nearly normal condition. 
+\end{enumerate}
+\item Below is a bootstrapped distribution of differences in means (Males - Females) as well as output for various quantiles. Create an 80\% CI for the true difference in mean salaries (Males - Females).
+<<bootSalary, echo = FALSE, message = FALSE, fig.height = 5, fig.width = 5, out.width = '.5\\linewidth'>>= 
+require(mosaic)
+obs <- compareMean(Salary~Gender, data = salaries)
+boot.dist <- do(1000)*compareMean(Salary~Gender, data = resample(salaries))
+hist(boot.dist$result, nclass = 50, main = "Bootstrap Distribution", xlab = "Differences in Means (Males - Females", col = "lightgray")
+qdata(c(0.025,0.975), boot.dist$result)
+qdata(c(0.1,0.9), boot.dist$result)
+qdata(c(0.05,0.95), boot.dist$result)
+@
+\item Interpret the above interval in the context of the problem. 
+\vspace{1in}
+\item Below is output from a t-test. 
+<<TtestSalary, echo = FALSE, message = FALSE>>= 
+t.test(Salary~Gender, data = salaries, var.equal = T, alternative = "less")
+@
+\begin{enumerate}
+  \item What is the distribution of the test statistic under the null hypothesis: $\mu_F - \mu_M = 0$? 
+  \vspace{1in}
+  \item What is the p-value? 
+    \vspace{.5in}
+  \item How would you answer the research question? 
+  \begin{enumerate}
+  \item There is strong evidence against the null hypothesis that there is no difference in the mean salaries paid to male and female professors at American Universities (included in this study). Therefore, we conclude that based on these data male professors at these universities in America have higher average salaries as their female co-workers. 
+  \item We conclude that based on these data, male professors at these universities in America receive on average the same salaries than their female co-workers. 
+  \item There is not enough evidence to say that there is a difference in the mean salaries paid to male and female professors at American Universities (included in this study). 
+    \item There is strog evidence against the null hypothesis that there is no difference in the mean salaries paid to male and female professors at American Universities (included in this study). Therefore, we conclude that based on these data, male professors at these universities in America receive on average the same salaries than their female co-workers.
+\end{enumerate}
+
+\end{enumerate}
+
+<<eye, echo=FALSE>>=
+drops <- read.csv("~/Documents/Stat217Spring2015/Homeworks/HW1/eyedrop.csv", head=F)
+names(drops) <- c("dryness", "group")
+drops$group <- factor(drops$group, levels=c("treat","control"))
+test <- lm(dryness~group, data=drops)
+@
+
+<<ci, echo=TRUE>>=
+confint(test)
+@
+
+
+
+
+
+
+
+\end{enumerate}
+\end{document}

@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{setspace}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.7in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-2.0cm}
+
+%% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+
+\begin{document}
+
+\begin{center}
+{\Large \bf In Class $9-9$}
+\end{center}
+\vspace{0.25in}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  # this is equivalent to \SweaveOpts{...}
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72", show.signif.stars=FALSE)
+@
+
+<<mockjury, echo=TRUE, message=FALSE, size='footnotesize'>>=
+require(heplots)
+data(MockJury)
+model1 <- lm(Years~Attr, data=MockJury)
+anova(model1)
+summary(model1)
+model2 <- lm(Years~Attr-1, data=MockJury)
+anova(model2)
+@
+
+<<dfjl, echo=TRUE, eval=FALSE>>=
+summary(model2)
+@
+\begin{verbatim}
+                 Estimate Std. Error t value Pr(>|t|)    
+AttrBeautiful      4.3333     0.5730   7.563 1.23e-11 
+AttrAverage        3.9737     0.5805   6.845 4.41e-10 
+AttrUnattractive   5.8108     0.5883   9.878  < 2e-16 
+\end{verbatim}
+
+
+  
+  
+Study explores how physical handicaps affect people’s perception of employment 
+qualifications. Researchers prepared 5 videotaped job interviews using actors 
+with a script designed to reflect an interview with an applicant of average 
+qualifications. The 5 tapes differed only in that the applicant appeared with a 
+different handicap in each one. Seventy undergraduate students were randomly assigned 
+to view the tapes and rate the qualification of the applicant on a 0-10 point scale. 
+See the plot below. "Score" is the score each student gave to the applicant. 
+"Handicap"is a factor variable with 5 levels.
+
+
+<<plot, echo=FALSE, message=FALSE>>=
+  require(Sleuth3)
+handicap.data <- case0601
+require(lattice)
+xyplot(Score~Handicap, data=handicap.data)
+@
+
+\begin{enumerate}
+\item Label $y_{13}$ and ${y_65}$. Assume the numbering of observations starts from the bottom for each group.
+\item Label $\bar{y}_1$ through $\bar{y}_5$.
+\item Now label $e_{13}$ and $e_{65}$.
+\item Label $\bar{\bar{y}}$.
+\item Just looking at the plot, what do you think the results would be if you conducted a one way ANOVA hypothesis test? Why do you think so?
+\vspace{1in}
+\end{enumerate}
+  
+
+
+
+\end{document}

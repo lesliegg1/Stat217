@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: SLR Assumptions Practice (in class 3/30)} \\
+\end{center}
+
+\noindent A study was done about nutritional and marketing information on US cereals. Data on the calories and sugar per serving (one cup) of $77$ randomly selected US cereals was collected. Use the residual plots below to assess the simple linear regression model assumptions.
+
+<<scatterCereal, out.width='.7\\linewidth',echo=FALSE, message=FALSE>>= 
+require(mosaic)
+cereal <- read.table("~/Documents/Stat217Fall2014/quizzes/Quiz19/cereals.txt", header = T)
+@
+ 
+<<sum, echo=TRUE, size='footnotesize'>>=
+cereal.fit <- lm(calories~sugar, data = cereal)
+summary(cereal.fit)
+@
+
+
+<<plot, echo=TRUE, fig.width=11, out.width="0.8\\linewidth", size='footnotesize'>>=
+par(mfrow=c(2,2))
+plot(cereal.fit)
+@
+
+\noindent Let's consider using a permutation test to test the hypotheses $H_0: \beta_1=0$ vs $H_A: \beta_1 \neq 0$. The following gives you some general steps for conducting a permutation test. Answer the bulleted questions about how to conduct a permutation test in this context.
+
+<<per, echo=TRUE, results='hide', size='footnotesize'>>=
+b1obs <- cereal.fit$coef[2]
+
+B <- 1000
+slope <- matrix(NA, nrow=B)
+for(b in (1:B)){
+  slope[b]<-lm(calories~shuffle(sugar), data=cereal)$coef[2]
+}
+@
+
+
+\begin{enumerate}
+\item Simulate $1000$ new datasets under the assumption that the null hypothesis is true.
+\begin{itemize}
+\item Explain specifically how this is done. Use the R-code above to explain your answer.
+\end{itemize}
+
+\item With each of the $1000$ datasets, calculate the statistic of interest.
+\begin{itemize}
+\item What is the statistic of interest in this example?
+\end{itemize}
+
+\item You should now have $1000$ statistics, one from each of the $1000$ samples. Make a histogram of those statistics.
+
+
+<<plot2, echo=FALSE, fig.width=14, out.width="0.9\\linewidth">>=
+par(mfrow=c(1,2))
+
+histPercent <- function(x, ...) {
+   H <- hist(x, plot = FALSE)
+   H$density <- with(H, 100 * density* diff(breaks)[1])
+   labs <- paste(round(H$density), "%", sep="")
+   plot(H, freq = FALSE, labels = labs, ylim=c(0, 1.12*max(H$density)),...)
+}
+
+histPercent(slope, main = "Permutation distribution",
+     xlab = "statistic",
+     ylab = "Proportion of total")
+abline(v=c(-1,1)*b1obs, col="red",lwd=3)
+
+@
+
+\begin{itemize}
+\item What was the observed statistic from the original sample?
+\item Draw a vertical line at the observed statistic on the plot above.
+\end{itemize}
+
+\item The p-value is found by calculating the proportion of permutation statistics (generated under the assumption that the null hypothesis is true) that were as or more extreme than the observed statistic.
+\begin{itemize}
+\item Estimate the p-value. Explain your answer.
+\item Is this a two-tailed test or a one-tailed test?
+\end{itemize}
+
+\item Write a conclusion.
+
+\end{enumerate}
+
+
+
+\end{document}

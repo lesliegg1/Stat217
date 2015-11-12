@@ -1,0 +1,76 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: In Class $8/31$}
+\end{center}
+
+<<datasetup, echo=FALSE>>=
+set.seed(21)
+mt <- rnorm(20, 105, 20)
+id <- rnorm(20, 100, 20)
+
+iq <- data.frame(c(mt, id), c(rep("mt", 20), rep("id", 20)))
+names(iq) <- c("iq", "state")
+@
+
+
+<<ttest, echo=TRUE>>=
+t.test(iq ~ state, data=iq, var.equal=TRUE, alternative="less")
+1-pt(0.864, 38)
+@
+
+<<assumpt, echo=TRUE>>=
+sd(mt)
+sd(id)
+par(mfrow=c(1,2))
+hist(mt)
+hist(id)
+@
+
+Independence: Think of a reason why the IQ of one person in the Montana group might be more similar to another person in the Montana group. \\
+
+Example: Suppose two people in the sample belong to the same family. This could be a source of dependence - the IQ's of two people in the same family are probably more similar than the IQ's of two people from different families. \\
+
+Write down two more possible sources of dependence:
+\vspace{2in}
+
+Now consider a new example. Suppose we want to compare the grades of MSU students who sit in the front row to the grades of MSU students who sit in the back row. We randomly select ten classes at MSU during the fall semester. In each of these classes, the final grades of the students in the front row and the final grades of the students in the back row are recorded. Identify two possible violations of the independence assumption.
+\vspace{2in}
+
+One more example. Suppose we think that more Americans wear hats indoors more often than Europeans. Suppose we randomly select 50 Americans and 50 Europeans. We ask each subject to recall the number of times in the last week that they wore a hat indoors. Identify two possible violations of the independence assumption.
+
+
+\end{document}

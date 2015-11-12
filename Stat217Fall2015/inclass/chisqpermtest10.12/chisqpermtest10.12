@@ -1,0 +1,61 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+\begin{center}
+\large{STAT 217: Chi-Squared Permutation Test 10-12 and 10-14} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Two random samples of cars were taken (one sample of $30$ Hondas, and one sample of $70$ Toyotas), and then the safety rating of the vehicle was recorded in stars (one star, two star, or three star). The data are shown in the {\bf contingency table} below. 
+
+<<safety, echo=FALSE, message=FALSE>>=
+brand <- c(rep("Honda", 30), rep("Toyota", 70))
+set.seed(3)
+starsH <- ifelse(runif(30)<0.1, "one", ifelse(runif(30)<0.3, "two", "three"))
+starsT <- ifelse(runif(70)<0.4, "one", ifelse(runif(70)<0.7, "two", "three"))
+stars <- c(starsH, starsT)
+brand <- as.factor(brand)
+stars <- as.factor(stars)
+require(mosaic)
+@
+
+<<tally, echo=TRUE, message=FALSE, size='footnotesize'>>=
+safetytable<-tally(~brand+stars,margins=F)
+chisq.test(safetytable)
+@
+
+<<permtest>>=
+
+@
+
+
+\end{enumerate}
+
+
+
+\end{document}

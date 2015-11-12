@@ -1,0 +1,94 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: MLR Model (in class 4/13)} \\
+\end{center}
+
+
+
+<<mlr, echo=FALSE>>=
+snow <- read.csv("~/Documents/Stat217Spring2015/Inclass/mlrmodel/snotel_s.csv", head=T)
+@
+
+<<modelfit, echo=TRUE, size='footnotesize'>>=
+lm.snow <- lm(Snow.Depth~Max.Temp+Min.Temp+Elevation, data=snow)
+summary(lm.snow)
+@
+
+<<effect, echo=FALSE, out.width="0.5\\linewidth">>=
+#Making own effect plot:
+elevs<-c(5000,6000,8000)
+snowdepths<-c(-6.19,20.71,74.51)
+plot(snowdepths~elevs,ylim=c(-20,100),cex=2,main="Effect plot of elevation by hand",col="blue",pch=16)
+lines(snowdepths~elevs,col="red",lwd=2)
+@
+
+
+\begin{enumerate}
+
+\item The following dataset contains the SAT verbal and SAT math scores of $1000$ college graduates, as well as there college GPA. The results of the linear model output are shown below.
+
+<<sat, echo=FALSE, message=FALSE>>=
+require(openintro)
+data(satGPA)
+@
+
+<<satfit, echo=TRUE, size='footnotesize'>>=
+lm.sat <- lm(FYGPA~SATV+SATM, data=satGPA)
+summary(lm.sat)
+@
+
+\begin{enumerate}
+\item What is the response variable, and what is (are) the explantory variable(s)?
+\vspace{0.75in}
+
+\item Write out the true AND estimated models.
+\vspace{1in}
+
+\item Write out the hypotheses being tested next to each p-value in the summary table above.
+
+\item Write out your conclusion for the slope coefficient on SAT Math.
+\vspace{0.75in}
+
+\item Interpret the slope coefficient estimate for SAT Math in context of the problem.
+\vspace{0.75in}
+
+\item What does 'after controlling for' the SAT verbal score mean in this context?
+
+\end{enumerate}
+
+
+
+\end{enumerate}
+
+
+
+
+
+\end{document}

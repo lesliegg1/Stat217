@@ -1,0 +1,76 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Parallel Lines Model (4-20)} \\
+\end{center}
+
+
+Crab Claw Force and Size: As part of a study of the relationship between predatory intertidal crab species and snail populations, researchers measured the average closing forces (newtons) and propodus heights (mm) of the claws on several crabs of three species. They collected data on $14$ crabs from the species {\it nudus}, $12$ from species {\it bellus}, and $12$ from species {\it productus}. 
+
+<<data, echo=FALSE>>=
+crab.data <- read.csv("~/Documents/Stat411/data/CrabData.csv", head=TRUE)
+crab.data$Species <- c(rep("nudus",14),rep("bellus",12),rep("productus",12))
+@
+
+<<separatelines, echo=TRUE, message=FALSE>>=
+parallel.out <- lm(Force ~ Height+Species, data=crab.data) 
+summary(parallel.out)
+@
+
+\begin{enumerate}
+\item Write out the response variable and the explanatory variable(s). Identify each as categorical or quantitative. Write out the levels of the categorical variable.
+\vspace{1in}
+\item Write out the true model. Choose the same indicator variables that R chose!
+\vspace{1in}
+\item Using the R output, write out the estimated model.
+\vspace{1in}
+\item What is the reference level?
+\vspace{0.5in}
+
+\item Write out the model for the {\it nudus} species.
+\vspace{1in}
+
+\item Write out the model for the {\it bellus} species.
+\vspace{1in}
+
+\item Write out the model for the {\it productus} species.
+\vspace{1in}
+
+\item Plot the three estimated regression lines on the same graph. Why is this called a ``parallel lines'' model?
+
+\end{enumerate}
+
+
+\end{document}

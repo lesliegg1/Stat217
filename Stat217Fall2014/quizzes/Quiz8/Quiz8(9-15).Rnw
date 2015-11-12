@@ -1,0 +1,85 @@
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: QUIZ 8\\
+\end{flushleft}
+
+For each of the following, clearly write:
+
+\begin{itemize}
+\item Question of interest
+\item Summary of statistical findings (based on output given)
+\item Scope of inference (never assume you have a R.S. or R.A. unless it is specifically stated)
+\end{itemize}
+
+\begin{enumerate}
+
+\item In the 1980s, biologists Peter and Rosemary Grant caught and measured all the birds from more than 20 generations of finches on the Galapagos island of Daphne Major. In one of those years, 1977, a severe drought caused vegetation to wither, and the only remaining food source was a large, tough seed, which the finches ordinarily ignored. Were the birds with larger and stronger beaks for opening these tough seeds more likely to survive that year, and did they tend to pass this characteristic to their offspring? The data are beak depths (height of the beak at its base) of 89 finches caught the year before the drought (1976) and 89 finches captured the year after the drought (1978).
+
+<<finches, echo=FALSE, message=FALSE>>=
+require(Sleuth3)
+attach(case0201)
+yearFactor <- factor(Year) # Convert the numerical variable Year into a factor
+# with 2 levels. 1976 is "group 1" (it comes first alphanumerically)
+t.test(Depth ~ yearFactor, var.equal=TRUE) # 2-sample t-test; 2-sided by default
+@
+
+\item Susan Sound predicts that students will learn most effectively with a constant background sound, as opposed to an unpredictable sound or no sound at all. She randomly divides twenty-four students into three groups of eight. All students study a passage of text for 30 minutes. Those in group 1 study with background sound at a constant volume in the background. Those in group 2 study with noise that changes volume periodically. Those in group 3 study with no sound at all. After studying, all students take a 10 point multiple choice test over the material.
+
+<<susan, echo=FALSE>>=
+scores <- c(7,4,6,8,6,6,2,9,5,5,3,4,4,7,2,2,2,4,7,1,2,1,5,5)
+sound <- c(rep("constant",8), rep("random",8), rep("nosound",8))
+lm.fit <- lm(scores~sound)
+anova(lm.fit)
+@
+
+\item In an industrial laboratory, under uniform conditions, $28$ randomly selected batches of electrical insulating fluid were subjected to constant voltages until the insulating property of the fluids broke down. Seven different voltage levels were randomly assigned to each of the batches and the measured reponses were the times until breakdown.
+
+<<voltages, echo=FALSE, message=FALSE>>=
+attach(case0802)
+logTime <- log(Time)
+myOneWay <- lm(logTime ~ factor(Voltage))
+anova(myOneWay) 
+@
+
+\item Educational researchers randomly assigned 28 ninth-year students in Australia to receive coordinate geometry training in one of two ways: a conventional way and a modified way. After the training, the students were asked to solve a coordinate geometry problem. The time to complete the problem was recorded, but five students in the “conventional” group did not complete the solution in the five minute alloted time.
+
+<<tests, echo=FALSE, message=FALSE>>=
+attach(case0402)
+#boxplot(Time ~ Treatment)
+median(Time[Treatment=="Conventional"])-median(Time[Treatment=="Modified"])
+t.test(Time ~ Treatment, var.equal=TRUE,
+            alternative="two.sided", conf.int=TRUE)
+@
+
+
+
+
+\end{enumerate}
+\end{document}

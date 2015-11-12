@@ -1,0 +1,79 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: Project $2$} \\
+Due Friday, January $30$ in class
+\end{center}
+
+{\bf You must work in a group of 2-3. There will be a point deduction if you do not 
+work in a group.}\\
+
+The following excerpt from Verdot, et al. (2010) from an article titled, 
+``A simple tool to ameliorate detainees’ mood and well-being in prison: 
+physical activities'' published in the French journal (sorry about the ``translation''...)  {\it International Review on Sport and Violence} describes their study.
+
+\begin{quote}
+A total number of 26 male subjects, imprisoned between 3 to 48 months (M = 24.54; SD = 16.33), participated to the study. Aged between 20 and 59 years (M = 35.77; SD = 10.55) the detainees were held in custody for sexual offences. This particular population of prisoners was chosen because they are subjected to severe stress and idleness as they are housed separately from other prisoners in reason of the bad perception the latter have of their particular crimes. \\
+
+The participants were divided into two groups: 15 “Sportsmen” (aged 20 to 57 years, Mean: 33.3 ± 9.4) who chose to follow the physical programme; and 11 “References” (aged 26 to 59 years, Mean: 39.1 ± 11.5), who did not and wished to remain sedentary. \\
+
+Each “sportsman” participated in a programme of two to three physical exercise sessions per week lasting one to two hours and warranting a minimum of three hours per week. The sessions took place in a specific room and at definite time crenels, guaranteeing safety, space and time of practice without wardens and with the only presence of the “physical instructor”. \\
+
+The programme consisted in dual (table tennis and badminton) or collective (volley ball) physical exercises chosen in order to increase social interactions, enjoyment, motivation and adherence. The practice was of moderate intensity, adapted to each individual and was not intended to be a training programme.
+\end{quote}
+
+Researchers would like to compare changes on the Perceived Stress Scale for the subjects in the sport program to those in the control. Conduct a permutation test to address this question. Summarize your results in a written report following the {\bf Project Writing Guidelines} posted on D2L. The following R code will get you started. \\
+
+Include one additional section in your report and label it {\it Additional Section}. In this section, conduct a two-sample t-test and write a conclusion with your results from the t-test. Compare these results to the permutation test results.
+
+
+\begin{verbatim}
+require(mosaic)
+
+favstats(Difference~Group,data=PrisonStress)
+require(beanplot)
+beanplot(Difference~Group,data=PrisonStress,method="jitter",log="",col=7)
+
+#Parametric
+t.test(Difference~Group,data=PrisonStress,var.equal=T)
+
+#Permutation test
+
+#Bootstrap CI
+\end{verbatim}
+
+\end{document}
+

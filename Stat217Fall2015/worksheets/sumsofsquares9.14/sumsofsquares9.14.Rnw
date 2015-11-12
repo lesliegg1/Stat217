@@ -1,0 +1,82 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{setspace}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.7in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-2.0cm}
+
+%% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+
+\begin{document}
+
+\begin{center}
+{\Large \bf Sums of Squares $9-14$}
+\end{center}
+\vspace{0.25in}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  # this is equivalent to \SweaveOpts{...}
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="72", show.signif.stars=FALSE)
+@
+
+Today's activity will guide you to understand three quantities used to measure variability in data, SSE, SST, and SSA:
+
+\begin{itemize}
+\item The sums of squared errors (SSE) is a measure of the variability of responses within a group.\\
+$SSE=\sum_{j=1}^{J}\sum_{n=1}^{n_j} (y_{ij}-\bar{y_j})^2 = \sum_{j=1}^{J}\sum_{n=1}^{n_j} e_{ij}^2$
+
+\item The total sums of squares (SST) is a measure of the variability of responses around the overall average, $\bar{\bar{y}}$.\\
+$SST=\sum_{j=1}^{J}\sum_{n=1}^{n_j} (y_{ij}-\bar{\bar{y}})^2 $
+
+\item The sums of squares for the explanatory variable (SSA) is a measure of the variability of the group averages around the overall average.\\
+$SSA=\sum_{j=1}^{J}\sum_{n=1}^{n_j} (\bar{y_j}-\bar{\bar{y}})^2 = SST-SSE$
+\end{itemize}
+
+<<simeasy, echo=TRUE>>=
+y1 <- c(1,2, 5,6, 10,11)
+group <- c(rep(1,2), rep(2,2), rep(3,2))
+one <- cbind.data.frame(y1,group)
+one
+@
+
+<<simnext, echo=TRUE>>=
+y2 <- c(3,9, 3,11, 2,10)
+two <- cbind.data.frame(y2, group)
+two
+@
+
+<<plots, echo=TRUE, fig.width=10>>=
+par(mfrow=c(1,2))
+plot(group, y1, main="Dataset 1")
+plot(group, y2, main="Dataset 2")
+@
+
+
+
+
+
+\begin{enumerate}
+
+\item For the first dataset, calculate $\bar{\bar{y}}$ and $\bar{y_j}$ (for each of the groups).
+
+\item For the first dataset, calculate SSE, SST, and SSA.
+
+\item Find the ratio, SSA/SSE.
+
+\item Repeat these steps for the second dataset.
+
+\item For each dataset, describe whether you would choose the single mean model or the separate means model. In your answer, refer to the plot and the ratio SSA/SSE.
+
+\end{enumerate}
+
+\end{document}

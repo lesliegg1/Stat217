@@ -1,0 +1,67 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 15} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Identify each of the following as a chi-squared test of independence or a chi-squared test of homogeneity.
+
+\begin{itemize} 
+\item A sample of 36 students was selected and were then categorized according to gender (M,F) and political party preference (Democrat, Republican, Independent). 
+\vspace{0.5in}
+
+\item To determine if there was an association between race and opinions about schools, researchers surveyed 3 randomly selected groups of parents (black, hispanic, and white) and asked them “Are high schools in your state doing an excellent, good, fair or poor job or don’t you know enough to say?”. 
+\vspace{0.5in}
+
+\item In a group of $100$ $18$-year-olds, $50$ were randomly assigned to become smokers and $50$ were randomly assigned to be non-smokers. Thirty years later, each person was identified to have ``lung cancer'' or ``no lung cancer''.
+\vspace{0.5in}
+
+\end{itemize}
+
+\item Suppose $30$ of the $50$ smokers in the last problem had lung cancer, and only $5$ of the $50$ nonsmokers had lung cancer. 
+
+
+
+\begin{enumerate}
+\item Make a contingency table for these data. 
+
+\vspace{1.5in}
+
+\item Sketch a stacked barchart for these data. 
+
+\vspace{1.5in}
+
+\end{enumerate}
+\end{enumerate}
+
+
+
+\end{document}

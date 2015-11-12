@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Unreplicated designs} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item Refer to the data below. Is this a replicated or an unreplicated design? Explain how you know.
+
+<<design, echo=FALSE>>=
+adhesive <- data.frame(strength=c(9.60,9.69,8.43,9.98,11.28,10.10,11.01,10.44, 9.00, 9.57, 9.03, 9.80), pressure=rep(seq(from=120,to=150,by=10),3), temperature=rep(seq(250,270,10),c(4,4,4)))
+adhesive
+adhesive$pressure<-factor(adhesive$pressure)
+adhesive$temperature<-factor(adhesive$temperature)
+@
+
+\item Is this a balanced design? Briefly explain how you know.
+\vspace{0.5in}
+
+\item Below is a partial anova table. Fill in the missing blanks.
+
+\begin{verbatim}
+Source                   df      SS
+pressure                 __     .58
+temperature              __     4.66
+pressure*temperature     __     2.15
+Residual                 __      ___
+\end{verbatim}
+
+\item What did you get in the residual row above? Specifically explain why this is an issue.
+\vspace{0.75in}
+
+\item Below is the interaction plot for these data. How would {\bf you} deal with the issue identified above?
+
+<<plot, echo=TRUE, out.width=".5\\linewidth">>=
+with(adhesive, interaction.plot(temperature, pressure,strength))
+@
+
+
+\item Below is the additive model, fit with Anova(lm.adhesive). In the temperature row, what distribution does the test statistic follow under the null hypothesis?
+
+<<Anova, echo=FALSE, message=FALSE>>=
+lm.adhesive <- lm(strength~pressure+temperature, data=adhesive)
+require(car)
+Anova(lm.adhesive)
+@
+
+\item Interpret the p-value in the temperature row of the Anova above. Refer to the example provided in class.
+
+\vspace{2in}
+
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

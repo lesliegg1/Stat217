@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: In Class $9/2$}
+\end{center}
+
+Researchers are interested in whether offensive players earn higher salaries than defensive players in the NFL. $100$ offensive players and $100$ defensive players were randomly sampled, and their annual salaries were recorded (10000s of dollars). The \verb+favstats+ are shown below.
+
+<<setupdata, echo=FALSE, message=FALSE>>=
+require(fastR)
+data(noise)
+noise <- noise %>%
+  select(score, volume) %>%
+  filter(volume!="low")
+noise$volume <- droplevels(noise$volume)
+set.seed(20135)
+position <- c(rep("defense", 100), rep("offense", 100))
+baseball <- read.csv("~/Documents/Stat506/Homework/HW5/BaseballStats2000.csv", head=T)
+premium <- c(rnorm(100, 500, 100), baseball$salary[1:100]/10000)
+@
+
+
+<<favstats, echo=TRUE>>=
+favstats(premium~position, data=noise)
+@
+
+
+<<noisebean, echo=TRUE, out.width=".5\\linewidth", fig.height=8, message=FALSE>>=
+require(beanplot)
+beanplot(premium~position, data=noise, col="white", log="")
+@
+
+\begin{enumerate}
+
+\item Assess the assumptions for a two sample t-test.
+\vspace{2in}
+
+\item Assess the assumptions for a permutation test.
+\vspace{2in}
+
+\item The permutation distribution is shown below, along with the code used to generate it. Recall that the permutation distribution plots sample statistics that we would see if the null hypothesis were true. Draw a vertical line on the histogram at the observed difference in means. Then estimate the p-value.
+
+<<perdist, echo=FALSE, out.width="\\linewidth", fig.width=10>>=
+#Permutation test
+Tobs <- diffmean(premium ~ position, data = noise) ## this is the observed diff in means
+B <- 1000 ## this is how many permutations you want
+Tstar <- matrix(NA, nrow = B) ## setting up empty slots to put our permutation statistics in
+for (b in 1:B) {
+Tstar[b] <- diffmean(premium ~ shuffle(position), data = noise) ## the bth permutation stat
+}
+par(mfrow = c(1, 2)) ## telling R to put the two plots side by side
+hist(Tstar)
+
+plot(density(Tstar), main = "Density Plot of Tstar", xlab = "")
+#pdata(abs(Tobs), abs(Tstar), lower.tail = F)
+@
+
+
+\item Write a conclusion based on your p-value. Use a $95\%$ confidence interval of $[10,160]$
+\vspace{1.7in}
+
+
+\item Write a Scope of Inference.
+\vspace{1.5in}
+
+\item Write a scope of inference for the following:
+\begin{enumerate}
+\item Susan Sound predicts that students will learn most effectively with a constant background sound, as opposed to an unpredictable sound or no sound at all. She randomly selects $24$ students at Whatcom Community College for the study. She randomly divides twenty-four students into three groups of eight. All students study a passage of text for 30 minutes. Those in group 1 study with background sound at a constant volume in the background. Those in group 2 study with noise that changes volume periodically. Those in group 3 study with no sound at all. After studying, all students take a 10 point multiple choice test over the material.
+
+\vspace{1.6in}
+
+\item In an industrial laboratory, under uniform conditions, 28 batches of electrical insulating fluid were subjected to constant voltages until the insulating property of the fluids broke down. Each of the batches were subject to one of seven voltage levels and the measured reponses were the times until breakdown.
+\vspace{1.6in}
+
+\end{enumerate} 
+
+\item If time: The output from \verb+t.test+ is shown below. Are the results similar to what you got from the permutation test? Draw a picture to describe how you would find the p-value, and explain how this test differs from the permutation test.
+<<ttestt, echo=TRUE, size='footnotesize', eval=FALSE>>=
+t.test(premium~position, data=noise, var.equal=TRUE, alt="greater")
+@
+\begin{verbatim}
+  Two Sample t-test
+data:  premium by position
+t = 2.0043, df = 198, p-value = 0.0232
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+ 13.87332      Inf
+sample estimates:
+mean in group defense mean in group offense 
+             493.5688              414.5004 
+\end{verbatim}
+
+
+\end{enumerate}
+
+
+\end{document}

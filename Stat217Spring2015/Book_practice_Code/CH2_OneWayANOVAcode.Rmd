@@ -1,0 +1,274 @@
+Topic 2: One-Way ANOVA
+========================================================
+
+
+```{r warning=F, message=F, echo=T, fig.width=10, fig.height=10}
+require(heplots)
+require(mosaic)
+data(MockJury)
+par(mfrow=c(1,2))
+boxplot(Years~Attr,data=MockJury)
+beanplot(Years~Attr,data=MockJury,log="",col="bisque",method="jitter")
+
+favstats(Years~Attr,data=MockJury)
+
+#install.packages("gplots")
+#require(gplots)
+#plotmeans(Years~Attr,data=MockJuryR,ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black")
+
+lm1=lm(Years~Attr-1,data=MockJury)
+summary(lm1)
+
+lm2=lm(Years~Attr,data=MockJury)
+summary(lm2)
+
+require(effects)
+plot(allEffects(lm2))
+
+lm3=lm(Years~1,data=MockJuryR)
+summary(lm3)
+
+
+
+pf(2.77,df1=2,df2=111,lower.tail=F)
+
+anova(lm1)
+
+
+#Permutation approaches to an F-test:
+#MockJuryP1=MockJuryR
+#MockJuryP1$Attr=shuffle(MockJuryP1$Attr)
+#MockJuryP2=MockJuryR
+#MockJuryP2$Attr=shuffle(MockJuryP2$Attr)
+#MockJuryP3=MockJuryR
+#MockJuryP3$Attr=shuffle(MockJuryP3$Attr)
+
+Tobs <- anova(lm(Years~Attr,data=MockJuryR))[1,2]; Tobs
+par(mfrow=c(2,2))
+require(gplots)
+plotmeans(Years~Attr,data=MockJuryR,ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black", main="(a) Real Data",ylim=c(3,7.2))
+anova(lm(Years~Attr,data=MockJuryR))
+text(c(1,1,1),c(7,6.5,6),labels=c("SSA=70.9","SSE=1421.3","SSTotal=1492.3"),col="blue")
+
+plotmeans(Years~Attr,data=MockJuryP1,main="(b) Permuted Data",ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black",ylim=c(3,7.2))
+anova(lm(Years~Attr,data=MockJuryP1))
+text(c(1,1,1),c(7,6.5,6),labels=c("SSA=6.7","SSE=1485.6","SSTotal=1492.3"),col="blue")
+
+
+plotmeans(Years~Attr,data=MockJuryP2,main="(c) Permuted Data",ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black",ylim=c(3,7.2))
+anova(lm(Years~Attr,data=MockJuryP2))
+text(c(1,1,1),c(7,6.5,6),labels=c("SSA=6.6","SSE=1485.7","SSTotal=1492.3"),col="blue")
+
+
+plotmeans(Years~Attr,data=MockJuryP3,main="(d) Permuted Data",ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black",ylim=c(3,7.2))
+anova(lm(Years~Attr,data=MockJuryP3))
+text(c(1,1,1),c(7,6.5,6),labels=c("SSA=11.0","SSE=1481.3","SSTotal=1492.3"),col="blue")
+
+Tobs <- anova(lm(Years~Attr,data=MockJury))[1,2]; Tobs
+
+par(mfrow=c(1,2))
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-anova(lm(Years~shuffle(Attr),data=MockJury))[1,2]
+  }
+hist(Tstar,labels=T)
+abline(v=Tobs,col="red",lwd=3)
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=Tobs,col="red",lwd=3)
+
+
+pdata(Tobs,Tstar,lower.tail=F)
+
+#F-distribution examples
+
+x=seq(from=0,to=6,length.out=50)
+par(mfrow=c(2,2))
+plot(x,df(x,df1=2,df2=111),type="l",ylab="Density",xlab="F",main="F(2,111)",col="red",lwd=3)
+
+plot(x,df(x,df1=2,df2=10),type="l",ylab="Density",xlab="F",main="F(2,10)",col="blue",lwd=3)
+
+plot(x,df(x,df1=6,df2=10),type="l",ylab="Density",xlab="F",main="F(6,10)",col="green",lwd=3)
+
+plot(x,df(x,df1=6,df2=111),type="l",ylab="Density",xlab="F",main="F(6,111)",col="magenta",lwd=3)
+
+anova(lm2)
+pf(2.77,df1=2,df2=111,lower.tail=F)
+
+
+Tobs <- anova(lm(Years~Attr,data=MockJury))[1,4]; Tobs
+
+par(mfrow=c(1,2))
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-anova(lm(Years~shuffle(Attr),data=MockJury))[1,4]
+  }
+hist(Tstar,labels=T)
+abline(v=Tobs,col="red",lwd=3)
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=Tobs,col="red",lwd=3)
+
+
+pdata(Tobs,Tstar,lower.tail=F)
+
+
+par(mfrow=c(1,1))
+plot(density(Tstar),xlab="F-values",ylab="Density",main="Comparison of permutation and F(2,111) distributions",lwd=2,xlim=c(0,9))
+x=seq(from=0,to=9,length.out=50)
+lines(x,df(x,df1=2,df2=111),col="red",lwd=2,lty=2)
+
+par(mfrow=c(2,2))
+plot(lm2,which=2,pch=16)
+
+par(mfrow=c(1,2))
+eij=residuals(lm2)
+hist(eij,main="Histogram of residuals")
+plot(density(eij),main="Density plot of residuals",ylab="Density",xlab="Residuals")
+par(mfrow=c(1,1))
+require(car)
+qqPlot(eij,main="QQ-Plot of residuals")
+plot(density(eij),main="Density plot of residuals",ylab="Density",xlab="Residuals")
+
+#QQ plot code and examples:
+require(car)
+par(mfrow=c(4,2))
+#Right skew
+#y1=scale(rf(75,df1=3,df2=8))
+qqPlot(y1,main="(a) QQ-Plot of y1",envelope=F,pch=19,cex=1.3)
+plot(density(y1),xlab="y1",ylab='Density',main="(b) Density plot of y1",col="blue",xlim=c(-6.5,6.5))
+#Left Skew
+#y2=scale(-rf(75,df1=3,df2=8))
+qqPlot(y2,main="(c) QQ-Plot of y2",envelope=F,pch=19,cex=1.3)
+plot(density(y2),xlab="y2",ylab='Density',main="(d) Density plot of y2",col="blue",xlim=c(-6.5,6.5))
+
+#t(2)
+#y3=scale(rt(75,df=4))
+qqPlot(y3,main="(e) QQ-Plot of y3",envelope=F,pch=19,cex=1.3)
+plot(density(y3),xlab="y3",ylab='Density',main="(f) Density plot of y3",col="blue",xlim=c(-6.5,6.5))
+
+#Uniform
+#y4=scale(runif(75,0,1))
+qqPlot(y4,main="(g) QQ-Plot of y4",envelope=F,pch=19,cex=1.3)
+plot(density(y4),xlab="y4",ylab='Density',main="(h) Density plot of y4",col="blue",xlim=c(-6.5,6.5))
+
+
+
+par(mfrow=c(2,2))
+#One normal example
+
+#y5=scale(rnorm(75))
+qqPlot(y5,main="(i) QQ-Plot of y5",envelope=F,pch=19,cex=1.3)
+plot(density(y5),xlab="y5",ylab='Density',main="(j) Density plot of y5",col="blue",xlim=c(-6.5,6.5))
+
+
+#Another normal example
+#y6=scale(rnorm(75))
+qqPlot(y6,main="(k) QQ-Plot of y6",envelope=F,pch=19,cex=1.3)
+plot(density(y6),xlab="y6",ylab='Density',main="(l) Density plot of y6",col="blue",xlim=c(-6.5,6.5))
+
+#balanced or not?
+tally(~Attr,data=MockJuryR)
+
+
+#Tooth growth example: 
+data(ToothGrowth) #Available in Base R package
+ToothGrowth$Treat=with(ToothGrowth,interaction(supp,dose)) #Creates a new variable Treat with 6 levels
+require(mosaic)
+tally(~Treat,data=ToothGrowth)
+
+par(mfrow=c(1,2))
+boxplot(len~Treat,data=ToothGrowth,ylab="Tooth Growth in mm")
+beanplot(len~Treat,data=ToothGrowth,log="",col="yellow",method="jitter")
+
+
+favstats(len~Treat,data=ToothGrowth)
+
+
+
+m2=lm(len~Treat,data=ToothGrowth)
+par(mfrow=c(2,2))
+plot(m2)
+anova(m2)
+
+ Tobs <- anova(lm(len~Treat,data=ToothGrowth))[1,4]; Tobs
+par(mfrow=c(1,2))
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-anova(lm(len~shuffle(Treat),data=ToothGrowth))[1,4]
+  }
+hist(Tstar,xlim=c(0,Tobs+3))
+abline(v=Tobs,col="red",lwd=3)
+plot(density(Tstar),,xlim=c(0,Tobs+3),main="Density curve of Tstar")
+abline(v=Tobs,col="red",lwd=3)
+
+
+pdata(Tobs,Tstar,lower.tail=F)
+
+summary(m2)
+
+#Tukey section:
+
+m=1:100
+pr=1-.95^m
+plot(m,pr,type="l",col="blue",xlab="# of Tests",ylab="Probability of at least one Type I error",lwd=2)
+abline(h=.05,lty=2,col="red")
+
+
+
+par(mfrow=c(1,1))
+#TukeyHSD.lm(m2)
+#plot(TukeyHSD(m2))
+require(multcomp)
+Tm2 <- glht(m2, linfct = mcp(Treat = "Tukey"))
+confint(Tm2)
+old.par <- par(mai=c(1.5,2,1,1)) #Makes room on the plot for the group names
+plot(Tm2)
+cld(Tm2)
+
+#require(gplots)
+#plotmeans(len~Treat,data=ToothGrowth,ylab="Tooth Growth in mm",mean.labels=T,digits=2,barcol="red",col="black")
+beanplot(len~Treat,data=ToothGrowth,log="",col="white",method="jitter")
+text(c(2),c(10),"a",col="blue",cex=2)
+text(c(3,5,6),c(25,28,28),"b",col="green",cex=2)
+text(c(1,4),c(15,18),"c",col="red",cex=2)
+
+require(heplots)
+require(mosaic)
+data(MockJury)
+lm2=lm(Years~Attr,data=MockJury)
+require(multcomp)
+Tm2 <- glht(lm2, linfct = mcp(Attr = "Tukey"))
+confint(Tm2)
+old.par <- par(mai=c(1.5,2.5,1,1)) #Makes room on the plot for the group names
+plot(Tm2)
+cld(Tm2)
+
+#Re-running at 90% family-wise rate:
+confint(Tm2,level=0.9)
+old.par <- par(mai=c(1.5,2.5,1,1)) #Makes room on the plot for the group names
+plot(confint(Tm2,level=.9))
+cld(Tm2,level=0.1)
+
+
+#require(gplots)
+#plotmeans(Years~Attr,data=MockJuryR,ylab="Years",mean.labels=T,digits=2,legends=c("Beautiful","Average","Unattractive"),barcol="red",col="black", main="Tukey's HSD at the 90% confidence level")
+
+beanplot(Years~Attr,data=MockJury,log="",col="white",method="jitter")
+text(c(1),c(5),"ab",col="blue",cex=2)
+text(c(2),c(4.8),"a",col="green",cex=2)
+text(c(3),c(6.5),"b",col="red",cex=2)
+
+
+#Practice problem
+require(multcomp)
+data(cholesterol)
+help(cholesterol)
+
+```
+
+
+
+
+

@@ -1,0 +1,76 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Class handout $10/31$} \\
+\end{center}
+
+The following is output from a linear model of log earnings on education. I will use this output for the class example today. You can use this handout to follow along. You can fill in the blanks here or in your notes.
+
+<<edmodel, echo=F>>=
+earn <- read.csv("~/Documents/Stat505/Homework/HW8/earnings.csv", head=T)
+earn <- subset(earn, earn!="NA" & earn!=0)
+log.earn <- log(earn$earn)
+lm.ed <- lm(log.earn~ed, data=earn)
+summary(lm.ed)
+confint(lm.ed)
+@
+
+
+Conclusion for a test for a slope coefficient when the response variable is logged:
+\vspace{2.5in}
+
+<<logexpl, echo=F, size='footnotesize'>>=
+log.ed <- log(earn$ed)
+lm.ex <- lm(earn~log.ed,data=earn)
+summary(lm.ex)
+confint(lm.ex)
+@
+
+Conclusion for a test for a slope coefficient when the explanatory variable is logged:
+\vspace{1.8in}
+
+<<logboth, echo=F, size='footnotesize'>>=
+lm.both <- lm(log.earn~log.ed,data=earn)
+summary(lm.both)
+confint(lm.both)
+@
+
+Conclusion for a test for a slope coefficient when both the explanatory and response variables are logged:
+\vspace{2in}
+
+
+
+
+\end{document}

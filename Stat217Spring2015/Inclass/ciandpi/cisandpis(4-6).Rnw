@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='\\linewidth', dev='pdf', concordance=TRUE, size = 'footnotesize')
+options(replace.assign=TRUE,width=82, digits = 3, max.print="72",
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Prediction Intervals and Confidence Intervals (4/6)} \\
+\end{center}
+
+<<temptrend, echo=FALSE>>=
+cricket <- read.csv("~/Documents/Stat217Fall2014/quizzes/Quiz21/slr02.csv" 
+                           ,head=T)
+@
+
+<<lm, echo=TRUE>>=
+lm.chirp <- lm(chirps~temp, data=cricket)
+summary(lm.chirp)
+@
+
+\begin{enumerate}
+
+\item Write the hypotheses being tested in the intercept row.
+\vspace{0.75in}
+
+\item Write the hypotheses being tested in the temp row.
+\vspace{0.75in}
+
+<<int, echo=TRUE>>=
+confint(lm.chirp)
+@
+
+\item Interpret the $95\%$ confidence interval for the slope coefficient.
+\vspace{1in}
+
+<<ciformean, echo=TRUE>>=
+predict(lm.chirp, newdata=data.frame(temp=84.3), interval="confidence", level=0.95)
+@
+
+
+<<predict, echo=TRUE>>=
+predict(lm.chirp, newdata=data.frame(temp=84.3), interval="prediction", level=0.95)
+@
+
+\item Interpret the prediction interval for the predicted number of chirps at a temperature of $84.3$.
+\vspace{1in}
+
+\item Interpret the confidence interval for the estimated mean number of chirps at a temperature of $84.3$.
+\vspace{1in}
+
+
+\item Suppose someone told you that it was going to be $70$ degrees tomorrow, and asked you how many chirps you think there will be. Which uncertainty interval will you report along with your estimate?
+
+\end{enumerate}
+
+
+
+\end{document}

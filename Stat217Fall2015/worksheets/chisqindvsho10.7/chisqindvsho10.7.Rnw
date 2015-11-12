@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Chi Squared Tests of Homogeneity and Independence} \\
+\end{center}
+
+\noindent Identify each of the following as a chi-squared test of homogeneity or a chi-squared test of independence.
+
+\begin{enumerate}
+
+\item Bambach et al. (2013) analyzed data on all bicycle accidents involving collisions with motor vehicles in New South Wales, Australia during 2001-2009. For each collision, they recorded whether the rider was wearing a helmet, and they recorded whether the injury was a head injury or a ``other injury'' (not head-related).
+%\item Rerchers surveyed genotypes at an insertion/deletion polymorphism of the apolipoprotein B signal peptide in 2259 men. $807$ of the men with the ``AA'' genotype had coronary artery disease, while $26$ did not. $759$ of the men with the ``AB'' genotype had coronary artery disease, while $199$ did not. $184$ of the men with the ``BB'' genotype had coronary artery disease, while $42$ did not.
+\vspace{0.25in}
+
+\item Diodes used on a printed circuit board are produced in lots of size 4000. To study the lots with respect to a demanding specification, we take random samples of size 300 from 5 consecutive lots and test the diodes. Each diode is recorded as 'conforming' or `non-conforming'.
+\vspace{0.25in}
+
+\item Jackson et al. (2013) wanted to know whether it is better to give the diphtheria, tetanus and pertussis (DTaP) vaccine in either the thigh or the arm, so they collected data on severe reactions to this vaccine in children aged 3 to 6 years old. They collected a random sample of $30$ children in this age range and randomly assigned each child to be vaccinated in the thigh or the arm. They recorded the child's reaction as either severe or not severe.
+\vspace{0.25in}
+
+\item With your group, think of an example of a chi-squared test (I will assign you independence or homogeneity). Make a mini-presentation for the class explaining your example. Be sure to justify why it is a test of homogeneity or independence.
+
+
+\end{enumerate}
+
+
+
+\end{document}

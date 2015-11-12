@@ -1,0 +1,151 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 17} \\
+\end{center}
+
+
+\begin{enumerate}
+
+\item $800$ subjects were randomly divided into two groups and given a placebo or vitamin C to take during the cold season. At the end of the cold season, the subjects were interviewed by a physician who determined whether they had or had not suffered a cold during the period. Below is a table with the data. State whether a homogeneity test or an independence test is more appropriate.
+
+<<table, echo=FALSE, message=FALSE>>=
+require(Sleuth2)
+vit.c <- ex1916[3:4, 2:4]
+vit.c
+@
+
+\item $1160$ randomly selected Americans were asked about their gender and who they voted for in the 2000 presidential elections. Below is a table of the data.
+
+\begin{enumerate}
+\item Would you use a chi-square test of independence or homogeneity?
+
+<<bday, echo=FALSE, eval=FALSE>>=
+year <- c(rep("freshman",5), rep("sophomore",5), rep("junior",5), rep("senior",5))
+GPA <- c("A","B", "C","D","F", "A","B", "C","D","F", "A","B", "C","D","F", "A","B", "C","D","F")
+total <- c(14, 28, 24, 8, 5, 19, 48, 6, 4, 3, 30, 35, 15, 0, 2, 32, 26, 7, 6, 0)
+frame <- as.data.frame(cbind(year,GPA,total))
+frame$year <- factor(year)
+frame$GPA <- factor(GPA)
+as.numeric(frame$total)
+@
+
+
+<<mosiac, echo=F, message=FALSE>>=
+require(mosaic)
+require(poLCA)
+data(election)
+election <- subset(election, election$VOTE3 != "<NA>")
+election$VOTEF=factor(election$VOTE3)
+levels(election$VOTEF)=c("Gore","Bush","Other")
+election$GENDER <- factor(election$GENDER)
+levels(election$GENDER)=c("Male","Female")
+electable <- tally(~GENDER+VOTEF,data=election, margins=F)
+electable
+@
+
+\item What is the name of the plot below?
+
+<<mosaic, echo=FALSE, out.width="0.5\\linewidth">>=
+mosaicplot(electable)
+@
+
+\item Write the hypotheses of interest.
+\vspace{0.75in}
+
+\item Just by looking at the plot, do you think you will reject or FTR the null hypothesis? Briefly explain.
+\vspace{0.75in}
+
+\item Are the assumptions and conditions met to conduct a parametric chi-squared test (yes or no)? If you answer no, state the assumption(s) that are not met and why.
+\vspace{1.5in}
+
+\item Below is output from the chisq.test function. You can see that the degrees of freedom is spit out for you. Show how you would calculate these df by hand.
+
+<<chisq, echo=TRUE>>=
+chisq.test(electable)
+@
+
+\item Sketch a picture of the appropriate chi-squared distribution and draw a vertical line at your test statistic. Shade the area that represents the p-value.
+
+\vspace{1in}
+
+\item State your conclusion.
+
+\end{enumerate}
+
+\vspace{1in}
+\newpage
+
+\item Which of the following is not one of the assumptions necessary for a parametric chi-square test?
+\begin{enumerate}
+\item Normality
+\item Independence
+\item Randomization
+\item Expected Counts $>$ 5
+\end{enumerate}
+
+
+\item The $\chi^2$ test of the table gives the output below.  Using $\alpha = 0.01$, what decision should we make and what are the degrees of freedom for the test?
+\begin{verbatim}
+X-squared = 30.679, df = ---, p-value = 0.0002
+\end{verbatim}
+\begin{enumerate}
+\item FTR $H_0$, 15 df
+\item Reject $H_0$, 8 df
+\item FTR $H_0$, 12 df
+\item Reject $H_0$, 15 df
+\end{enumerate}
+
+
+\item Expected counts under the null hypothesis are shown below.  Are the assumptions for inference with a chi-square test satisfied?
+\begin{table}[H]
+\centering
+\begin{tabular}{l | rrrrr}
+& & Ranking & & & \\
+Location & 1-100 & 101-200 & 201-300 & 301-400 & 401-500 \\
+\hline
+North and Latin America & 39.8 & 40.2 & 39.8 & 40.6 & 39.4 \\
+Europe & 41.6 & 42 & 41.6 & 42.5 & 41.2 \\
+Asia/Africa/Pacific &18.58 & 18.7 & 18.5 & 18.7 & 18.3
+\end{tabular}
+\end{table}
+\begin{enumerate}
+\item No, the observed counts are too close to the expected counts
+\item No, the expected cell counts condition is violated
+\item No, the data are quantitative
+\item Yes
+\end{enumerate}
+
+\item {\bf Extra Credit} If the chi squared test statistic is relatively large, this provides evidence against the null hypothesis. Explain why. 
+
+\end{enumerate}
+
+
+
+\end{document}

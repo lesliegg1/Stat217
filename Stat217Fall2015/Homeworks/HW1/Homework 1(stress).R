@@ -1,0 +1,10 @@
+stress
+head(stress)
+tail(stress)
+stress$differences<-stress$PSSafter-stress$PSSbefore
+require(mosaic)
+stress$differences
+mean(stress$differences)
+sd(stress$differences)
+summary(stress$differences)
+hist(stress$differences)

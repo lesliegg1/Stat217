@@ -1,0 +1,274 @@
+```{r}
+install.packages("heplots")
+
+require(heplots)
+ require(mosaic)
+ data(MockJury)
+View(MockJury)
+head(MockJury)
+tail(MockJury)
+help(MockJury)
+summary(MockJury)
+par(mfrow=c(1,2)) #Makes one row and two columns of plot panels
+hist(MockJury$Years,xlab="Years",labels=T,main="Histogram of Years")
+boxplot(MockJury$Years,ylab="Years",main="Boxplot of Years")
+par(mfrow=c(1,1)) #Returns to making one graph at a time
+
+hist(MockJury$Years,freq=F,xlab="Years",main="Histogram of Years with density curve and rug")
+lines(density(MockJury$Years),lwd=3,col="red")
+rug(jitter(MockJury$Years),col="blue",lwd=2)
+
+boxplot(Years~Attr,data=MockJury)
+
+require(beanplot)
+beanplot(Years~Attr,data=MockJury,log="",col="bisque",method="jitter")
+
+NotBeautiful <- MockJury$Attr!="Beautiful"
+data.frame(MockJury$Attr,NotBeautiful)
+
+MockJury2 <- MockJury[NotBeautiful,]
+
+MockJury2$Attr <- factor(MockJury2$Attr) 
+
+summary(MockJury2$Attr)
+
+par(mfrow=c(1,2))
+boxplot(Years~Attr,data=MockJury2)
+beanplot(Years~Attr,data=MockJury2,log="",col="bisque",method="jitter")
+mean(Years~Attr,data=MockJury2)
+
+compareMean(Years ~ Attr, data=MockJury2)
+
+require(scatterplot3d)
+x=sort(rep(c(1,2),1000))
+y=rep(seq(from=-10,to=20,length.out=1000),2)
+z=dnorm(y,mean=5,sd=2)
+s3d <- scatterplot3d(x=x,y=y,z=z,pch=20,xlab="Group",angle=60,type="p",box=F,axis=F)
+text(s3d$xyz.convert(1.4, 15, 0.07),labels=expression(mu[1]==mu[2]))
+
+z=dnorm(y,mean=c(rep(0,1000),rep(10,1000)),sd=2)
+s3d <- scatterplot3d(x=x,y=y,z=z,pch=20,xlab="Group",angle=60,type="p",box=F,axis=F)
+text(s3d$xyz.convert(1.4, 15, 0.07),labels=expression(mu[1]!=mu[2]))
+
+Perm1 <- with(MockJury2,data.frame(Years,Attr,PermutedAttr=shuffle(Attr)))
+Perm1
+beanplot(Years~Attr,data=Perm1,log="",col="bisque",method="jitter",main="Original data")
+beanplot(Years~PermutedAttr,data=Perm1,log="",col="bisque",method="jitter",main="Permuted group labels")
+mean(Years ~ PermutedAttr, data=Perm1)
+compareMean(Years ~ PermutedAttr, data=Perm1)
+
+B<-5
+for (b in (1:B)){
+  print(b)
+  }
+
+
+Ts<-compareMean(Years ~ shuffle(Attr), data=MockJury2)
+Ts
+for (b in (1:B)){
+  Ts<-compareMean(Years ~ shuffle(Attr), data=MockJury2)
+  print(Ts)
+  }
+
+Tstar<-matrix(NA,nrow=B)
+Tstar
+for (b in (1:B)){
+  Tstar[b]<-compareMean(Years ~ shuffle(Attr), data=MockJury2)
+  }
+Tstar
+
+
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-compareMean(Years ~ shuffle(Attr), data=MockJury2)
+  }
+hist(Tstar,labels=T)
+plot(density(Tstar),main="Density curve of Tstar")
+favstats(Tstar)
+
+Tobs<-1.837
+hist(Tstar,labels=T)
+abline(v=Tobs,lwd=2,col="red")
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=Tobs,lwd=2,col="red")
+
+pdata(Tobs,Tstar,lower.tail=F)
+pdata(-Tobs,Tstar,lower.tail=T)
+
+hist(Tstar,labels=T)
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+
+
+pdata(abs(Tobs),abs(Tstar),lower.tail=F)
+
+par(mfrow=c(1,2))
+Tobs <- t.test(Years ~ Attr, data=MockJury2,var.equal=T)$statistic
+Tobs
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-t.test(Years ~ shuffle(Attr), data=MockJury2,var.equal=T)$statistic
+  }
+hist(Tstar,labels=T)
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+
+pdata(abs(Tobs),abs(Tstar),lower.tail=F)
+
+xa=seq(from=-7,to=7,length.out=300)
+par(mfrow=c(1,1))
+plot(xa,dt(xa,df=2),type="l",xlab="t-values",ylab="Density",lwd=4,ylim=c(0,0.39),main="Plot of three different t-distributions and the normal curve")
+lines(xa,dt(xa,df=10),lwd=3,col="grey")
+lines(xa,dt(xa,df=20),lwd=2)
+lines(xa,dnorm(xa),lty=2,lwd=2,col="blue")
+legend("left",legend=c("t(2)","t(10)","t(20)","Normal"),col=c("black","grey","black","blue"),lty=c(1,1,1,2),lwd=c(4,3,2,2))
+
+plot(density(Tstar),main="Permutation and t(73) distributions",xlab="T=t-statistic",lwd=2)
+x=seq(from=-4,to=4,length.out=100)
+lines(x,dt(x,df=73),col="red",lty=2,lwd=2)
+legend("left",legend=c("Permutation","t(73)"),col=c("black","red"),lty=c(2,2),lwd=c(1,2))
+
+
+x<-seq(from=-4,to=4,length.out=20)
+plot(x,dt(x,df=73),col="red",lty=2,lwd=2,type="l",xlab="t-values",ylab="Density",main="Plot of t(73) distribution" )
+abline(v=-2.1702)
+abline(v=2.1702)
+
+pt(-2.1702,df=73,lower.tail=T)
+2*pt(-2.1702,df=73,lower.tail=T)
+2*pt(abs(-2.1702),df=73,lower.tail=F)
+
+
+```
+
+
+```{r}
+s217=read.csv("http://dl.dropboxusercontent.com/u/77307195/s217.csv")
+require(mosaic)
+par(mfrow=c(1,2))
+boxplot(GPA~Sex,data=s217)
+require(beanplot)
+beanplot(GPA~Sex,data=s217,log="",col="lightblue",method="jitter")
+
+mean(GPA~Sex,data=s217)
+favstats(GPA~Sex,data=s217)
+
+compareMeans(GPA~Sex,data=s217)
+t.test(GPA~Sex,data=s217,var.equal=T)
+
+
+Tobs <- t.test(GPA~Sex,data=s217,var.equal=T)$statistic
+Tobs
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-t.test(GPA~shuffle(Sex),data=s217,var.equal=T)$statistic
+  }
+hist(Tstar,labels=T)
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=c(-1,1)*Tobs,lwd=2,col="red")
+pdata(abs(Tobs),abs(Tstar),lower.tail=F)
+
+```
+
+
+Bootstrapping code
+```{r}
+
+table(as.numeric(resample(MockJury2)$orig.ids))
+
+
+Tobs <- compareMean(Years ~ Attr, data=MockJury2); Tobs
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-compareMean(Years ~ Attr, data=resample(MockJury2))
+  }
+hist(Tstar,labels=T)
+abline(v=Tobs,col="red",lwd=2)
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=Tobs,col="red",lwd=2)
+favstats(Tstar)
+
+
+qdata(.025,Tstar)
+qdata(.975,Tstar)
+quantiles<-qdata(c(.025,.975),Tstar)
+quantiles
+hist(Tstar,labels=T)
+abline(v=quantiles$quantile,col="blue",lwd=3)
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=quantiles$quantile,col="blue",lwd=3)
+
+t.test(Years ~ Attr, data=MockJury2,var.equal=T)
+
+par(mfrow=c(1,1))
+x<-seq(from=-4,to=4,length.out=200)
+plot(x,dt(x,df=73),col="red",lty=2,lwd=3,type="l",xlab="t-values",ylab="Density",main="Plot of t(73) distribution" )
+abline(v=-2.1702,lwd=3)
+abline(v=2.1702,lwd=3)
+
+qt(.975,df=73)
+qt(.025,df=73)   
+
+x=seq(from=-4,to=4,length.out=100)
+plot(x,dt(x,df=73),col="red",lty=2,lwd=2,type="l",xlab="t-values",ylab="Density",main="Plot of t(73) distribution" )
+abline(v=-1.9913)
+abline(v=1.9913)
+
+favstats(Years~Attr,data=MockJury2)
+sp <- sqrt(((38-1)*(2.8235^2)+(37-1)*(4.364^2))/(38+37-2))
+sp
+3.974-5.811+c(-1,1)*qt(.975,df=73)*sp*sqrt(1/38+1/37)
+qt(.975,df=73)*sp*sqrt(1/38+1/37)
+
+```
+
+```{r}
+s217=read.csv("http://dl.dropboxusercontent.com/u/77307195/s217.csv")
+require(mosaic)
+
+favstats(GPA~Sex,data=s217)
+sp <- sqrt(((37-1)*(0.4075^2)+(42-1)*(0.41518^2))/(37+42-2))
+sp
+3.338-3.0886+c(-1,1)*qt(.975,df=77)*sp*sqrt(1/37+1/42)
+qt(.975,df=77)*sp*sqrt(1/37+1/42)
+
+compareMean(GPA~Sex,data=s217)
+t.test(GPA~Sex,data=s217,var.equal=T)
+
+ qt(.95,df=77) # For 90% confidence and 77 df
+ qt(.995,df=77) #For 99% confidence and 77 df
+
+Tobs <- compareMean(GPA ~ Sex, data=s217); Tobs
+par(mfrow=c(1,2))
+B<- 1000
+Tstar<-matrix(NA,nrow=B)
+for (b in (1:B)){
+  Tstar[b]<-compareMean(GPA ~ Sex, data=resample(s217))
+  }
+
+qdata(.05,Tstar)
+qdata(.95,Tstar)
+quantiles<-qdata(c(.05,.95),Tstar)
+quantiles
+
+
+hist(Tstar,labels=T)
+abline(v=Tobs,col="red",lwd=2)
+abline(v=quantiles$quantile,col="blue",lwd=3,lty=2)
+plot(density(Tstar),main="Density curve of Tstar")
+abline(v=Tobs,col="red",lwd=2)
+abline(v=quantiles$quantile,col="blue",lwd=3,lty=2)
+
+favstats(Tstar)
+
+
+```
+
+
+
+

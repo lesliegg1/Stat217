@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{verbatim}
+
+%% LaTeX margin settings:
+  \setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+%% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+  opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+  
+  
+\begin{center}
+\large{STAT 217: In Class $8/28$}
+\end{center}
+
+<<datasetup, echo=TRUE>>=
+set.seed(21)
+mt <- rnorm(20, 105, 20)
+id <- rnorm(20, 100, 20)
+
+iq <- data.frame(c(mt, id), c(rep("mt", 20), rep("id", 20)))
+names(iq) <- c("iq", "state")
+
+iq
+@
+
+<<permtest, echo=TRUE, message=FALSE>>=
+require(mosaic)
+
+mean(mt)
+mean(id)
+
+Tobs <- diffmean(iq ~ state, data = iq) ## this is the observed diff in means
+Tobs
+
+B <- 1000 ## this is how many permutations you want
+Tstar <- matrix(NA, nrow = B) ## setting up empty slots to put our permutation statistics in
+for (b in 1:B) {
+  Tstar[b] <- diffmean(iq ~ shuffle(state), data = iq) ## the bth permutation stat
+  ## the text uses compareMean, but that is an outdated function
+}
+Tstar[1:10,]
+
+par(mfrow = c(1, 2)) ## telling R to put the two plots side by side
+hist(Tstar)
+abline(v = Tobs, lwd = 2) ## adding a line for the observed statistic
+abline(v = -Tobs, lwd = 2)
+plot(density(Tstar), main = "Density Plot of Tstar", xlab = "")
+abline(v = Tobs, lwd = 2)
+abline(v = -Tobs, lwd = 2)
+@
+
+<<ttest, echo=FALSE>>=
+t.test(iq ~ state, data=iq, var.equal=TRUE, alternative="less")
+1-pt(0.864, 38)
+@
+
+
+\end{document}
+

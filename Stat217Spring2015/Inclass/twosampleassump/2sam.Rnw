@@ -1,0 +1,35 @@
+\documentclass[10pt]{article}
+
+\usepackage{verbatim}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+\else
+  \fi
+
+
+\begin{document}
+
+
+<<yes, echo=TRUE, out.width="0.5\\linewidth", message=FALSE>>=
+require(heplots)
+data(MockJury)
+mockjury <- subset(MockJury, Attr != "Beautiful")
+mockjury$Attr <- factor(mockjury$Attr, levels=c("Average", "Unattractive"))
+boxplot(Years~Attr, data=mockjury)
+sd(subset(mockjury, Attr=="Average")$Years)
+sd(subset(mockjury, Attr=="Unattractive")$Years)
+@
+
+<<hists, echo=TRUE, fig.width=14, out.width="0.8\\linewidth">>=
+par(mfrow=c(1,2))
+hist(subset(mockjury, Attr=="Average")$Years, main="Average")
+hist(subset(mockjury, Attr=="Unattractive")$Years, main="Unattractive")
+t.test(Years~Attr, data=mockjury, var.equal=T)
+@
+
+
+
+\end{document}

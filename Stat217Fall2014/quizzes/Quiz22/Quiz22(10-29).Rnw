@@ -1,0 +1,79 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Quiz 22} \\
+\end{center}
+
+
+\begin{enumerate}
+\item A chemist studied the concentration of a solution over time. Fifteen identical solutions were prepared. The 15 solutions were then randomly divided into five sets of three, and the five sets were measured, respectively after 1, 3, 5, 7, and 9 hours. A simple linear regression model was fit to these data and the diagnostic plots are found below.
+
+\includegraphics[scale=0.5]{before.png}
+
+The chemist noticed a nonlinear relationship between these two variables and decides to rerun his analysis by taking the log of the concentration and using log(concentration) as the response variable. The diagnostic plots for this model are found below.
+
+\includegraphics[scale=0.5]{after.png}
+
+\begin{enumerate}
+\item Why was a log transformation on {\it concentration} considered for this example?
+\vspace{1in}
+\item Did the log transformation on {\it concentration} improve the model assumptions? Briefly justify.
+\vspace{1in}
+\end{enumerate}
+
+\item Biological Pest Control. In a study of the effectiveness of biological control of the exotic weed tansy ragwort, researches manipulated the exposure to the ragwort flea beetle on 15 plots that had been planted with high density of ragwort. Harvesting the plots the next season, they measured the average dry mass of ragwort remaining (grams/plant) and the flea beetle load (beetles/gram of ragwort dry mass) to see if the ragwort plants in plots with high flea beetle loads were smaller as a result of herbivory by the beetles.
+
+\begin{enumerate}
+\item What is the response variable, and what is the explanatory variable?
+\vspace{0.5in}
+\item A linear model was fit. Look at the diagnostic plots. Do you think a transformation is needed? Why or why not?
+
+\includegraphics[scale=0.5]{diags.png}
+
+\item Based on the two histograms below, what transformation(s) do you suggest? Why?
+
+\includegraphics[scale=0.5]{hists.png}
+
+\item Below is the summary table of the linear regression fit on the transformed scale. Which variable(s) was (were) log transformed?
+
+\includegraphics[scale=0.5]{out.png}
+
+\item Write out the estimated regression equation for this model.
+\vspace{0.75in}
+\item Now write out the equation for the TRUE regression line for this model.
+\vspace{0.75in}
+\item One of the observed average dry mass of the remaining ragwort was zero. I had to drop this observation from the analysis using log transformations. Why did I have to do so?
+\end{enumerate}
+
+
+\end{enumerate}
+
+
+
+\end{document}

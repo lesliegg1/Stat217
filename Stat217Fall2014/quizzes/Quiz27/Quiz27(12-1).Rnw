@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.width=5, fig.height=4, out.width='.5\\linewidth', dev='pdf', concordance=TRUE, size='footnotesize')
+options(replace.assign=TRUE,width=72, digits = 3, 
+        show.signif.stars = FALSE)
+@
+
+
+\begin{center}
+\large{STAT 217: Quiz 27} \\
+\end{center}
+
+\begin{enumerate}
+
+\item Crab Claw Force and Size: As part of a study of the relationship between predatory intertidal crab species and snail populations, researchers measured the average closing forces (newtons) and propodus heights (mm) of the claws on several crabs of three species. They collected data on $14$ crabs from the species Hemigrapsus nudus, $12$ from Lophphanopeus bells, and $12$ from Cancer productus. (Data read from Figure $3$ in Yamada $\&$ Boulding, “Claw morphology, prey size selection, and foraging efficiency in generalist and specialist shell-breaking crabs,” Journal of Experimental Marine Biology and Ecology, $220$, pp. $191-211$.)
+
+<<data, echo=FALSE>>=
+crab.data <- read.csv("~/Documents/Stat411/data/CrabData.csv", head=TRUE)
+@
+
+<<separatelines,echo=FALSE, message=FALSE>>=
+crab.data$Species <- c(rep("nudus",14),rep("bellus",12),rep("productus",12))
+separate.out <- lm(Force ~ Height*Species, data=crab.data) 
+summary(separate.out)
+anova(separate.out)
+@
+
+\begin{enumerate}
+\item Write out the response variable and the explanatory variable(s). Identify each as categorical or quantitative.
+\vspace{1in}
+\item Is this multiple linear regression or simple linear regression?
+Briefly justify.
+\vspace{1in}
+\item Write out the model that was fit above.
+\vspace{1.5in}
+\item What is the reference level?
+\vspace{0.5in}
+\item Would you allow different slopes for each species? Write a conclusion to answer this question.
+\vspace{1in}
+\end{enumerate}
+
+\item Now let's look at the same question using AIC-based model comparisons.
+
+<<aic, echo=TRUE>>=
+lm.add <- lm(Force~Height+Species, data=crab.data)
+lm.int <- lm(Force~Height+Species+Height*Species, data=crab.data)
+AIC(lm.add,lm.int)
+@
+
+\begin{enumerate}
+\item According to the AIC, which model would you choose and why?
+\vspace{1in}
+\item Is this consistent with the answer you gave in $1e$? Briefly justify.
+\end{enumerate}
+
+
+
+
+\end{enumerate}
+
+
+\end{document}

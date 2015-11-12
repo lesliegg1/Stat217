@@ -1,0 +1,75 @@
+
+
+\documentclass{article}
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\def\Xb{\overline X}
+\def\xb{\overline x}
+\def\Yb{\overline Y}
+\def\yb{\overline y}
+\def\fs{\footnotesize}
+\def\sig2{\sigma^2}
+\def\bs{\boldsymbol}
+\newcounter{alistctr}
+\newenvironment{alist}{\begin{list}{\Alph{alistctr}.\ }
+      {\usecounter{alistctr}}} {\end{list}}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{flushleft} 
+STAT 217: Worksheet 4\\
+\end{flushleft}
+
+This data set gives the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn. The loom is set at a tension of low, medium or high. $54$ measurements are taken. The researcher wants to know if the machine tension is related to the number of warp breaks.
+
+<<oe, echo=FALSE, message=FALSE>>=
+require(multcomp)
+tension <- factor(warpbreaks$tension, levels=c("H", "M", "L"))
+breaks <- warpbreaks$breaks
+lm.model <- lm(breaks~tension)
+@
+
+\begin{enumerate}
+
+\item Fill in the blanks on the following ANOVA table.
+
+\begin{verbatim}
+Analysis of Variance Table
+
+Response: warpbreaks$breaks
+          Df Sum Sq Mean Sq F value   Pr(>F)   
+tension   __ ______ 1017.13  ______ 0.001753
+Residuals __ 7198.6  _____                    
+\end{verbatim}
+
+
+\item What is the residual sums of squares (RSS) for the single mean model?
+\vspace{0.1in}
+
+\item What is the residual sums of squares (RSS) for the separate means model?
+\vspace{0.1in}
+
+\item Given the answers to the above two questions, how can you find the sums of squares given in the tension row of the table above?
+\vspace{0.5in}
+
+\item Explain, relating your answer to the sums of squares, why the F-value is large (and the p-value small).
+\vspace{2in}
+
+\item Write a conclusion to answer the research question.
+
+\end{enumerate}
+
+
+\end{document}

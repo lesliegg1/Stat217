@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage{float}
+
+%% LaTeX margin settings:
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+
+ %% tell knitr to use smaller font for code chunks
+\def\fs{\footnotesize}
+\def\R{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfL}{\mbox{\boldmath $L$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfv}{\mbox{\boldmath $V$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfb}{\mbox{\boldmath $b$}}
+\begin{document}
+
+
+\begin{center}
+\large{STAT 217: Influential Points (in class 3/23)} \\
+\end{center}
+
+
+<<scatterCereal, out.width='.7\\linewidth',echo=FALSE, message=FALSE>>= 
+require(mosaic)
+cereal <- read.table("~/Documents/Stat217Fall2014/quizzes/Quiz19/cereals.txt", header = T)
+@
+ 
+
+<<line, echo=TRUE, size='footnotesize'>>=
+cereal.fit <- lm(calories~sugar, data = cereal)
+summary(cereal.fit)
+@
+
+
+
+<<plot, echo=TRUE, fig.width=10, out.width="0.9\\linewidth", size='footnotesize'>>=
+par(mfrow=c(2,2))
+plot(cereal.fit)
+@
+
+<<add, echo=FALSE>>=
+treadmill <- read.csv("~/Documents/Stat217Spring2015/Inclass/influentialpts/treadmill.csv")
+treadmill <- rbind.data.frame(treadmill, c(32, 68, 155, 13.7, 150, 48, 71, 43))
+@
+
+
+<<tread, echo=TRUE, fig.width=10, out.width="0.9\\linewidth", size='footnotesize'>>=
+lm.tread <- lm(TreadMillOx~RunTime, data=treadmill)
+summary(lm.tread)
+par(mfrow=c(2,2))
+plot(lm.tread)
+@
+
+
+
+
+\end{document}
